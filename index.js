@@ -16,14 +16,14 @@ const plugin = {
 };
 
 plugin.configs.recommended = {
-  name: "agent-ready/recommended",
+  name: "agentic-dom/recommended",
   files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"],
   languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
-  plugins: { "agent-ready": plugin },
+  plugins: { "agentic-dom": plugin },
   rules: {
-    "agent-ready/disabled-has-reason": "warn",
-    "agent-ready/label-prop-linked": "error",
-    "agent-ready/repeated-action-context": "warn",
+    "agentic-dom/disabled-has-reason": "warn",
+    "agentic-dom/label-prop-linked": "error",
+    "agentic-dom/repeated-action-context": "warn",
   },
 };
 

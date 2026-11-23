@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-agent-ready",
+  "name": "eslint-plugin-agentic-dom",
   "version": "0.1.0",
   "description": "ESLint rules that flag React code AI browser agents struggle to operate.",
   "type": "module",
@@ -8,8 +8,8 @@
   "keywords": ["eslint", "eslintplugin", "eslint-plugin", "react", "jsx", "ai-agents", "accessibility", "a11y"],
   "author": "Caio Câmara",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/caiodsc/agent-ready.git" },
-  "homepage": "https://github.com/caiodsc/agent-ready#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/caiodsc/agentic-dom.git" },
+  "homepage": "https://github.com/caiodsc/agentic-dom#readme",
   "scripts": { "test": "node --test tests/*.test.js", "readme:assets": "node scripts/readme-assets.js" },
   "peerDependencies": { "eslint": ">=9" },
   "devDependencies": { "eslint": "^9.39.5" },

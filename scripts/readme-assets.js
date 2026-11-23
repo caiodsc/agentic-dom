@@ -2,7 +2,7 @@
 import { ESLint } from "eslint";
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename } from "node:path";
-import agentReady from "../index.js";
+import agenticDom from "../index.js";
 
 const root = new URL("..", import.meta.url).pathname;
 const demo = `${root}scripts/readme-demo`;
@@ -41,7 +41,7 @@ function wrap(text, width) {
 }
 
 async function lint(dir) {
-  const eslint = new ESLint({ cwd: root, overrideConfigFile: true, overrideConfig: [agentReady.configs.recommended] });
+  const eslint = new ESLint({ cwd: root, overrideConfigFile: true, overrideConfig: [agenticDom.configs.recommended] });
   return eslint.lintFiles([`${demo}/${dir}`]);
 }
 
@@ -229,8 +229,8 @@ function hero(t) {
     `<path d="M${x + 4.5} ${y - 5}l3 3 6-6.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>` +
     `<text class="a" x="${x + 26}" y="${y}">${esc(text)}</text>`;
   const pill = (side) => side === "with"
-    ? `<rect x="${W - 166}" y="14" width="150" height="24" rx="12" fill="${t.brand}"/><text class="pw" x="${W - 91}" y="30" text-anchor="middle">WITH AGENT-READY</text>`
-    : `<rect x="${W - 190}" y="14" width="174" height="24" rx="12" fill="${t.box}" stroke="${t.line}"/><text class="po" x="${W - 103}" y="30" text-anchor="middle">WITHOUT AGENT-READY</text>`;
+    ? `<rect x="${W - 166}" y="14" width="150" height="24" rx="12" fill="${t.brand}"/><text class="pw" x="${W - 91}" y="30" text-anchor="middle">WITH AGENTIC-DOM</text>`
+    : `<rect x="${W - 190}" y="14" width="174" height="24" rx="12" fill="${t.box}" stroke="${t.line}"/><text class="po" x="${W - 103}" y="30" text-anchor="middle">WITHOUT AGENTIC-DOM</text>`;
   const card = `x="0.5" y="0.5" width="${W - 1}" height="${height - 1}" rx="10"`;
   let out = `<rect ${card} fill="${t.bg}" stroke="${t.line}"/>` +
     `<path d="M0.5 ${BAR}V10.5a10 10 0 0 1 10-10h${W - 21}a10 10 0 0 1 10 10V${BAR}z" fill="${t.box}"/>` +

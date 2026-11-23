@@ -75,7 +75,7 @@ ruleTester.run("disabled-has-reason", rule, {
     },
     {
       code: `<Action disabled={!ok}>Go</Action>`,
-      settings: { "agent-ready": { components: { Action: { as: "button" } } } },
+      settings: { "agentic-dom": { components: { Action: { as: "button" } } } },
       errors: [{ messageId: "noReason" }],
     },
   ],
