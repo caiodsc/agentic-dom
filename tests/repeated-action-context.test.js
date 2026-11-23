@@ -129,6 +129,11 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label()}" } }],
     },
     {
+      name: "element as the aria-label value",
+      code: `rows.map(r => <button aria-label=<b>Edit</b>>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${<b>Edit</b>}" } }],
+    },
+    {
       name: "const that refers to itself",
       code: `rows.map(r => { const label = (() => { function again() { return label; } return t("edit"); })(); return <button>{label}</button>; })`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
