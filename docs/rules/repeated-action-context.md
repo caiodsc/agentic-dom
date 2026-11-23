@@ -2,6 +2,14 @@
 
 Flags a button or link inside `.map()` whose name is the same on every row.
 
+## How it decides
+
+The rule never runs the code. It looks at where each part of the name comes from:
+
+- From the row, like `r.name`, a field destructured from it, the index, or a variable in the loop built from them. The name changes per row, so it passes.
+- From outside the row, like `t("edit")`, a prop or a const outside the loop. Every row gets the same name, so it is reported.
+- From a value the rule can't trace, like a spread or a variable assigned again. It is not reported. [Not reported](#not-reported) lists these.
+
 ## Why
 
 A table with twenty "Edit" buttons gives an agent twenty identical targets. It picks by position and often edits the wrong row. Naming the row ("Edit Jane Doe") makes each target unique.
