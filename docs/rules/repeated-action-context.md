@@ -36,3 +36,5 @@ rows.map((r) => (
 - Text that already changes per row (`{r.name}`).
 - Buttons with spread props (`{...rowProps(r)}`). The spread can set a name per row.
 - Icon-only buttons with no text. They have no name to repeat. A button with no name at all is a different problem.
+- A name from a variable in the loop that is assigned again after its declaration, like `if (r.locked) label = "View"`. The rule can't tell a per-row assignment from a shared one.
+- A name from a variable in the loop that is not written-out text and is also passed to a function, has a method called on it or is put in an object or array, like `onClick={() => track(label)}`. The rule can't tell whether that use changes it.
