@@ -13,6 +13,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "icon picked by a condition", code: `rows.map(r => <button>{busy ? <Spinner /> : <TrashIcon />}</button>)` },
     { name: "const set to null", code: `const empty = null; rows.map(r => <button>{empty}</button>)` },
     { name: "icon in a let that nothing changes", code: `rows.map(r => { let icon = <TrashIcon />; return <button>{icon}</button>; })` },
+    { name: "aria-label from a let set to null on an icon button", code: `rows.map(r => { let label = null; return <button aria-label={label}><TrashIcon /></button>; })` },
     { name: "callback that is not a loop", code: `useEffect(() => { render(<button>Edit</button>); })` },
     { name: "unknown component", code: `rows.map(r => <Chip>Edit</Chip>)` },
     { name: "row text rendered by a component", code: `rows.map(r => <Link href={r.url}><ItemText item={r} />Open</Link>)` },
@@ -141,6 +142,11 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${a.value}" } }],
     },
     {
+      name: "icon from a const beside the text",
+      code: `const icon = <TrashIcon />; rows.map(r => <button>{icon}Delete</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Delete" } }],
+    },
+    {
       name: "element written inside braces",
       code: `rows.map(r => <button>{<span>Edit</span>}</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
@@ -153,7 +159,7 @@ ruleTester.run("repeated-action-context", rule, {
     {
       name: "text in the loop passed to a function",
       code: `rows.map(r => { let label = "Edit"; log(label); return <button aria-label={label}>Edit</button>; })`,
-      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
       name: "element as the aria-label value",
