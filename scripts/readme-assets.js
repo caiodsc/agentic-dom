@@ -13,11 +13,11 @@ const MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monos
 const THEMES = {
   light: {
     bg: "#ffffff", box: "#f6f8fa", line: "#d0d7de", text: "#1f2328", muted: "#656d76",
-    accent: "#0969da", brand: "#1a7f37", red: "#cf222e", yellow: "#9a6700",
+    accent: "#2563eb", brand: "#2563eb", good: "#15803d", red: "#dc2626", yellow: "#b45309",
   },
   dark: {
     bg: "#0d1117", box: "#161b22", line: "#30363d", text: "#e6edf3", muted: "#8d96a0",
-    accent: "#4493f8", brand: "#3fb950", red: "#ff7b72", yellow: "#d29922",
+    accent: "#3b82f6", brand: "#3b82f6", good: "#4ade80", red: "#f87171", yellow: "#fbbf24",
   },
 };
 
@@ -47,13 +47,16 @@ async function lint(dir) {
 
 function logo(t) {
   const w = "#ffffff";
+  const line = `fill="none" stroke="${w}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"`;
   return svg(96, 96,
     `<rect x="8" y="8" width="80" height="80" rx="20" fill="${t.brand}"/>` +
-    `<circle cx="30" cy="30" r="5" fill="${w}"/>` +
-    `<path d="M30 35V66M30 48H44M30 66H44" fill="none" stroke="${w}" stroke-width="3" stroke-linecap="round" opacity=".6"/>` +
-    `<rect x="47" y="45" width="14" height="6" rx="3" fill="${w}" opacity=".6"/>` +
-    `<rect x="47" y="63" width="10" height="6" rx="3" fill="${w}" opacity=".6"/>` +
-    `<path d="M58 34l6 6 12-13" fill="none" stroke="${w}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`);
+    `<path d="M48 26V19" ${line}/>` +
+    `<circle cx="48" cy="15" r="4" fill="${w}"/>` +
+    `<rect x="10" y="42" width="8" height="18" rx="3" fill="${w}"/>` +
+    `<rect x="78" y="42" width="8" height="18" rx="3" fill="${w}"/>` +
+    `<rect x="16" y="26" width="64" height="52" rx="14" fill="${w}"/>` +
+    `<rect x="23" y="35" width="50" height="32" rx="8" fill="${t.brand}"/>` +
+    `<path d="M38 43L31 51L38 59M58 43L65 51L58 59M51 41L45 61" ${line}/>`);
 }
 
 function top(t) {
@@ -114,7 +117,7 @@ function terminal(t, lines) {
     if (segs.length) body.push(`<g ${anim(`a${k + 1}`, steps[k])}>${row(lines.length + k, segs)}</g>`);
   });
   const style =
-    `.l{font:12.5px ${MONO};white-space:pre;fill:${t.text}}.p{fill:${t.brand};font-weight:700}` +
+    `.l{font:12.5px ${MONO};white-space:pre;fill:${t.text}}.p{fill:${t.good};font-weight:700}` +
     `.c{font-weight:700}.h{text-decoration:underline}.d{fill:${t.muted}}.e{fill:${t.red};font-weight:700}` +
     `.w{fill:${t.yellow};font-weight:700}.m{fill:${t.muted};font-style:italic}.ttl{font:600 12px ${SANS};fill:${t.muted}}`;
   const chrome =
@@ -155,18 +158,18 @@ function flow(t) {
     keys.push(`@keyframes g${i}{0%,${on}%{opacity:0}${on + 2}%,90%{opacity:1}96%,100%{opacity:0}}`);
     parts.push(
       `<rect x="${x}" y="${Y}" width="${W}" height="${H}" rx="10" fill="${t.box}" stroke="${t.line}"/>` +
-        `<rect x="${x}" y="${Y}" width="${W}" height="${H}" rx="10" fill="none" stroke="${t.accent}" stroke-width="2" style="opacity:0;animation:g${i} ${cycle}s infinite"/>` +
+        `<rect x="${x}" y="${Y}" width="${W}" height="${H}" rx="10" fill="none" stroke="${t.good}" stroke-width="2" style="opacity:0;animation:g${i} ${cycle}s infinite"/>` +
         `<text class="k" x="${x + 14}" y="${Y + 24}">${esc(kicker)}</text>` +
         `<text class="t${i === 3 ? " a" : ""}" x="${x + 14}" y="${Y + 46}">${esc(title)}</text>` +
         rows.map(([c, s], j) => `<text class="${c}" x="${x + 14}" y="${Y + 68 + j * 16}">${esc(s)}</text>`).join(""));
   });
   const px = boxes[0][0] + W + (boxes[1][0] - boxes[0][0] - W) / 2;
-  parts.push(`<rect x="${px - 34}" y="${Y + H / 2 - 38}" width="68" height="24" rx="12" fill="${t.brand}"/>`);
+  parts.push(`<rect x="${px - 34}" y="${Y + H / 2 - 38}" width="68" height="24" rx="12" fill="${t.good}"/>`);
   parts.push(`<text class="cmd" x="${px}" y="${Y + H / 2 - 21.5}" text-anchor="middle">eslint</text>`);
   const style =
     `.t{font:700 14px ${SANS};fill:${t.text}}.u{font:12px ${SANS};fill:${t.muted}}` +
     `.k{font:700 10.5px ${SANS};fill:${t.muted};letter-spacing:.08em}.cd{font:12px ${MONO};fill:${t.text}}` +
-    `.a{fill:${t.accent}}.cmd{font:700 13px ${MONO};fill:#ffffff}`;
+    `.a{fill:${t.good}}.cmd{font:700 13px ${MONO};fill:#ffffff}`;
   return svg(900, 184,
     `<style>${style}${keys.join("")}</style>${parts.join("")}`);
 }
@@ -225,12 +228,12 @@ function hero(t) {
     `<circle cx="${x + 9}" cy="${y - 5}" r="9" fill="${t.red}"/><text class="qi" x="${x + 9}" y="${y - 0.5}" text-anchor="middle">?</text>` +
     `<text class="q" x="${x + 26}" y="${y}">${esc(text)}</text>`;
   const ok = (x, y, text) =>
-    `<circle cx="${x + 9}" cy="${y - 5}" r="9" fill="${t.brand}"/>` +
+    `<circle cx="${x + 9}" cy="${y - 5}" r="9" fill="${t.good}"/>` +
     `<path d="M${x + 4.5} ${y - 5}l3 3 6-6.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>` +
     `<text class="a" x="${x + 26}" y="${y}">${esc(text)}</text>`;
   const pill = (side) => side === "with"
-    ? `<rect x="${W - 166}" y="14" width="150" height="24" rx="12" fill="${t.brand}"/><text class="pw" x="${W - 91}" y="30" text-anchor="middle">WITH AGENTIC-DOM</text>`
-    : `<rect x="${W - 190}" y="14" width="174" height="24" rx="12" fill="${t.box}" stroke="${t.line}"/><text class="po" x="${W - 103}" y="30" text-anchor="middle">WITHOUT AGENTIC-DOM</text>`;
+    ? `<rect x="${W - 166}" y="14" width="150" height="24" rx="12" fill="${t.good}"/><text class="pw" x="${W - 91}" y="30" text-anchor="middle">WITH AGENTIC-DOM</text>`
+    : `<rect x="${W - 190}" y="14" width="174" height="24" rx="12" fill="${t.red}"/><text class="pw" x="${W - 103}" y="30" text-anchor="middle">WITHOUT AGENTIC-DOM</text>`;
   const card = `x="0.5" y="0.5" width="${W - 1}" height="${height - 1}" rx="10"`;
   let out = `<rect ${card} fill="${t.bg}" stroke="${t.line}"/>` +
     `<path d="M0.5 ${BAR}V10.5a10 10 0 0 1 10-10h${W - 21}a10 10 0 0 1 10 10V${BAR}z" fill="${t.box}"/>` +
@@ -245,7 +248,7 @@ function hero(t) {
       const k = i * 2 + s;
       const { reads, thought } = scene[side];
       let g = pill(side);
-      if (side === "with") g += `<rect ${card} fill="none" stroke="${t.brand}" stroke-width="1.5"/>`;
+      if (side === "with") g += `<rect ${card} fill="none" stroke="${t.good}" stroke-width="1.5"/>`;
       reads.forEach((c, j) => { g += chip(RX + 28, HEAD + 8 + j * 28, c); });
       g += (side === "with" ? ok : ask)(RX + 28, HEAD + 8 + reads.length * 28 + 20, thought);
       if (!same) g += ui[scene.see[side]];
@@ -259,17 +262,17 @@ function hero(t) {
     const b = ((i * 2 + 2) * phase).toFixed(2);
     keys.push(`@keyframes u${i}{0%,${a}%{transform:scaleX(0)}${b}%,100%{transform:scaleX(1)}}`);
     out += `<g ${show(i * 2, i * 2 + 2)}><rect x="${tx}" y="11" width="${w}" height="30" rx="15" fill="${t.brand}" opacity=".14"/>` +
-      `<rect x="${tx + 14}" y="46" width="${w - 28}" height="3" rx="1.5" fill="${t.brand}" style="transform-box:fill-box;transform-origin:left;animation:u${i} ${cycle}s linear infinite"/></g>` +
+      `<rect x="${tx + 14}" y="46" width="${w - 28}" height="3" rx="1.5" fill="${t.good}" style="transform-box:fill-box;transform-origin:left;animation:u${i} ${cycle}s linear infinite"/></g>` +
       `<text class="tab" x="${tx + w / 2}" y="31" text-anchor="middle">${scene.tab}</text>`;
     tx += w + 6;
   });
   const style =
     `.cd{font:12px ${MONO};fill:${t.text}}.n{font:13px ${SANS};fill:${t.muted}}` +
-    `.q{font:italic 14px ${SANS};fill:${t.muted}}.a{font:700 14px ${SANS};fill:${t.brand}}` +
+    `.q{font:italic 14px ${SANS};fill:${t.muted}}.a{font:700 14px ${SANS};fill:${t.good}}` +
     `.qi{font:700 12px ${SANS};fill:#ffffff}.k{font:700 12px ${SANS};letter-spacing:.08em;fill:${t.muted}}` +
     `.ul{font:600 14px ${SANS};fill:${t.text}}.um{font:13px ${SANS};fill:${t.muted}}` +
     `.ub{font:600 14px ${SANS};fill:${t.muted};opacity:.6}.ue{font:600 13px ${SANS};fill:${t.text}}` +
-    `.pw{font:700 11px ${SANS};letter-spacing:.06em;fill:${t.bg}}.po{font:700 11px ${SANS};letter-spacing:.06em;fill:${t.muted}}` +
+    `.pw{font:700 11px ${SANS};letter-spacing:.06em;fill:${t.bg}}` +
     `.tab{font:600 14px ${SANS};fill:${t.text}}`;
   return svg(W, height, `<style>${style}${keys.join("")}</style>${out}`);
 }
