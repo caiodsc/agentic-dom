@@ -10,7 +10,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 [![Tests](https://github.com/caiodsc/agentic-dom/actions/workflows/test.yml/badge.svg)](https://github.com/caiodsc/agentic-dom/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![ESLint 9 flat config](https://img.shields.io/badge/ESLint%209-flat%20config-4b32c3)](#quick-start)
+[![ESLint 9+ flat config](https://img.shields.io/badge/ESLint%209%2B-flat%20config-4b32c3)](#quick-start)
 
 **[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Rules](#rules) · [Setup](#setup) · [For agents](#for-agents)**
 
@@ -210,7 +210,7 @@ Paste this prompt into your coding agent to install and configure agentic-dom in
 ```text
 Install and configure the ESLint plugin eslint-plugin-agentic-dom in this project.
 
-1. Check that the project uses ESLint 9 or newer with a flat config file (eslint.config.js, .mjs, .cjs or .ts). If it uses a legacy .eslintrc file, stop and tell me.
+1. Check that the project uses ESLint 9 or newer with a flat config file (eslint.config.js, .mjs, .cjs or .ts). If it uses a legacy .eslintrc file, stop and tell me. A .cjs config needs Node 20.19+ or 22.12+ to load this plugin. On an older Node, stop and tell me.
 2. Install eslint-plugin-agentic-dom as a dev dependency with the project's package manager.
 3. Import it in the flat config and add agenticDom.configs.recommended to the exported array. Keep every existing entry.
 4. If the project lints TypeScript and the config sets no TypeScript parser, set @typescript-eslint/parser for **/*.{ts,tsx,mts,cts} files.
