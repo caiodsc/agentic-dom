@@ -130,6 +130,21 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
     },
     {
+      name: "object with a second name that nothing changes",
+      code: `rows.map(r => { const label = { value: "Edit" }; const copy = label; return <button aria-label={label.value}>Edit</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label.value}" } }],
+    },
+    {
+      name: "two names that point at each other",
+      code: `rows.map(r => { var a = b; var b = a; return <button aria-label={a.value}>Edit</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${a.value}" } }],
+    },
+    {
+      name: "element written inside braces",
+      code: `rows.map(r => <button>{<span>Edit</span>}</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
       name: "function in the loop that reads no row value",
       code: `rows.map(r => { function label() { return t("edit"); } return <button aria-label={label()}>Edit</button>; })`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label()}" } }],
