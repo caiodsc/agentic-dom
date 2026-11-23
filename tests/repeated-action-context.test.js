@@ -13,6 +13,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "icon picked by a condition", code: `rows.map(r => <button>{busy ? <Spinner /> : <TrashIcon />}</button>)` },
     { name: "const set to null", code: `const empty = null; rows.map(r => <button>{empty}</button>)` },
     { name: "icon in a let that nothing changes", code: `rows.map(r => { let icon = <TrashIcon />; return <button>{icon}</button>; })` },
+    { name: "icon beside a const set to empty text", code: `const empty = " "; rows.map(r => <button><TrashIcon />{empty}</button>)` },
     { name: "aria-label from a let set to null on an icon button", code: `rows.map(r => { let label = null; return <button aria-label={label}><TrashIcon /></button>; })` },
     { name: "callback that is not a loop", code: `useEffect(() => { render(<button>Edit</button>); })` },
     { name: "unknown component", code: `rows.map(r => <Chip>Edit</Chip>)` },
@@ -30,6 +31,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "object property set from the row", code: `rows.map(r => { const name = {}; name.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "object set from the row through a copy", code: `rows.map(r => { const name = {}; const copy = name; copy.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "object set from the row through another object", code: `rows.map(r => { const name = {}; const copy = { name }; copy.name.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
+    { name: "object set from the row through an assigned copy", code: `rows.map(r => { const name = {}; let copy; copy = name; copy.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "object set from the row through an array", code: `rows.map(r => { const name = {}; const list = [name]; list[0].value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "function in the loop that reads the row", code: `rows.map(r => { function label() { return \`Edit \${r.name}\`; } return <button aria-label={label()}>Edit</button>; })` },
   ],
@@ -135,6 +137,16 @@ ruleTester.run("repeated-action-context", rule, {
       name: "object with a second name that nothing changes",
       code: `rows.map(r => { const label = { value: "Edit" }; const copy = label; return <button aria-label={label.value}>Edit</button>; })`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label.value}" } }],
+    },
+    {
+      name: "object with a second name set by assignment that nothing changes",
+      code: `rows.map(r => { const label = { value: "Edit" }; let copy; copy = label; return <button aria-label={label.value}>Edit</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label.value}" } }],
+    },
+    {
+      name: "text from a const outside the loop",
+      code: `const EDIT = "Edit"; rows.map(r => <button>{EDIT}</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
       name: "two names that point at each other",
