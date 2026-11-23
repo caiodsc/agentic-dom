@@ -1,11 +1,16 @@
 {
   "name": "eslint-plugin-agent-ready",
   "version": "0.1.0",
+  "description": "ESLint rules that flag React code AI browser agents struggle to operate.",
   "type": "module",
   "exports": "./index.js",
   "files": ["index.js", "lib"],
+  "keywords": ["eslint", "eslintplugin", "eslint-plugin", "react", "jsx", "ai-agents", "accessibility", "a11y"],
+  "author": "Caio Câmara",
   "license": "MIT",
-  "scripts": { "test": "node --test tests/*.test.js" },
+  "repository": { "type": "git", "url": "git+https://github.com/caiodsc/agent-ready.git" },
+  "homepage": "https://github.com/caiodsc/agent-ready#readme",
+  "scripts": { "test": "node --test tests/*.test.js", "readme:assets": "node scripts/readme-assets.js" },
   "peerDependencies": { "eslint": ">=9" },
   "devDependencies": { "eslint": "^9.39.5" },
   "engines": { "node": ">=18.18" }
