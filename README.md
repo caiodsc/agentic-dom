@@ -12,7 +12,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![ESLint 9 flat config](https://img.shields.io/badge/ESLint%209-flat%20config-4b32c3)](#quick-start)
 
-**[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Rules](#rules) · [Setup](#setup)**
+**[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Rules](#rules) · [Setup](#setup) · [For agents](#for-agents)**
 
 <br>
 
@@ -200,6 +200,24 @@ npx eslint . --suppress-all
 ```
 
 New code is checked. Old violations stay listed in `eslint-suppressions.json` until someone fixes them.
+
+<br>
+
+## For agents
+
+Paste this prompt into your coding agent to install and configure agentic-dom in your project.
+
+```text
+Install and configure the ESLint plugin eslint-plugin-agentic-dom in this project.
+
+1. Check that the project uses ESLint 9 or newer with a flat config file (eslint.config.js, .mjs, .cjs or .ts). If it uses a legacy .eslintrc file, stop and tell me.
+2. Install eslint-plugin-agentic-dom as a dev dependency with the project's package manager.
+3. Import it in the flat config and add agenticDom.configs.recommended to the exported array. Keep every existing entry.
+4. If the project lints TypeScript and the config sets no TypeScript parser, set @typescript-eslint/parser for **/*.{ts,tsx,mts,cts} files.
+5. Find the project's own components that render a button or a link and whose name does not end in Button or Link. Map each one in settings["agentic-dom"].components as { as: "button" } or { as: "link" }.
+6. Run ESLint on the source folder and fix every agentic-dom message. Each message says what to add.
+7. If there are too many to fix now, run npx eslint . --suppress-all instead and tell me how many were suppressed.
+```
 
 <br>
 
