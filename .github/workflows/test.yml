@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         include:
+          - { node: 18, eslint: 8 }
           - { node: 18, eslint: 9 }
           - { node: 22, eslint: 9 }
           - { node: 22, eslint: 10 }

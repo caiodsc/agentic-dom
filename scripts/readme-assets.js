@@ -2,7 +2,7 @@
 import { ESLint } from "eslint";
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename } from "node:path";
-import agenticDom from "../index.js";
+import agenticDom from "../index.cjs";
 
 const root = new URL("..", import.meta.url).pathname;
 const demo = `${root}scripts/readme-demo`;
