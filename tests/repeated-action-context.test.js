@@ -20,6 +20,8 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "spread props", code: `rows.map(r => <button {...rowProps(r)}>Edit</button>)` },
     { name: "const destructured from the row", code: `rows.map(r => { const { name } = r; return <button aria-label={name}>Edit</button>; })` },
     { name: "let changed per row", code: `rows.map(r => { let label = "Edit"; if (r.locked) label = "View"; return <button aria-label={label}>x</button>; })` },
+    { name: "default value from the row", code: `function List({ rows, ...props }) { return rows.map(r => { const { label = r.name } = props; return <button aria-label={label}>Edit</button>; }); }` },
+    { name: "function in the loop that reads the row", code: `rows.map(r => { function label() { return \`Edit \${r.name}\`; } return <button aria-label={label()}>Edit</button>; })` },
   ],
   invalid: [
     {
@@ -118,6 +120,11 @@ ruleTester.run("repeated-action-context", rule, {
       name: "let in the loop never reassigned",
       code: `rows.map(r => { let label = t("edit"); return <button aria-label={label}>Edit</button>; })`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+    },
+    {
+      name: "function in the loop that reads no row value",
+      code: `rows.map(r => { function label() { return t("edit"); } return <button aria-label={label()}>Edit</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label()}" } }],
     },
     {
       name: "const that refers to itself",
