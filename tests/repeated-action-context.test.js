@@ -9,6 +9,9 @@ ruleTester.run("repeated-action-context", rule, {
     `rows.map(r => <button aria-describedby={r.id}>Edit</button>)`,
     { name: "button outside a list", code: `<button>Edit</button>` },
     { name: "icon-only button with no text", code: `rows.map(r => <button><TrashIcon /></button>)` },
+    { name: "icon from a const outside the loop", code: `const icon = <TrashIcon />; rows.map(r => <button>{icon}</button>)` },
+    { name: "icon picked by a condition", code: `rows.map(r => <button>{busy ? <Spinner /> : <TrashIcon />}</button>)` },
+    { name: "const set to null", code: `const empty = null; rows.map(r => <button>{empty}</button>)` },
     { name: "callback that is not a loop", code: `useEffect(() => { render(<button>Edit</button>); })` },
     { name: "unknown component", code: `rows.map(r => <Chip>Edit</Chip>)` },
     { name: "row text rendered by a component", code: `rows.map(r => <Link href={r.url}><ItemText item={r} />Open</Link>)` },
@@ -24,6 +27,8 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "array filled from the row", code: `rows.map(r => { const parts = []; parts.push(r.name); return <button aria-label={parts.join(" ")}>Edit</button>; })` },
     { name: "object property set from the row", code: `rows.map(r => { const name = {}; name.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "object set from the row through a copy", code: `rows.map(r => { const name = {}; const copy = name; copy.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
+    { name: "object set from the row through another object", code: `rows.map(r => { const name = {}; const copy = { name }; copy.name.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
+    { name: "object set from the row through an array", code: `rows.map(r => { const name = {}; const list = [name]; list[0].value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "function in the loop that reads the row", code: `rows.map(r => { function label() { return \`Edit \${r.name}\`; } return <button aria-label={label()}>Edit</button>; })` },
   ],
   invalid: [
