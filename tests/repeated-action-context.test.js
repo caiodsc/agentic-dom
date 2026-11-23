@@ -18,6 +18,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "row index", code: "rows.map((r, i) => <button aria-label={`Edit row ${i + 1}`}>Edit</button>)" },
     { name: "translated text built from the row", code: "rows.map(r => <button>{t(`edit.${r.type}`)}</button>)" },
     { name: "spread props", code: `rows.map(r => <button {...rowProps(r)}>Edit</button>)` },
+    { name: "const destructured from the row", code: `rows.map(r => { const { name } = r; return <button aria-label={name}>Edit</button>; })` },
   ],
   invalid: [
     {
@@ -110,6 +111,26 @@ ruleTester.run("repeated-action-context", rule, {
     {
       name: "spread object with no name keys",
       code: `rows.map(r => <button {...{ "data-testid": r.id }}>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
+      name: "const in the loop destructured from outside the row",
+      code: `function List({ rows, ...props }) { return rows.map(r => { const { label } = props; return <button aria-label={label}>Edit</button>; }); }`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+    },
+    {
+      name: "const that refers to itself",
+      code: `rows.map(r => { const label = (() => { function again() { return label; } return t("edit"); })(); return <button>{label}</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+    },
+    {
+      name: "parameter of a function inside the name",
+      code: `rows.map(r => <button aria-label={[t("edit")].map((r) => r).join()}>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: '${[t("edit")].map((r) => r).join()}' } }],
+    },
+    {
+      name: "spread object with a computed key",
+      code: `rows.map(r => <button {...{ ["data-testid"]: r.id }}>Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
