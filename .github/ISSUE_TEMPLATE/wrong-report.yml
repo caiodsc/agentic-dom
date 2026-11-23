@@ -1,0 +1,41 @@
+name: Wrong report or missed case
+description: A rule warns on code that is fine, or stays quiet on code it should flag.
+labels: [bug]
+body:
+  - type: textarea
+    id: code
+    attributes:
+      label: Code
+      description: The smallest JSX that shows the problem.
+      render: jsx
+    validations:
+      required: true
+  - type: textarea
+    id: reported
+    attributes:
+      label: What ESLint reported
+      description: The message and rule name, or "nothing".
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: eslint-version
+    attributes:
+      label: ESLint version
+      placeholder: "9.39.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: config
+    attributes:
+      label: Config file
+      options:
+        - Flat config (eslint.config.*)
+        - .eslintrc
+    validations:
+      required: true

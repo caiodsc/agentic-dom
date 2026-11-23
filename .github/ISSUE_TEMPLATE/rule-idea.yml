@@ -1,0 +1,32 @@
+name: Rule idea
+description: A code pattern that makes browser agents fail.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: pattern
+    attributes:
+      label: The pattern
+      description: What in the code causes the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: agent-failure
+    attributes:
+      label: How an agent fails
+      description: What the agent tries to do and what goes wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: fails
+    attributes:
+      label: Code that should fail
+      render: jsx
+    validations:
+      required: true
+  - type: textarea
+    id: passes
+    attributes:
+      label: The same code fixed
+      render: jsx
+    validations:
+      required: true
