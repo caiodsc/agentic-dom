@@ -36,7 +36,7 @@ Also linked: the control inside `<label>`, `aria-labelledby` on the control, `ar
 
 - The label handed to another component (`<Base label={label} />`). The rule cannot see what `Base` does.
 - Controls that already carry a fixed `aria-label`.
-- Controls hidden with `hidden`, `aria-hidden` or Tailwind's `hidden` class.
+- Controls hidden with `hidden`, `aria-hidden` or Tailwind's `hidden` class. They are left out of the accessibility tree, so no agent reads their name.
 
 ## Options
 
