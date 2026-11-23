@@ -14,6 +14,13 @@ Text elsewhere in the row does not count. WCAG 2.4.4 accepts context from the su
 rows.map((r) => <button onClick={() => edit(r)}>Edit</button>)
 ```
 
+A name built only from values outside the row is the same on every row too:
+
+```jsx
+rows.map((r) => <button>{t("edit")}</button>)
+rows.map((r) => <button aria-label={label}>Edit</button>)
+```
+
 ## Passes
 
 ```jsx
@@ -22,9 +29,12 @@ rows.map((r) => (
 ))
 ```
 
-`aria-labelledby` or `aria-describedby` built from the row (`aria-describedby={r.id}`) also count. A fixed ID is the same on every row, so it does not.
+`aria-labelledby` or `aria-describedby` built from the row (`aria-describedby={r.id}`) also count. An ID shared by the whole list, like a fixed string or a `useId()` outside the loop, is the same on every row, so it does not.
 
 ## Not reported
 
 - Text that already changes per row (`{r.name}`).
+- Buttons with spread props (`{...rowProps(r)}`). The spread can set a name per row.
 - Icon-only buttons with no text. They have no name to repeat. A button with no name at all is a different problem.
+- A name from a variable in the loop that is assigned again after its declaration, like `if (r.locked) label = "View"`. The rule can't tell a per-row assignment from a shared one.
+- A name from a variable in the loop that is not written-out text and is also passed to a function, has a method called on it or is put in an object or array, like `onClick={() => track(label)}`. The rule can't tell whether that use changes it.
