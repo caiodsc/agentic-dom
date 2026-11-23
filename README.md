@@ -223,6 +223,12 @@ Then run ESLint and fix every agentic-dom message. If there are too many, suppre
 
 <br>
 
+## Contributing
+
+Found a wrong report or have a rule idea? [Open an issue](https://github.com/caiodsc/agentic-dom/issues/new/choose). To send a change, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+<br>
+
 ## License
 
 [MIT](LICENSE). This project is not affiliated with any other project or website.
