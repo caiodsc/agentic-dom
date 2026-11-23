@@ -27,4 +27,4 @@ rows.map((r) => (
 ## Not reported
 
 - Text that already changes per row (`{r.name}`).
-- Icon-only buttons with no text.
+- Icon-only buttons with no text. They have no name to repeat. A button with no name at all is a different problem.
