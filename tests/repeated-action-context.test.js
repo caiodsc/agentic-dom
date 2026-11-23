@@ -103,6 +103,16 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
+      name: "const in the loop copied from outside the row",
+      code: `rows.map(r => { const label = t("edit"); return <button>{label}</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+    },
+    {
+      name: "spread object with no name keys",
+      code: `rows.map(r => <button {...{ "data-testid": r.id }}>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
       code: `rows.flatMap(r => [<a href={r.url}>Open</a>])`,
       errors: [{ messageId: "sameName", data: { kind: "link", text: "Open" } }],
     },
