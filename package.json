@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "description": "ESLint rules that flag React code AI browser agents struggle to operate.",
   "type": "module",
-  "exports": "./index.js",
-  "files": ["index.js", "lib"],
+  "exports": "./index.cjs",
+  "files": ["index.cjs", "index.d.cts", "lib"],
   "keywords": ["eslint", "eslintplugin", "eslint-plugin", "react", "jsx", "ai-agents", "accessibility", "a11y"],
   "author": "Caio Câmara",
   "license": "MIT",
   "repository": { "type": "git", "url": "git+https://github.com/caiodsc/agentic-dom.git" },
   "homepage": "https://github.com/caiodsc/agentic-dom#readme",
   "scripts": { "test": "node --test tests/*.test.js", "readme:assets": "node scripts/readme-assets.js" },
-  "peerDependencies": { "eslint": ">=9" },
+  "peerDependencies": { "eslint": ">=8.57" },
   "devDependencies": { "eslint": "^9.39.5" },
   "engines": { "node": ">=18.18" }
 }

@@ -6,7 +6,7 @@ import rule from "../lib/rules/disabled-has-reason.js";
 
 test("empty transientPattern is rejected", () => {
   const config = { plugins: { a: { rules: { r: rule } } }, rules: { "a/r": ["warn", { transientPattern: "" }] } };
-  assert.throws(() => new Linter().verify("", config), /shorter than 1/);
+  assert.throws(() => new Linter({ configType: "flat" }).verify("", config), /shorter than 1/);
 });
 
 ruleTester.run("disabled-has-reason", rule, {
