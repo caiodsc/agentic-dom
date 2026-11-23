@@ -14,6 +14,10 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "row text rendered by a component", code: `rows.map(r => <Link href={r.url}><ItemText item={r} />Open</Link>)` },
     { name: "anchor with a null href is not a link", code: `rows.map(r => <a href={null}>Open</a>)` },
     { name: "const built from the row", code: "rows.map(r => { const label = `Edit ${r.name}`; return <button aria-label={label}>Edit</button>; })" },
+    { name: "destructured row", code: "rows.map(({ name }) => <button aria-label={`Edit ${name}`}>Edit</button>)" },
+    { name: "row index", code: "rows.map((r, i) => <button aria-label={`Edit row ${i + 1}`}>Edit</button>)" },
+    { name: "translated text built from the row", code: "rows.map(r => <button>{t(`edit.${r.type}`)}</button>)" },
+    { name: "spread props", code: `rows.map(r => <button {...rowProps(r)}>Edit</button>)` },
   ],
   invalid: [
     {
@@ -77,6 +81,26 @@ ruleTester.run("repeated-action-context", rule, {
       name: "named arrow passed to flatMap",
       code: `const renderRow = (r) => [<a href={r.url}>Open</a>]; rows.flatMap(renderRow)`,
       errors: [{ messageId: "sameName", data: { kind: "link", text: "Open" } }],
+    },
+    {
+      name: "translated text shared by every row",
+      code: `rows.map(r => <button>{t("edit")}</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: '${t("edit")}' } }],
+    },
+    {
+      name: "aria-label from a prop",
+      code: `function List({ rows, label }) { return rows.map(r => <button aria-label={label}>Edit</button>); }`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+    },
+    {
+      name: "aria-label template with no row value",
+      code: "rows.map(r => <button aria-label={`Edit ${kind}`}>Edit</button>)",
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit ${kind}" } }],
+    },
+    {
+      name: "aria-describedby with one id for the whole list",
+      code: `const helpId = useId(); rows.map(r => <button aria-describedby={helpId}>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
       code: `rows.flatMap(r => [<a href={r.url}>Open</a>])`,
