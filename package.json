@@ -1,0 +1,12 @@
+{
+  "name": "eslint-plugin-agent-ready",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./index.js",
+  "files": ["index.js", "lib"],
+  "license": "MIT",
+  "scripts": { "test": "node --test tests/*.test.js" },
+  "peerDependencies": { "eslint": ">=9" },
+  "devDependencies": { "eslint": "^9.39.5" },
+  "engines": { "node": ">=18.18" }
+}
