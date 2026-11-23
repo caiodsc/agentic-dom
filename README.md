@@ -57,7 +57,7 @@ Then run `npx eslint .` and hand the messages to your coding agent. Using TypeSc
 
 Browser agents like Claude in Chrome and Playwright MCP read a page through its accessibility tree, often alongside screenshots. A label that is only nearby text, a disabled button with no reason, or a column of identical "Edit" buttons looks fine to a person. To an agent it is a field with no name, a dead button, or a guess. agentic-dom catches those patterns in your JSX. The [Rules](#rules) table has the exact list.
 
-Each message says what an agent sees and what to add, so the coding agent that wrote the component can fix it too. The rules read the JSX as written, so a button name that only exists at runtime is not checked.
+Each message says what an agent sees and what to add, so the coding agent that wrote the component can fix it too. The rules read each file without running it, so they judge a value by where it comes from in the code, like a list's row or the component's props.
 
 <br>
 
