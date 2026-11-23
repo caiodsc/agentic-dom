@@ -129,6 +129,11 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${label()}" } }],
     },
     {
+      name: "text in the loop passed to a function",
+      code: `rows.map(r => { let label = "Edit"; log(label); return <button aria-label={label}>Edit</button>; })`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "${label}" } }],
+    },
+    {
       name: "element as the aria-label value",
       code: `rows.map(r => <button aria-label=<b>Edit</b>>Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "${<b>Edit</b>}" } }],
