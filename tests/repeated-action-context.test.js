@@ -23,6 +23,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "default value from the row", code: `function List({ rows, ...props }) { return rows.map(r => { const { label = r.name } = props; return <button aria-label={label}>Edit</button>; }); }` },
     { name: "array filled from the row", code: `rows.map(r => { const parts = []; parts.push(r.name); return <button aria-label={parts.join(" ")}>Edit</button>; })` },
     { name: "object property set from the row", code: `rows.map(r => { const name = {}; name.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
+    { name: "object set from the row through a copy", code: `rows.map(r => { const name = {}; const copy = name; copy.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "function in the loop that reads the row", code: `rows.map(r => { function label() { return \`Edit \${r.name}\`; } return <button aria-label={label()}>Edit</button>; })` },
   ],
   invalid: [
