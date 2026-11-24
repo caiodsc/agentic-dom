@@ -103,6 +103,12 @@ ruleTester.run("label-prop-linked", rule, {
       name: "submit input in capitals is not a field",
       code: `const Form = ({ label }) => (<div><span>{label}</span><input type="SUBMIT" /></div>);`,
     },
+    { name: "component with no name", code: `export default ({ label }) => (<div><span>{label}</span><input /></div>);` },
+    { name: "label key in brackets", code: `const Field = ({ ["label"]: text }) => (<div><span>{text}</span><input /></div>);` },
+    { name: "label destructured further", code: `const Field = ({ label: { text } }) => (<div><span>{text}</span><input /></div>);` },
+    { name: "control hidden with aria-hidden text", code: `const Field = ({ label }) => (<div><span>{label}</span><input aria-hidden="true" /></div>);` },
+    { name: "control hidden with bare aria-hidden", code: `const Field = ({ label }) => (<div><span>{label}</span><input aria-hidden /></div>);` },
+    { name: "id and htmlFor set to the same element", code: `const Field = ({ label }) => (<div><label htmlFor=<b />>{label}</label><input id=<b /> /></div>);` },
   ],
   invalid: [
     {
@@ -236,6 +242,36 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Field = ({ title }) => (<div><b>{title}</b><input /></div>);`,
       options: [{ labelProps: ["title"] }],
       errors: [{ messageId: "notLinked", data: { component: "Field", prop: "title", control: "input" } }],
+    },
+    {
+      name: "label key in quotes",
+      code: `const Field = ({ "label": text }) => (<div><span>{text}</span><input /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
+    },
+    {
+      name: "props destructured from a call",
+      code: `function Field(props) { const { id } = useField(); return (<div><span>{props.label}</span><input /></div>); }`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
+    },
+    {
+      name: "other props destructured from props",
+      code: `function Field(props) { const { id } = props; return (<div><span>{props.label}</span><input id={id} /></div>); }`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
+    },
+    {
+      name: "label as a value in an object",
+      code: `const Field = ({ label }) => (<div><span>{format({ text: label })}</span><input /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
+    },
+    {
+      name: "label used as a lookup key",
+      code: `const Field = ({ label }) => (<div><span>{names[label]}</span><input /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
+    },
+    {
+      name: "label as a computed key in an object",
+      code: `const Field = ({ label }) => (<div><span>{format({ [label]: true })}</span><input /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
     },
   ],
 });

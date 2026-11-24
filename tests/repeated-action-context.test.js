@@ -36,6 +36,18 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "function in the loop that reads the row", code: `rows.map(r => { function label() { return \`Edit \${r.name}\`; } return <button aria-label={label()}>Edit</button>; })` },
     { name: "row parameter named undefined in the text", code: `rows.map(undefined => <button onClick={() => edit(undefined)}>{undefined}Edit</button>)` },
     { name: "icon-only button with a variable set to undefined", code: `const empty = undefined; rows.map(r => <button onClick={() => del(r)}>{empty}<TrashIcon /></button>)` },
+    {
+      name: "object passed to a function outside the name",
+      code: `rows.map(r => { const label = { value: "Edit" }; fill(label, r); return <button aria-label={label.value}>Edit</button>; })`,
+    },
+    {
+      name: "object copied to an undeclared name",
+      code: `rows.map(r => { const label = { value: "Edit" }; copy = label; return <button aria-label={label.value}>Edit</button>; })`,
+    },
+    {
+      name: "element that holds itself",
+      code: `rows.map(r => { const icon = <i>{icon}</i>; return <button onClick={() => edit(r)}>{icon}Edit</button>; })`,
+    },
   ],
   invalid: [
     {
@@ -203,6 +215,31 @@ ruleTester.run("repeated-action-context", rule, {
     {
       code: `rows.flatMap(r => [<a href={r.url}>Open</a>])`,
       errors: [{ messageId: "sameName", data: { kind: "link", text: "Open" } }],
+    },
+    {
+      name: "map called with a quoted name",
+      code: `rows["map"](r => <button onClick={() => edit(r)}>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
+      name: "element with a link role",
+      code: `rows.map(r => <span role="link" onClick={() => open(r)}>Open</span>)`,
+      errors: [{ messageId: "sameName", data: { kind: "link", text: "Open" } }],
+    },
+    {
+      name: "aria-label template with no values",
+      code: "rows.map(r => <button aria-label={`Edit`} onClick={() => edit(r)}>Edit</button>)",
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
+      name: "namespaced element in the row",
+      code: `rows.map(r => <li><svg:title>Row</svg:title><button onClick={() => edit(r)}>Edit</button></li>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
+      name: "component in the name with an element as a prop",
+      code: `rows.map(r => <button onClick={() => edit(r)}><Icon title=<b>x</b> />Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
   ],
 });

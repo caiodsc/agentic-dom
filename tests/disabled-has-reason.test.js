@@ -43,6 +43,10 @@ ruleTester.run("disabled-has-reason", rule, {
       code: `<Button disabled={!ok} disabledReason="Fill the form">Save</Button>`,
       options: [{ reasonProps: ["disabledReason"] }],
     },
+    { name: "flag read with optional chaining", code: `<button disabled={query?.isPending}>Save</button>` },
+    { name: "own disabled prop with a default", code: `function Save({ disabled = false }) { return <button disabled={disabled}>Save</button>; }` },
+    { name: "own disabled prop with a quoted key", code: `function Save({ "disabled": off }) { return <button disabled={off}>Save</button>; }` },
+    { name: "parameter named disabled", code: `function Save(disabled) { return <button disabled={disabled}>Save</button>; }` },
   ],
   invalid: [
     {
