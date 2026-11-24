@@ -64,6 +64,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const ColorPicker = ({ label }) => (<div><div>{label}</div><input aria-label={"Select custom color"} /></div>);`,
     },
     {
+      name: "control with a fixed aria-label template",
+      code: "const Search = ({ label, scope }) => (<div><div>{label}</div><input aria-label={`Search ${scope}`} /></div>);",
+    },
+    {
       name: "file input hidden by class",
       code: `const Photos = ({ label }) => (<div><h3>{label}</h3><input type="file" className="hidden" /></div>);`,
     },
@@ -153,6 +157,11 @@ ruleTester.run("label-prop-linked", rule, {
     {
       name: "aria-label from a different prop",
       code: `function DatePicker({ label, ariaLabel }) { return <div><Typography>{label}</Typography><input type="text" aria-label={ariaLabel} /></div>; }`,
+      errors: [{ messageId: "notLinked", data: { component: "DatePicker", prop: "label", control: "input" } }],
+    },
+    {
+      name: "aria-label template with only a different prop",
+      code: "function DatePicker({ label, ariaLabel }) { return <div><Typography>{label}</Typography><input type=\"text\" aria-label={`${ariaLabel}`} /></div>; }",
       errors: [{ messageId: "notLinked", data: { component: "DatePicker", prop: "label", control: "input" } }],
     },
     {

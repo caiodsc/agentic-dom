@@ -37,7 +37,9 @@ rows.map((r) => (
 ))
 ```
 
-`aria-labelledby` or `aria-describedby` built from the row (`aria-describedby={r.id}`) also count. An ID shared by the whole list, like a fixed string or a `useId()` outside the loop, is the same on every row, so it does not.
+`aria-labelledby` built from the row (`aria-labelledby={r.id}`) also counts. An ID shared by the whole list, like a fixed string or a `useId()` outside the loop, is the same on every row, so it does not.
+
+`aria-describedby` does not count, even from the row. It adds a description, not a name, so the button is still found as "Edit".
 
 ## Not reported
 
