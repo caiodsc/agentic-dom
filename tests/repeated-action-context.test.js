@@ -37,6 +37,11 @@ ruleTester.run("repeated-action-context", rule, {
   ],
   invalid: [
     {
+      name: "null and booleans in the text render nothing",
+      code: `rows.map(r => <button onClick={() => edit(r)}>{null}{false}Edit{true}</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
+    },
+    {
       code: `rows.map(r => <tr><td>{r.name}</td><td><button onClick={() => edit(r)}>Edit</button></td></tr>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
