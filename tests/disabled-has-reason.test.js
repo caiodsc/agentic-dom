@@ -20,6 +20,7 @@ ruleTester.run("disabled-has-reason", rule, {
     { name: "disabled set to null", code: `<button disabled={null}>Save</button>` },
     { name: "disabled set to zero", code: `<button disabled={0}>Save</button>` },
     { name: "disabled set to undefined", code: `<button disabled={undefined}>Save</button>` },
+    { name: "aria attribute set to a boolean, which React renders as text", code: `<button disabled={!ok} aria-description={true}>Pay</button>` },
     { name: "own disabled prop passed through", code: `function Save({ disabled }) { return <button disabled={disabled}>Save</button>; }` },
     {
       name: "local const disabled only while loading",
@@ -61,6 +62,8 @@ ruleTester.run("disabled-has-reason", rule, {
     { name: "title that repeats the aria-label", code: `<button disabled={!ok} aria-label="Undo" title="undo"><UndoIcon /></button>`, errors: [{ messageId: "noReason" }] },
     { name: "empty title is no reason", code: `<button disabled title="">Pay</button>`, errors: [{ messageId: "noReason" }] },
     { name: "null title is no reason", code: `<button disabled title={null}>Pay</button>`, errors: [{ messageId: "noReason" }] },
+    { name: "false title is no reason", code: `<button disabled={!ok} title={false}>Pay</button>`, errors: [{ messageId: "noReason" }] },
+    { name: "title with no value is no reason", code: `<button disabled={!ok} title>Pay</button>`, errors: [{ messageId: "noReason" }] },
     { name: "wait word after a No", code: `<button disabled={isNoLoading}>Save</button>`, errors: [{ messageId: "noReason" }] },
     { name: "submit input in capitals", code: `<input type="SUBMIT" disabled={!ok} />`, errors: [{ messageId: "noReason" }] },
     {
