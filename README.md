@@ -167,7 +167,7 @@ Flagged by [`repeated-action-context`](docs/rules/repeated-action-context.md).
 
 ## Setup
 
-**Your components.** The rules treat components whose name ends in `Button` as buttons and in `Link` as links. Map anything else in settings:
+**Your components.** The rules treat components whose name ends in `Button` as buttons and in `Link` as links, and read their name from their text or `aria-label`. Map anything else in settings. A component that builds its name from other props can be mapped to `as: "none"` to skip it:
 
 ```js
 {
@@ -176,6 +176,7 @@ Flagged by [`repeated-action-context`](docs/rules/repeated-action-context.md).
       components: {
         Action: { as: "button" },
         NavItem: { as: "link" },
+        TooltipButton: { as: "none" },
       },
     },
   },
