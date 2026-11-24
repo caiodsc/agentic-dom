@@ -36,6 +36,7 @@ Also linked: the control inside `<label>`, `aria-labelledby` on the control, `ar
 
 - The label handed to another component (`<Base label={label} />`). The rule cannot see what `Base` does.
 - An input, select or textarea that a `<label htmlFor>` in the component names, whatever text it shows.
+- A control that shares its id with an earlier element, like `<div id="x" />` before `<input id="x" />`. HTML links `<label htmlFor="x">` only to the first one, but the rule counts it as naming the control.
 - Controls that already carry a fixed `aria-label`, written as text or as a template with text of its own, like `` `Search ${scope}` ``.
 - Controls with an `aria-labelledby` id that no element has. The id can belong to text outside the component, like a dialog title, so the rule can't tell a typo from a name set elsewhere.
 - Controls hidden with `hidden`, `aria-hidden` or Tailwind's `hidden` class. They are left out of the accessibility tree, so no agent reads their name.
