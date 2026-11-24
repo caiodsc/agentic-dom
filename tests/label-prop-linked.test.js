@@ -56,6 +56,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Field = ({ label, name }) => (<div><Typography as="label" htmlFor={name}>{label}</Typography><input id={name} /></div>);`,
     },
     {
+      name: "label element from a namespace with htmlFor",
+      code: `const Field = ({ label, name }) => (<div><motion.label htmlFor={name}>{label}</motion.label><input id={name} /></div>);`,
+    },
+    {
       name: "label rendered inside the control",
       code: `function Toggle({ label, on }) { return <button role="switch" aria-checked={on}><span>{label}</span></button>; }`,
     },
@@ -176,6 +180,16 @@ ruleTester.run("label-prop-linked", rule, {
     {
       name: "label without htmlFor beside the control",
       code: `const TextArea = ({ label = "" }) => (<div><label>{label}</label><textarea /></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
+      name: "htmlFor on a div showing the prop",
+      code: `const Field = ({ label }) => (<div><div htmlFor="email">{label}</div><input id="email" /></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
+      name: "htmlFor on an output beside an unnamed control",
+      code: `const Field = ({ label }) => (<div><div>{label}</div><input id="sum" /><output htmlFor="sum" /></div>);`,
       errors: [{ messageId: "notLinked" }],
     },
     {
