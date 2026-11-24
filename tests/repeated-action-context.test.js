@@ -6,7 +6,7 @@ ruleTester.run("repeated-action-context", rule, {
     `rows.map(r => <button aria-label={"Edit " + r.name}>Edit</button>)`,
     "rows.map(r => <Button aria-label={`Edit ${r.name}`}>Edit</Button>)",
     `rows.map(r => <button>{r.name}</button>)`,
-    `rows.map(r => <button aria-describedby={r.id}>Edit</button>)`,
+    `rows.map(r => <button aria-labelledby={r.id}>Edit</button>)`,
     { name: "button outside a list", code: `<button>Edit</button>` },
     { name: "icon-only button with no text", code: `rows.map(r => <button><TrashIcon /></button>)` },
     { name: "icon from a const outside the loop", code: `const icon = <TrashIcon />; rows.map(r => <button>{icon}</button>)` },
@@ -64,13 +64,13 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
-      name: "empty aria-describedby",
-      code: `rows.map(r => <button aria-describedby="">Edit</button>)`,
+      name: "empty aria-labelledby",
+      code: `rows.map(r => <button aria-labelledby="">Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
-      name: "same help text on every row",
-      code: `rows.map(r => <button aria-describedby="actions-help">Edit</button>)`,
+      name: "same label id on every row",
+      code: `rows.map(r => <button aria-labelledby="actions-label">Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
@@ -84,8 +84,8 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Delete" } }],
     },
     {
-      name: "aria-describedby from a fixed const",
-      code: `const HELP_ID = "actions-help"; rows.map(r => <button aria-describedby={HELP_ID}>Edit</button>)`,
+      name: "aria-labelledby from a fixed const",
+      code: `const LABEL_ID = "actions-label"; rows.map(r => <button aria-labelledby={LABEL_ID}>Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
@@ -114,8 +114,8 @@ ruleTester.run("repeated-action-context", rule, {
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit ${kind}" } }],
     },
     {
-      name: "aria-describedby with one id for the whole list",
-      code: `const helpId = useId(); rows.map(r => <button aria-describedby={helpId}>Edit</button>)`,
+      name: "aria-labelledby with one id for the whole list",
+      code: `const labelId = useId(); rows.map(r => <button aria-labelledby={labelId}>Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
@@ -187,6 +187,11 @@ ruleTester.run("repeated-action-context", rule, {
       name: "parameter of a function inside the name",
       code: `rows.map(r => <button aria-label={[t("edit")].map((r) => r).join()}>Edit</button>)`,
       errors: [{ messageId: "sameName", data: { kind: "button", text: '${[t("edit")].map((r) => r).join()}' } }],
+    },
+    {
+      name: "aria-describedby from the row",
+      code: `rows.map(r => <button aria-describedby={r.id}>Edit</button>)`,
+      errors: [{ messageId: "sameName", data: { kind: "button", text: "Edit" } }],
     },
     {
       code: `rows.flatMap(r => [<a href={r.url}>Open</a>])`,
