@@ -20,6 +20,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Select = ({ label, id }) => (<><span id={id}>{label}</span><div role="combobox" aria-labelledby={id} /></>);`,
     },
     {
+      name: "control named by a label with text of its own, label prop shown as a hint",
+      code: `const Field = ({ label }) => (<div><label htmlFor="email">Email</label><input id="email" /><small>{label}</small></div>);`,
+    },
+    {
       name: "aria-label built from the label prop",
       code: `const Field = ({ label }) => (<div><span>{label}</span><input aria-label={label} /></div>);`,
     },
@@ -50,6 +54,14 @@ ruleTester.run("label-prop-linked", rule, {
     {
       name: "polymorphic label element with htmlFor",
       code: `const Field = ({ label, name }) => (<div><Typography as="label" htmlFor={name}>{label}</Typography><input id={name} /></div>);`,
+    },
+    {
+      name: "label element from a namespace with htmlFor",
+      code: `const Field = ({ label, name }) => (<div><motion.label htmlFor={name}>{label}</motion.label><input id={name} /></div>);`,
+    },
+    {
+      name: "label pointing at a custom element with a control role",
+      code: `const Field = ({ label, id }) => (<div><label htmlFor={id}>{label}</label><x-date-input role="textbox" id={id} /></div>);`,
     },
     {
       name: "label rendered inside the control",
@@ -172,6 +184,26 @@ ruleTester.run("label-prop-linked", rule, {
     {
       name: "label without htmlFor beside the control",
       code: `const TextArea = ({ label = "" }) => (<div><label>{label}</label><textarea /></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
+      name: "htmlFor on a div showing the prop",
+      code: `const Field = ({ label }) => (<div><div htmlFor="email">{label}</div><input id="email" /></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
+      name: "htmlFor on an output beside an unnamed control",
+      code: `const Field = ({ label }) => (<div><div>{label}</div><input id="sum" /><output htmlFor="sum" /></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
+      name: "label showing the prop pointing at an element with a control role",
+      code: `const Field = ({ label }) => (<div><label htmlFor="pick">{label}</label><div role="combobox" id="pick" /></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
+      name: "label with text of its own pointing at an element with a control role",
+      code: `const Field = ({ label }) => (<div><label htmlFor="pick">Pick</label><div role="combobox" id="pick" /><small>{label}</small></div>);`,
       errors: [{ messageId: "notLinked" }],
     },
     {
