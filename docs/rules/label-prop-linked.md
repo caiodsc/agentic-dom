@@ -30,7 +30,7 @@ const InputText = ({ label, name }) => (
 
 Also linked: the control inside `<label>`, `aria-labelledby` on the control, `aria-label={label}`, or the label as the control's own content (a switch button).
 
-`htmlFor` links the label only when an element in the component has that id and can take a label: a visible input, select, textarea, button, meter, output or progress, or a component that may render one. A `<div role="combobox">` cannot.
+`htmlFor` links the label only when an element in the component has that id and can take a label: a visible input, select, textarea, button, meter, output or progress, a component that may render one, or a custom element like `<x-date-input>`, which may be form-associated. A `<div role="combobox">` cannot.
 
 ## Not reported
 

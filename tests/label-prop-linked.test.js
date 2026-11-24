@@ -60,6 +60,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Field = ({ label, name }) => (<div><motion.label htmlFor={name}>{label}</motion.label><input id={name} /></div>);`,
     },
     {
+      name: "label pointing at a custom element with a control role",
+      code: `const Field = ({ label, id }) => (<div><label htmlFor={id}>{label}</label><x-date-input role="textbox" id={id} /></div>);`,
+    },
+    {
       name: "label rendered inside the control",
       code: `function Toggle({ label, on }) { return <button role="switch" aria-checked={on}><span>{label}</span></button>; }`,
     },
