@@ -176,6 +176,7 @@ Flagged by [`repeated-action-context`](docs/rules/repeated-action-context.md).
       components: {
         Action: { as: "button" },
         NavItem: { as: "link" },
+        TooltipButton: { as: "none" },
       },
     },
   },
