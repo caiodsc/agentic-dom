@@ -19,10 +19,13 @@ Focus exclusively on problems that make AI browser agents struggle to identify, 
 - Prioritize precision over coverage.
 - Never confuse dynamic values with unique values.
 - Respect HTML and ARIA semantics.
+- Read every JSX value the way React renders it. A value React drops or renders as nothing counts as absent.
 - Every rule must address a real agent interaction problem.
 - Keep implementations simple and diagnostics actionable.
 - Test both reported problems and valid patterns that must not be reported.
 - Document limitations honestly.
+- Every sentence in the docs matches what the code does today, and a change in behavior updates those sentences in the same PR.
+- A rule page's "Not reported" list is a decision. A pattern listed there stays skipped until that list changes first.
 - Avoid speculative heuristics and unnecessary abstractions.
 
 **Build tools that make interfaces easier for agents to operate, not tools that merely produce more warnings.**
