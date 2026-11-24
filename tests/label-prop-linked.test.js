@@ -165,6 +165,11 @@ ruleTester.run("label-prop-linked", rule, {
       errors: [{ messageId: "notLinked", data: { component: "DatePicker", prop: "label", control: "input" } }],
     },
     {
+      name: "aria-label template with only spaces and a line break around a different prop",
+      code: "function DatePicker({ label, ariaLabel }) { return <div><Typography>{label}</Typography><input type=\"text\" aria-label={`  ${ariaLabel}\n  `} /></div>; }",
+      errors: [{ messageId: "notLinked", data: { component: "DatePicker", prop: "label", control: "input" } }],
+    },
+    {
       name: "label without htmlFor beside the control",
       code: `const TextArea = ({ label = "" }) => (<div><label>{label}</label><textarea /></div>);`,
       errors: [{ messageId: "notLinked" }],
