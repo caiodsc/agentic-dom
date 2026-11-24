@@ -26,6 +26,7 @@ An agent that meets a disabled button cannot tell what is missing. It retries, s
 - Disabled only while waiting on a request, when every name in the condition matches `transientPattern` and none is negated with `!` or a `not`/`no` prefix (`disabled={isLoading}`, `disabled={mutation.isPending}`). A const like `const disabled = isSaving || isLoading` is checked by what it is computed from.
 - `disabled={disabled}` when `disabled` is the component's prop, also when renamed while destructuring, or `disabled={props.disabled}`: the component passes its caller's choice through, so the caller explains.
 - Elements with a spread (`{...props}`), which may carry `aria-describedby`.
+- A `title`, `aria-description` or `aria-describedby` written as an expression or a variable, like `ready ? false : null`, `!done` or a const. The rule counts it as a reason even when React drops every value it can take.
 
 ## Options
 
