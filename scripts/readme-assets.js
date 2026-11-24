@@ -13,11 +13,11 @@ const MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monos
 const THEMES = {
   light: {
     bg: "#ffffff", box: "#f6f8fa", line: "#d0d7de", text: "#1f2328", muted: "#656d76",
-    accent: "#2563eb", brand: "#2563eb", good: "#15803d", red: "#dc2626", yellow: "#b45309",
+    accent: "#2563eb", brand: "#4b32c3", good: "#15803d", red: "#dc2626", yellow: "#b45309",
   },
   dark: {
     bg: "#0d1117", box: "#161b22", line: "#30363d", text: "#e6edf3", muted: "#8d96a0",
-    accent: "#3b82f6", brand: "#3b82f6", good: "#4ade80", red: "#f87171", yellow: "#fbbf24",
+    accent: "#3b82f6", brand: "#4b32c3", good: "#4ade80", red: "#f87171", yellow: "#fbbf24",
   },
 };
 
