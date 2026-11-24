@@ -179,6 +179,11 @@ ruleTester.run("label-prop-linked", rule, {
       errors: [{ messageId: "notLinked" }],
     },
     {
+      name: "label with text of its own pointing at an element with a control role",
+      code: `const Field = ({ label }) => (<div><label htmlFor="pick">Pick</label><div role="combobox" id="pick" /><small>{label}</small></div>);`,
+      errors: [{ messageId: "notLinked" }],
+    },
+    {
       name: "htmlFor on a label that does not show the prop",
       code: `const Field = ({ label }) => (<div><label htmlFor="other">Other</label><div>{label}</div><input /></div>);`,
       errors: [{ messageId: "notLinked" }],
