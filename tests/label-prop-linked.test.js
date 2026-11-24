@@ -20,6 +20,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Select = ({ label, id }) => (<><span id={id}>{label}</span><div role="combobox" aria-labelledby={id} /></>);`,
     },
     {
+      name: "control named by a label with text of its own, label prop shown as a hint",
+      code: `const Field = ({ label }) => (<div><label htmlFor="email">Email</label><input id="email" /><small>{label}</small></div>);`,
+    },
+    {
       name: "aria-label built from the label prop",
       code: `const Field = ({ label }) => (<div><span>{label}</span><input aria-label={label} /></div>);`,
     },
