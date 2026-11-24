@@ -34,6 +34,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "object set from the row through an assigned copy", code: `rows.map(r => { const name = {}; let copy; copy = name; copy.value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "object set from the row through an array", code: `rows.map(r => { const name = {}; const list = [name]; list[0].value = r.name; return <button aria-label={name.value}>Edit</button>; })` },
     { name: "function in the loop that reads the row", code: `rows.map(r => { function label() { return \`Edit \${r.name}\`; } return <button aria-label={label()}>Edit</button>; })` },
+    { name: "row parameter named undefined in the text", code: `rows.map(undefined => <button onClick={() => edit(undefined)}>{undefined}Edit</button>)` },
   ],
   invalid: [
     {
