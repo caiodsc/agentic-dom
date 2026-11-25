@@ -27,6 +27,7 @@ An agent that meets a disabled button cannot tell what is missing. It retries, s
 - `disabled={disabled}` when `disabled` is the component's prop, also when renamed while destructuring, or `disabled={props.disabled}`: the component passes its caller's choice through, so the caller explains.
 - Elements with a spread (`{...props}`), which may carry `aria-describedby`.
 - An `aria-describedby` written as an expression or a variable, like `ready ? false : null`, `!done` or a const. The rule counts it as a reason even when React drops every value it can take.
+- An `aria-describedby` id that no element has, or an element with no text. The rule checks that the button points at a reason, not that the reason exists or what it says.
 
 ## Options
 
