@@ -29,6 +29,20 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 <br>
 
+## Principles
+
+**Quiet when unsure.** A rule reports only what the code shows for certain. Missing a case is better than a warning you learn to ignore.
+
+**Built for agents.** Every rule targets something an AI agent gets stuck on: a field it can't name, a button it can't explain, two controls it can't tell apart. It doesn't replace your accessibility plugin.
+
+**Reads JSX like React renders it.** The rules read each file without running it, so they judge a value by where it comes from. A value React drops, like `false` or `""`, counts as missing. A name counts as different on each row only when it comes from the row, not from the component's props.
+
+**Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby` or `aria-label`.
+
+**Limits written down.** Each rule page has a "Not reported" list of what it skips on purpose. A skipped case stays skipped until that list changes first.
+
+<br>
+
 ## Quick start
 
 ```sh
@@ -57,7 +71,7 @@ Then run `npx eslint .` and hand the messages to your coding agent. Using TypeSc
 
 Browser agents like Claude in Chrome and Playwright MCP read a page through its accessibility tree, often alongside screenshots. A label that is only nearby text, a disabled button with no reason, or a column of identical "Edit" buttons looks fine to a person. To an agent it is a field with no name, a dead button, or a guess. agentic-dom catches those patterns in your JSX. The [Rules](#rules) table has the exact list.
 
-Each message says what an agent sees and what to add, so the coding agent that wrote the component can fix it too. The rules read each file without running it, so they judge a value by where it comes from in the code, like a list's row or the component's props.
+Each message says what an agent sees and what to add, so the coding agent that wrote the component can fix it too.
 
 <br>
 
