@@ -31,15 +31,11 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 ## Principles
 
-**Quiet when unsure.** A rule reports only what the code shows for certain. Missing a case is better than a warning you learn to ignore.
-
-**Built for agents.** Every rule targets something an AI agent gets stuck on: a field it can't name, a button it can't explain, two controls it can't tell apart. It doesn't replace your accessibility plugin.
-
-**Reasons about rendered JSX.** The rules read each file without running it and trace where each value comes from. A value React renders as nothing, like `false` or `""`, counts as missing. A name counts as row-specific only when its value traces back to the current row.
-
-**Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby` or `aria-label`.
-
-**Limits written down.** Each rule page has a "Not reported" list of what it skips on purpose. A skipped case stays skipped until that list changes first.
+1. **Quiet when unsure.** A rule reports only what the code shows for certain, because a warning you learn to ignore is worse than a missed case.
+2. **Built for agents.** Every rule targets something an AI agent gets stuck on, not every accessibility issue.
+3. **Reasons about rendered JSX.** The rules trace each value through the code without running it, and a value React renders as nothing, like `false` or `""`, counts as missing.
+4. **Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby` or `aria-label`.
+5. **Limits written down.** Each rule page lists what it skips on purpose under "Not reported", and a skipped case stays skipped until that list changes first.
 
 <br>
 
