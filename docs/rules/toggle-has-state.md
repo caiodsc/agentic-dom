@@ -32,7 +32,7 @@ A button counts as a toggle when its `onClick` calls a `useState` setter with `!
 
 ## Not reported
 
-- A button with a spread (`{...props}`), which may carry `aria-expanded`.
+- A button with a spread (`{...props}`), which may carry `aria-expanded`. The rule skips it even when an attribute after the spread replaces that value, like `<button {...props} aria-expanded={false}>`.
 - A state attribute that reads another value, like `aria-expanded={busy}`. The rule does not check which state it follows.
 - State from props or from a custom hook, like `useToggle()`.
 - A handler written as a function declaration, wrapped in `useCallback` or read from an object, like `handlers.toggle`.

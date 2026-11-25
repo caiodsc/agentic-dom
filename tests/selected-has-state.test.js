@@ -14,6 +14,7 @@ ruleTester.run("selected-has-state", rule, {
     { name: "role radio with aria-checked", code: wrap(`<button role="radio" aria-checked={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>{t.name}</button>`) },
     { name: "role menuitemradio with aria-checked", code: wrap(`<button role="menuitemradio" aria-checked={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>{t.name}</button>`) },
     { name: "spread may carry aria-pressed", code: wrap(`<button {...props} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>{t.name}</button>`) },
+    { name: "spread before a fixed aria-pressed", code: wrap(`<button {...props} aria-pressed={false} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>{t.name}</button>`) },
     { name: "style that reads no state", code: wrap(`<button className={t.id === "all" ? "on" : ""} onClick={() => setTab(t.id)}>{t.name}</button>`) },
     { name: "style reads a state the handler does not set", code: wrap(`<button className={tab === t.id ? "on" : ""} onClick={() => setOther(t.id)}>{t.name}</button>`, 'const [tab, setTab] = useState("all"); const [other, setOther] = useState("");') },
     { name: "boolean state with no comparison", code: wrap(`<button className={saving ? "opacity-50" : ""} onClick={() => setSaving(true)}>Save</button>`, "const [saving, setSaving] = useState(false);") },

@@ -9,6 +9,7 @@ ruleTester.run("error-prop-linked", rule, {
     `function Field({ error }) { return <div><input /></div>; }`,
     `function Field({ error }) { return <p>{error}</p>; }`,
     { name: "spread on the control may carry aria-describedby", code: `function Field({ error, ...rest }) { return <div><input {...rest} /><p>{error}</p></div>; }` },
+    { name: "spread before aria-describedby React drops", code: `function Field({ error, ...rest }) { return <div><input {...rest} aria-describedby={undefined} /><p>{error}</p></div>; }` },
     { name: "one linked control is enough", code: `function Field({ error }) { return <div><input placeholder="Search" /><div role="combobox" aria-describedby="e" /><p id="e">{error}</p></div>; }` },
     { name: "error read with brackets", code: `function Field(props) { return <div><input /><p>{props["error"]}</p></div>; }` },
     { name: "error handed to another component", code: `function Field({ error }) { return <div><input /><FieldError error={error} /></div>; }` },

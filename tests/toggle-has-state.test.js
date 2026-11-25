@@ -12,6 +12,7 @@ ruleTester.run("toggle-has-state", rule, {
     wrap(`<button aria-pressed={open} onClick={() => setOpen(!open)}>Bold</button>`),
     { name: "aria-expanded that reads another state", code: wrap(`<button aria-expanded={busy} onClick={() => setOpen(!open)}>Menu</button>`, undefined, "const [open, setOpen] = useState(false); const [busy] = useState(false);") },
     { name: "spread may carry aria-expanded", code: wrap(`<button {...props} onClick={() => setOpen(!open)}>Menu</button>`) },
+    { name: "spread before a fixed aria-expanded", code: wrap(`<button {...props} aria-expanded={false} onClick={() => setOpen(!open)}>Menu</button>`) },
     { name: "role switch with aria-checked", code: wrap(`<button role="switch" aria-checked={open} onClick={() => setOpen(!open)}>Menu</button>`) },
     { name: "role menuitemcheckbox with aria-checked", code: wrap(`<button role="menuitemcheckbox" aria-checked={open} onClick={() => setOpen(!open)}>Menu</button>`) },
     { name: "role tab with aria-selected", code: wrap(`<button role="tab" aria-selected={open} onClick={() => setOpen(!open)}>Menu</button>`) },

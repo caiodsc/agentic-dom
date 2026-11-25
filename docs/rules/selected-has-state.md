@@ -33,7 +33,7 @@ A button counts as selectable when its `onClick` calls a `useState` setter, writ
 
 ## Not reported
 
-- A button with a spread (`{...props}`), which may carry `aria-pressed`.
+- A button with a spread (`{...props}`), which may carry `aria-pressed`. The rule skips it even when an attribute after the spread replaces that value, like `<button {...props} aria-pressed={false}>`.
 - A style that reads the state without `===` or `==`, like `saving ? "opacity-50" : ""` or `!==`. A true or false state may show work in progress rather than a choice, and on/off buttons that show content are checked by [toggle-has-state](toggle-has-state.md).
 - A state compared outside `className` and `style`, like a `variant` prop of a design system button.
 - State from props or from a custom hook, like `useTabs()`.
