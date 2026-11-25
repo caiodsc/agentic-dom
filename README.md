@@ -162,6 +162,8 @@ const TeamList = ({ users }) =>
 | 1 | [label-prop-linked](docs/rules/label-prop-linked.md) | A component shows its `label` prop but never links it to its control | error |
 | 2 | [disabled-has-reason](docs/rules/disabled-has-reason.md) | A button can be disabled without saying why | warn |
 | 3 | [repeated-action-context](docs/rules/repeated-action-context.md) | The same button or link name on every row of a list | warn |
+| 4 | [icon-button-has-name](docs/rules/icon-button-has-name.md) | A button that shows only an icon and has no name | error |
+| 5 | [error-prop-linked](docs/rules/error-prop-linked.md) | A component shows its `error` prop but never links it to its control | warn |
 | 6 | [toggle-has-state](docs/rules/toggle-has-state.md) | A button shows and hides content but never says whether it is shown | warn |
 
 <br>
