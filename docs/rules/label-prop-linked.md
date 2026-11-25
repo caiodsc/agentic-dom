@@ -36,7 +36,7 @@ A fixed `aria-label` does not count, like `aria-label="Email"` or `` aria-label=
 
 ## Not reported
 
-- Code the rule can't follow, like a label handed to another component (`<Base label={label} />`), a label read with brackets (`props["label"]`) or a component with no name (`export default ({ label }) => ...`). The rule tells a component from another function by its capitalized name.
+- Code the rule can't follow, like a label handed to another component (`<Base label={label} />`), a label read with brackets (`props["label"]`) or a component without a capitalized name (`export default ({ label }) => ...`).
 - An input, select or textarea that a `<label htmlFor>` in the component names, whatever text it shows.
 - A control that shares its id with an earlier element, like `<div id="x" />` before `<input id="x" />`. HTML links `<label htmlFor="x">` only to the first one, but the rule counts it as naming the control.
 - Controls with an `aria-labelledby` id that no element has. The id can belong to text outside the component, like a dialog title, so the rule can't tell a typo from a name set elsewhere.
