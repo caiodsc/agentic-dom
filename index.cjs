@@ -1,6 +1,7 @@
 const disabledHasReason = require("./lib/rules/disabled-has-reason.js");
 const labelPropLinked = require("./lib/rules/label-prop-linked.js");
 const repeatedActionContext = require("./lib/rules/repeated-action-context.js");
+const toggleHasState = require("./lib/rules/toggle-has-state.js");
 const { name, version } = require("./package.json");
 
 const plugin = {
@@ -9,6 +10,7 @@ const plugin = {
     "disabled-has-reason": disabledHasReason,
     "label-prop-linked": labelPropLinked,
     "repeated-action-context": repeatedActionContext,
+    "toggle-has-state": toggleHasState,
   },
   configs: {},
 };
@@ -17,6 +19,7 @@ const rules = {
   "agentic-dom/disabled-has-reason": "warn",
   "agentic-dom/label-prop-linked": "error",
   "agentic-dom/repeated-action-context": "warn",
+  "agentic-dom/toggle-has-state": "warn",
 };
 
 plugin.configs.recommended = {
