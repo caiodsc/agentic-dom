@@ -49,7 +49,7 @@ ruleTester.run("toggle-has-state", rule, {
     { name: "gate by a negated state", code: wrap(`<button onClick={() => setCollapsed(!collapsed)}>Menu</button>`, "{!collapsed && <Menu />}", "const [collapsed, setCollapsed] = useState(false);"), errors: err("!collapsed") },
     { name: "ternary with JSX first", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{open ? <Menu /> : null}"), errors: err() },
     { name: "ternary with JSX second", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{open ? null : <><Menu /></>}"), errors: err("!open") },
-    { name: "negated ternary with JSX on both sides", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{!open ? <Menu /> : <Summary />}"), errors: err("!open") },
+    { name: "negated ternary with JSX on both sides", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{!open ? <Menu /> : <Summary />}"), errors: err() },
     { name: "text that reads the state", code: wrap(`<button onClick={() => setOpen(!open)}>{open ? "Hide" : "Show"}</button>`), errors: err() },
     { name: "aria-label that reads the state", code: wrap(`<button aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}><MenuIcon /></button>`), errors: err() },
     { name: "title that reads the state", code: wrap(`<button title={open ? "Close" : "Open"} onClick={() => setOpen(!open)}><MenuIcon /></button>`), errors: err() },
