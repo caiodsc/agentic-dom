@@ -92,7 +92,7 @@ function terminalLines(results) {
 
 const AFTER = [
   [],
-  [["m", "# Your coding agent applies each message: htmlFor and id, aria-describedby, aria-label."]],
+  [["m", "# Your coding agent applies each message: aria-label and aria-describedby."]],
   [["p", "$ "], ["c", "npx eslint src"]],
   [["m", "# No output. Every file passes."]],
 ];
@@ -176,9 +176,9 @@ function flow(t) {
 
 function hero(t) {
   const scenes = [
-    { tab: "Unnamed field", see: { without: "field", with: "field" },
-      without: { reads: [["textbox"]], thought: "Which field is this?" },
-      with: { reads: [['textbox "Email"']], thought: "The email field." } },
+    { tab: "Icon button", see: { without: "icon", with: "icon" },
+      without: { reads: [["button"]], thought: "What does this button do?" },
+      with: { reads: [['button "Delete"']], thought: "The delete button." } },
     { tab: "Disabled button", see: { without: "pay", with: "payReason" },
       without: { reads: [['button "Pay"', "disabled"]], thought: "Why can't I pay?" },
       with: { reads: [['button "Pay"', 'disabled · "Add a card to pay."']], thought: "Add a card first." } },
@@ -207,8 +207,8 @@ function hero(t) {
   const lx = 24;
   const top = HEAD + 8;
   const ui = {
-    field: `<text class="ul" x="${lx}" y="${top + 12}">Email</text>` +
-      `<rect x="${lx}" y="${top + 22}" width="300" height="36" rx="6" fill="${t.bg}" stroke="${t.line}"/>`,
+    icon: `${box(lx, top + 8, 44, 38)}<path transform="translate(${lx + 12} ${top + 17})" d="M2 5h16M7 5V2h6v3M4 5l1 13h10l1-13" ` +
+      `fill="none" stroke="${t.text}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
     pay: `${box(lx, top + 8, 120, 38)}<text class="ub" x="${lx + 60}" y="${top + 32}" text-anchor="middle">Pay</text>`,
     rows: ["Ana", "Ben", "Carl"].map((name, i) => {
       const y = top - 12 + i * 44;
