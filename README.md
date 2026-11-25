@@ -20,7 +20,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
-  <img alt="Without agentic-dom, an AI agent reads a textbox with no name and asks which field it is, reads a disabled Pay button and asks why it can't pay, and reads three buttons named Edit and asks which one is Ben's. With agentic-dom, it reads textbox Email, a disabled Pay button described as Add a card to pay, and buttons named Edit Ana, Edit Ben and Edit Carl" src="assets/hero-light.svg">
+  <img alt="Without agentic-dom, an AI agent reads a button with no name and asks what it does, reads a disabled Pay button and asks why it can't pay, and reads three buttons named Edit and asks which one is Ben's. With agentic-dom, it reads button Delete, a disabled Pay button described as Add a card to pay, and buttons named Edit Ana, Edit Ben and Edit Carl" src="assets/hero-light.svg">
 </picture>
 
 <sub>Computed by rendering the components in <a href="#see-it-in-action">See it in action</a>, not mocked.</sub>
@@ -82,29 +82,22 @@ Each message says what an agent sees and what to add, so the coding agent that w
 
 ## See it in action
 
-**1. A field with no name** (Flagged by [`label-prop-linked`](docs/rules/label-prop-linked.md))
+**1. A button with only an icon** (Flagged by [`icon-button-has-name`](docs/rules/icon-button-has-name.md))
 
 ```jsx
-// Rendered with label="Email".
-
-// ❌ Before. Agent reads: textbox → "Which field is this?"
-const Field = ({ label }) => (
-  <>
-    <span>{label}</span>
-    <input />
-  </>
+// ❌ Before. Agent reads: button → "What does this button do?"
+const DeleteButton = ({ onDelete }) => (
+  <button onClick={onDelete}>
+    <TrashIcon />
+  </button>
 );
 
-// ✅ After. Agent reads: textbox "Email" → "The email field."
-const Field = ({ label }) => {
-  const id = useId();
-  return (
-    <>
-      <label htmlFor={id}>{label}</label>
-      <input id={id} />
-    </>
-  );
-};
+// ✅ After. Agent reads: button "Delete" → "The delete button."
+const DeleteButton = ({ onDelete }) => (
+  <button onClick={onDelete} aria-label="Delete">
+    <TrashIcon />
+  </button>
+);
 ```
 
 <br>
