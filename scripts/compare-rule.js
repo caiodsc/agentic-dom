@@ -1,4 +1,3 @@
-// Lints a real app with one rule from the working tree and from a base ref, then lists the reports that differ.
 import { Linter } from "eslint";
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
