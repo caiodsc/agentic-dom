@@ -1,4 +1,5 @@
 const disabledHasReason = require("./lib/rules/disabled-has-reason.js");
+const errorPropLinked = require("./lib/rules/error-prop-linked.js");
 const labelPropLinked = require("./lib/rules/label-prop-linked.js");
 const repeatedActionContext = require("./lib/rules/repeated-action-context.js");
 const { name, version } = require("./package.json");
@@ -7,6 +8,7 @@ const plugin = {
   meta: { name, version },
   rules: {
     "disabled-has-reason": disabledHasReason,
+    "error-prop-linked": errorPropLinked,
     "label-prop-linked": labelPropLinked,
     "repeated-action-context": repeatedActionContext,
   },
@@ -15,6 +17,7 @@ const plugin = {
 
 const rules = {
   "agentic-dom/disabled-has-reason": "warn",
+  "agentic-dom/error-prop-linked": "warn",
   "agentic-dom/label-prop-linked": "error",
   "agentic-dom/repeated-action-context": "warn",
 };

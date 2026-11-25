@@ -22,7 +22,7 @@ npm test
 
 A rule change touches:
 
-1. `lib/rules/<rule>.js`. Its `meta.docs.url` points to its docs page. Shared JSX helpers live in `lib/jsx.js`, and `lib/elements.js` decides whether an element is a button or a link.
+1. `lib/rules/<rule>.js`. Its `meta.docs.url` points to its docs page. Shared JSX helpers live in `lib/jsx.js`, and `lib/elements.js` decides whether an element is a button or a link, and `lib/components.js` finds a component, the props it reads and the controls it renders.
 2. `index.cjs`: the rule in `rules` and its level in the recommended configs.
 3. `tests/<rule>.test.js`, with the `ruleTester` from `tests/setup.js`. Give each case that is not obvious a `name`.
 4. `docs/rules/<rule>.md`, with the same sections as the others: Why, Fails, Passes, Not reported.
