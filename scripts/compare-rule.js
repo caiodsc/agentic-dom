@@ -18,6 +18,11 @@ const require = createRequire(import.meta.url);
 const baseDir = mkdtempSync(join(tmpdir(), "agentic-dom-"));
 process.on("exit", () => rmSync(baseDir, { recursive: true, force: true }));
 execFileSync("tar", ["-x", "-C", baseDir], { input: execFileSync("git", ["-C", root, "archive", base, "lib"]) });
+const ruleFile = (dir) => join(dir, "lib/rules", `${rule}.js`);
+if (!existsSync(ruleFile(baseDir)) && !existsSync(ruleFile(root))) {
+  console.error(`No rule named ${rule} in ${base} or in the working tree.`);
+  process.exit(1);
+}
 
 let parser;
 try {
@@ -37,7 +42,7 @@ function files(dir, out = []) {
 }
 
 function reports(dir) {
-  const file = join(dir, "lib/rules", `${rule}.js`);
+  const file = ruleFile(dir);
   if (!existsSync(file)) return new Map();
   const linter = new Linter({ configType: "flat", cwd: app });
   const config = [{
