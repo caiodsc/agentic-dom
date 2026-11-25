@@ -22,7 +22,7 @@ An agent reads a button by its name. A button that shows only an icon has none, 
 </button>
 ```
 
-`aria-labelledby` and `title` also count. So does an icon that names itself: an icon component with `aria-label`, `aria-labelledby` or `title`, or an `<svg>` with a `<title>` child.
+`aria-labelledby` also counts. A `title` does not, since it names the button only when nothing else does. A name on the icon does not either, like `<CloseIcon aria-label="Close" />` or an `<svg>` with a `<title>` child, since it reaches the button only when the icon passes it on.
 
 A button counts as icon-only when every child is an icon or blank text. An icon is an `<svg>` or a component whose name matches `iconPattern`.
 
@@ -32,7 +32,7 @@ A button counts as icon-only when every child is an icon or blank text. An icon 
 - An icon inside another element, like `<span><CloseIcon /></span>`.
 - An icon component whose name does not match `iconPattern`, like `<Trash2 />`.
 - An icon passed as a prop, like `<IconButton icon={<CloseIcon />} />`, and a button with no children.
-- A spread on the button or on the icon, which may carry a name.
+- A spread on the button, which may carry a name.
 - Links that show only an icon.
 
 ## Options
