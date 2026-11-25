@@ -3,6 +3,7 @@ const errorPropLinked = require("./lib/rules/error-prop-linked.js");
 const iconButtonHasName = require("./lib/rules/icon-button-has-name.js");
 const labelPropLinked = require("./lib/rules/label-prop-linked.js");
 const repeatedActionContext = require("./lib/rules/repeated-action-context.js");
+const selectedHasState = require("./lib/rules/selected-has-state.js");
 const toggleHasState = require("./lib/rules/toggle-has-state.js");
 const { name, version } = require("./package.json");
 
@@ -14,6 +15,7 @@ const plugin = {
     "icon-button-has-name": iconButtonHasName,
     "label-prop-linked": labelPropLinked,
     "repeated-action-context": repeatedActionContext,
+    "selected-has-state": selectedHasState,
     "toggle-has-state": toggleHasState,
   },
   configs: {},
@@ -25,6 +27,7 @@ const rules = {
   "agentic-dom/icon-button-has-name": "error",
   "agentic-dom/label-prop-linked": "error",
   "agentic-dom/repeated-action-context": "warn",
+  "agentic-dom/selected-has-state": "warn",
   "agentic-dom/toggle-has-state": "warn",
 };
 
