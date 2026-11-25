@@ -44,7 +44,7 @@ rows.map((r) => (
 ## Not reported
 
 - Text that reads the row (`{r.name}`), also inside an expression React may not show, like `{false && r.name}`.
-- Buttons with spread props (`{...rowProps(r)}`). The spread can set a name per row.
+- Buttons with spread props (`{...rowProps(r)}`). The spread can set a name per row. The rule skips them even when an attribute after the spread replaces that value, like `<button {...rowProps(r)} aria-label="Edit">`.
 - Icon-only buttons with no text. They have no name to repeat. A button with no name at all is a different problem.
 - An icon-only button whose `aria-label` is `true` or `false`, also through a const. React writes that word as its name, but the rule reads it as no label.
 - A name from a variable in the loop that is assigned again after its declaration, like `if (r.locked) label = "View"`. The rule can't tell a per-row assignment from a shared one.
