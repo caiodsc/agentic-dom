@@ -30,7 +30,7 @@ const InputText = ({ label, name }) => (
 
 Also linked: the control inside `<label>`, `aria-labelledby` on the control, `aria-label={label}`, or the label as the control's own content (a switch button).
 
-A fixed `aria-label` does not count, like `aria-label="Email"` or `` aria-label={`Search ${scope}`} ``. It names the control the same way on every screen that uses the component, so the agent reads a name that is not the label shown, and two of these fields on one screen share it. An `aria-label` built from the label, like `` aria-label={`${label} search`} ``, counts.
+A fixed `aria-label` does not count, like `aria-label="Email"` or `` aria-label={`Search ${scope}`} ``. It names the control the same way on every screen that uses the component, so the agent reads a name that is not the label shown, and two of these fields on one screen share it. An `aria-label` built from the label, like `` aria-label={`${label} search`} ``, counts. One that reads the label only to pick a fixed name, like `aria-label={label && "Search"}`, does not.
 
 `htmlFor` links the label only when an element in the component has that id and can take a label: a visible input, select, textarea, button, meter, output or progress, a component that may render one, or a custom element like `<x-date-input>`, which may be form-associated. A `<div role="combobox">` cannot.
 

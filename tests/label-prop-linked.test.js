@@ -68,6 +68,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `function Toggle({ label, on }) { return <button role="switch" aria-checked={on}><span>{label}</span></button>; }`,
     },
     {
+      name: "aria-label ternary with the label in a branch",
+      code: `const Search = ({ label }) => (<div><div>{label}</div><input aria-label={label ? label : "Search"} /></div>);`,
+    },
+    {
       name: "aria-label template built from the label",
       code: "const Search = ({ label }) => (<div><div>{label}</div><input aria-label={`${label} search`} /></div>);",
     },
@@ -136,6 +140,16 @@ ruleTester.run("label-prop-linked", rule, {
       name: "fixed aria-label in braces",
       code: `const ColorPicker = ({ label }) => (<div><div>{label}</div><input aria-label={"Select custom color"} /></div>);`,
       errors: [{ messageId: "notLinked", data: { component: "ColorPicker", prop: "label", control: "input" } }],
+    },
+    {
+      name: "aria-label that reads the label only in its condition",
+      code: `const Search = ({ label }) => (<div><div>{label}</div><input aria-label={label && "Search"} /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Search", prop: "label", control: "input" } }],
+    },
+    {
+      name: "aria-label ternary whose branches leave out the label",
+      code: `const Search = ({ label }) => (<div><div>{label}</div><input aria-label={label ? "Search" : "Find"} /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Search", prop: "label", control: "input" } }],
     },
     {
       name: "aria-label template that leaves out the label",
