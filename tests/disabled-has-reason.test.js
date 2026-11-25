@@ -31,6 +31,7 @@ ruleTester.run("disabled-has-reason", rule, {
     { name: "pending flag read with brackets", code: `<button disabled={mutation["isPending"]}>Save</button>` },
     { name: "props.disabled passed through", code: `function Save(props) { return <Button disabled={props.disabled}>Save</Button>; }` },
     { name: "spread props may carry the reason", code: `<button {...props} disabled={!ok}>Save</button>` },
+    { name: "spread before aria-describedby React drops", code: `<button {...props} disabled={!ok} aria-describedby={undefined}>Save</button>` },
     { name: "input is not a button", code: `<input disabled={!editable} />` },
     { name: "unknown component is not a button", code: `<Card disabled={!ok} />` },
     {

@@ -24,6 +24,7 @@ ruleTester.run("repeated-action-context", rule, {
     { name: "row index", code: "rows.map((r, i) => <button aria-label={`Edit row ${i + 1}`}>Edit</button>)" },
     { name: "translated text built from the row", code: "rows.map(r => <button>{t(`edit.${r.type}`)}</button>)" },
     { name: "spread props", code: `rows.map(r => <button {...rowProps(r)}>Edit</button>)` },
+    { name: "spread before a fixed aria-label", code: `rows.map(r => <button {...rowProps(r)} aria-label="Edit">Edit</button>)` },
     { name: "const destructured from the row", code: `rows.map(r => { const { name } = r; return <button aria-label={name}>Edit</button>; })` },
     { name: "let changed per row", code: `rows.map(r => { let label = "Edit"; if (r.locked) label = "View"; return <button aria-label={label}>x</button>; })` },
     { name: "default value from the row", code: `function List({ rows, ...props }) { return rows.map(r => { const { label = r.name } = props; return <button aria-label={label}>Edit</button>; }); }` },

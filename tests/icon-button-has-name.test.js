@@ -16,6 +16,7 @@ ruleTester.run("icon-button-has-name", rule, {
     `<button><CloseIcon /> Close</button>`,
     `<Button aria-label={t("close")}><CloseIcon /></Button>`,
     { name: "spread on the button may carry a name", code: `<button {...props}><CloseIcon /></button>` },
+    { name: "spread before aria-label React drops", code: `<button {...props} aria-label={undefined}><CloseIcon /></button>` },
     { name: "text from an expression", code: `<button><CloseIcon />{label}</button>` },
     { name: "text in both branches", code: `<button>{open ? "Hide" : "Show"}</button>` },
     { name: "two ternaries that may share a condition", code: `<button>{open ? <ChevronUpIcon /> : "Show"}{open ? "Hide" : null}</button>` },

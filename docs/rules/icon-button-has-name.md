@@ -33,7 +33,7 @@ A button counts as icon-only when every child is an icon or blank text, also ins
 - An icon inside another element, like `<span><CloseIcon /></span>`.
 - An icon component whose name does not match `iconPattern`, like `<Trash2 />`.
 - An icon passed as a prop, like `<IconButton icon={<CloseIcon />} />`, and a button with no children.
-- A spread on the button, which may carry a name.
+- A spread on the button, which may carry a name. The rule skips it even when an attribute after the spread replaces that value, like `<button {...props} aria-label={undefined}>`.
 - An `aria-labelledby` id that no element has, or an element with no text. The rule checks that the button points at a name, not that the name exists or what it says.
 - Links that show only an icon.
 
