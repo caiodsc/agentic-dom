@@ -6,7 +6,6 @@ const err = { messageId: "notLinked" };
 ruleTester.run("error-prop-linked", rule, {
   valid: [
     `function Field({ error }) { const id = useId(); return <div><input aria-describedby={id} /><p id={id}>{error}</p></div>; }`,
-    `function Field({ error }) { return <div><input aria-errormessage="e" /><p id="e">{error}</p></div>; }`,
     `function Field({ error }) { return <div><input /></div>; }`,
     `function Field({ error }) { return <p>{error}</p>; }`,
     { name: "spread on the control may carry aria-describedby", code: `function Field({ error, ...rest }) { return <div><input {...rest} /><p>{error}</p></div>; }` },
@@ -31,6 +30,7 @@ ruleTester.run("error-prop-linked", rule, {
     { name: "props object", code: `function Field(props) { return <div><input /><p>{props.error}</p></div>; }`, errors: [err] },
     { name: "control with a role", code: `function Field({ error }) { return <div><div role="combobox" /><p>{error}</p></div>; }`, errors: [err] },
     { name: "forwardRef component", code: `const Field = forwardRef(({ error }, ref) => <div><input ref={ref} /><p>{error}</p></div>);`, errors: [err] },
+    { name: "aria-errormessage", code: `function Field({ error }) { return <div><input aria-invalid aria-errormessage="e" /><p id="e">{error}</p></div>; }`, errors: [err] },
     { name: "aria-describedby React drops", code: `function Field({ error }) { return <div><input aria-describedby="" /><p>{error}</p></div>; }`, errors: [err] },
     {
       name: "error prop from errorProps",
