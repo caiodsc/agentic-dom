@@ -10,17 +10,17 @@ const READS_SPREAD_AS_ID = new Set(["label-prop-linked"]);
 
 for (const file of readdirSync(rules)) {
   const rule = file.replace(/\.js$/, "");
-  const page = readFileSync(new URL(`${rule}.md`, pages), "utf8");
+  const notReported = readFileSync(new URL(`${rule}.md`, pages), "utf8").split(/^## Not reported$/m)[1]?.split(/^## /m)[0] ?? "";
   test(`${rule} page has an item for the code it can't follow`, () => {
     assert.ok(
-      page.includes(CANT_FOLLOW),
+      notReported.includes(CANT_FOLLOW),
       `docs/rules/${rule}.md must start one "Not reported" item with "${CANT_FOLLOW}" and add a skipped code shape there as an example, not as its own item.`,
     );
   });
   if (READS_SPREAD_AS_ID.has(rule) || !readFileSync(new URL(file, rules), "utf8").includes("hasSpread(")) continue;
   test(`${rule} page says what a spread skip covers`, () => {
     assert.ok(
-      page.includes(SPREAD_SKIP),
+      notReported.includes(SPREAD_SKIP),
       `docs/rules/${rule}.md must list a spread among the code it can't follow, ${SPREAD_SKIP}. The shared spread check skips any spread, whatever comes after it.`,
     );
   });
