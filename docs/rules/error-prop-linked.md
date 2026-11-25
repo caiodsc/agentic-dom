@@ -38,6 +38,7 @@ function EmailField({ error }) {
 ## Not reported
 
 - A component where any control has `aria-describedby` or a spread (`{...props}`), which may carry it. One linked control is enough, since the others may be a search box or a part of the same field.
+- An error read with brackets, like `props["error"]`. The rule reads `props.error` and destructured props.
 - An error handed to another component as a prop, like `<FieldError error={error} />`.
 - A boolean error that renders other text, like `{error && <p>Required</p>}`.
 - A control rendered by another component, like `<Input />`.
