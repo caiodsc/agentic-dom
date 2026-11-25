@@ -104,7 +104,7 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Form = ({ label }) => (<div><span>{label}</span><input type="SUBMIT" /></div>);`,
     },
     { name: "component with no name", code: `export default ({ label }) => (<div><span>{label}</span><input /></div>);` },
-    { name: "label key in brackets", code: `const Field = ({ ["label"]: text }) => (<div><span>{text}</span><input /></div>);` },
+    { name: "label key from a variable", code: `const Field = ({ [key]: text }) => (<div><span>{text}</span><input /></div>);` },
     { name: "label destructured further", code: `const Field = ({ label: { text } }) => (<div><span>{text}</span><input /></div>);` },
     { name: "control hidden with aria-hidden text", code: `const Field = ({ label }) => (<div><span>{label}</span><input aria-hidden="true" /></div>);` },
     { name: "id and htmlFor set to the same element", code: `const Field = ({ label }) => (<div><label htmlFor=<b />>{label}</label><input id=<b /> /></div>);` },
@@ -245,6 +245,11 @@ ruleTester.run("label-prop-linked", rule, {
     {
       name: "label key in quotes",
       code: `const Field = ({ "label": text }) => (<div><span>{text}</span><input /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
+    },
+    {
+      name: "label key in brackets",
+      code: `const Field = ({ ["label"]: text }) => (<div><span>{text}</span><input /></div>);`,
       errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
     },
     {
