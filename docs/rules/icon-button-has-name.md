@@ -24,7 +24,7 @@ An agent reads a button by its name. A button that shows only an icon has none, 
 
 `aria-labelledby` also counts. A `title` does not, since it names the button only when nothing else does. A name on the icon does not either, like `<CloseIcon aria-label="Close" />` or an `<svg>` with a `<title>` child, since it reaches the button only when the icon passes it on.
 
-A button counts as icon-only when every child is an icon or blank text. An icon is an `<svg>` or a component whose name matches `iconPattern`.
+A button counts as icon-only when every child is an icon or blank text, also inside a fragment (`<>…</>`). An icon is an `<svg>` or a component whose name matches `iconPattern`.
 
 ## Not reported
 
@@ -38,4 +38,4 @@ A button counts as icon-only when every child is an icon or blank text. An icon 
 
 ## Options
 
-- `iconPattern` (default `^Icon[A-Z]|Icon$`): a regular expression for the last part of an icon component's name, so `CloseIcon`, `IconTrash` and `Icons.CloseIcon` match.
+- `iconPattern` (default `^Icon[A-Z]|Icon$`): a regular expression for the last part of an icon component's name, so `CloseIcon`, `IconTrash`, `Icons.CloseIcon` and `icons.CloseIcon` match.
