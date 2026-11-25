@@ -15,8 +15,3 @@ Not reported:
 
 ```jsx
 ```
-
-## Checks
-
-- [ ] Tests cover the change
-- [ ] Docs page updated, if a rule changed

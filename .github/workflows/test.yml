@@ -25,6 +25,8 @@ jobs:
       - run: npm install --no-save eslint@${{ matrix.eslint }}
       - run: npm test
       - if: matrix.node == 22 && matrix.eslint == 9
+        run: node --test --experimental-test-coverage --test-coverage-include='lib/**' --test-coverage-include=index.cjs --test-coverage-lines=100 --test-coverage-branches=100 tests/*.test.js
+      - if: matrix.node == 22 && matrix.eslint == 9
         run: npm run readme:assets && git diff --exit-code assets
 
   docs:
