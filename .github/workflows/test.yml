@@ -36,11 +36,12 @@ jobs:
           fetch-depth: 2
       - name: Docs page changes when a rule gets new test cases
         run: |
-          git diff --quiet HEAD^1 HEAD -- lib index.cjs && exit 0
+          shared=$(git diff --name-only HEAD^1 HEAD -- index.cjs ':(glob)lib/*.js')
           status=0
           for test in $(git diff --name-only HEAD^1 HEAD -- 'tests/*.test.js'); do
             rule=$(basename "$test" .test.js)
             [ -f "docs/rules/$rule.md" ] || continue
+            [ -n "$shared" ] || ! git diff --quiet HEAD^1 HEAD -- "lib/rules/$rule.js" || continue
             git diff -U0 HEAD^1 HEAD -- "$test" | grep -qE '^\+\s*(`|.*\bcode:)' || continue
             git diff --quiet HEAD^1 HEAD -- "docs/rules/$rule.md" || continue
             echo "::error file=$test::$test adds test cases, but docs/rules/$rule.md did not change. Update the page to match what the rule now does."
