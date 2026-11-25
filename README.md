@@ -72,11 +72,12 @@ Each message says what an agent sees and what to add, so the coding agent that w
 
 ## See it in action
 
-**A field with no name**
+**1. A field with no name** (Flagged by [`label-prop-linked`](docs/rules/label-prop-linked.md))
 
 ```jsx
-// ❌ Before. Agent reads: textbox
-// Which field is this?
+// Rendered with label="Email".
+
+// ❌ Before. Agent reads: textbox → "Which field is this?"
 const Field = ({ label }) => (
   <>
     <span>{label}</span>
@@ -84,8 +85,7 @@ const Field = ({ label }) => (
   </>
 );
 
-// ✅ After. Agent reads: textbox "Email"
-// The email field.
+// ✅ After. Agent reads: textbox "Email" → "The email field."
 const Field = ({ label }) => {
   const id = useId();
   return (
@@ -97,21 +97,17 @@ const Field = ({ label }) => {
 };
 ```
 
-Flagged by [`label-prop-linked`](docs/rules/label-prop-linked.md). Rendered with `label="Email"`.
-
 <br>
 
-**A disabled button with no reason**
+**2. A disabled button with no reason** (Flagged by [`disabled-has-reason`](docs/rules/disabled-has-reason.md))
 
 ```jsx
-// ❌ Before. Agent reads: button "Pay", disabled, no description
-// Why can't I pay?
+// ❌ Before. Agent reads: button "Pay", disabled, no description → "Why can't I pay?"
 const PayButton = ({ hasCard }) => (
   <button disabled={!hasCard}>Pay</button>
 );
 
-// ✅ After. Agent reads: button "Pay", disabled, described as "Add a card to pay."
-// Add a card first.
+// ✅ After. Agent reads: button "Pay", disabled · "Add a card to pay." → "Add a card first."
 const PayButton = ({ hasCard }) => (
   <>
     <button disabled={!hasCard} aria-describedby="why">
@@ -122,15 +118,12 @@ const PayButton = ({ hasCard }) => (
 );
 ```
 
-Flagged by [`disabled-has-reason`](docs/rules/disabled-has-reason.md).
-
 <br>
 
-**The same button on every row**
+**3. The same button on every row** (Flagged by [`repeated-action-context`](docs/rules/repeated-action-context.md))
 
 ```jsx
-// ❌ Before. Agent reads: button "Edit", button "Edit", button "Edit"
-// Which one is Ben's?
+// ❌ Before. Agent reads: button "Edit", "Edit", "Edit" → "Which one is Ben's?"
 const TeamList = ({ users }) =>
   users.map((user) => (
     <li key={user.id}>
@@ -138,8 +131,7 @@ const TeamList = ({ users }) =>
     </li>
   ));
 
-// ✅ After. Agent reads: button "Edit Ana", button "Edit Ben", button "Edit Carl"
-// "Edit Ben".
+// ✅ After. Agent reads: button "Edit Ana", "Edit Ben", "Edit Carl" → "Edit Ben".
 const TeamList = ({ users }) =>
   users.map((user) => (
     <li key={user.id}>
@@ -151,17 +143,15 @@ const TeamList = ({ users }) =>
   ));
 ```
 
-Flagged by [`repeated-action-context`](docs/rules/repeated-action-context.md).
-
 <br>
 
 ## Rules
 
-| Rule | What it flags | Recommended |
-|---|---|---|
-| [disabled-has-reason](docs/rules/disabled-has-reason.md) | A button can be disabled without saying why | warn |
-| [label-prop-linked](docs/rules/label-prop-linked.md) | A component shows its `label` prop but never links it to its control | error |
-| [repeated-action-context](docs/rules/repeated-action-context.md) | The same button or link name on every row of a list | warn |
+| # | Rule | What it flags | Recommended |
+|---|---|---|---|
+| 1 | [label-prop-linked](docs/rules/label-prop-linked.md) | A component shows its `label` prop but never links it to its control | error |
+| 2 | [disabled-has-reason](docs/rules/disabled-has-reason.md) | A button can be disabled without saying why | warn |
+| 3 | [repeated-action-context](docs/rules/repeated-action-context.md) | The same button or link name on every row of a list | warn |
 
 <br>
 
