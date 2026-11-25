@@ -68,16 +68,8 @@ ruleTester.run("label-prop-linked", rule, {
       code: `function Toggle({ label, on }) { return <button role="switch" aria-checked={on}><span>{label}</span></button>; }`,
     },
     {
-      name: "control with its own fixed aria-label",
-      code: `const ColorPicker = ({ label }) => (<div><div>{label}</div><input aria-label="Select custom color" /></div>);`,
-    },
-    {
-      name: "control with a fixed aria-label in braces",
-      code: `const ColorPicker = ({ label }) => (<div><div>{label}</div><input aria-label={"Select custom color"} /></div>);`,
-    },
-    {
-      name: "control with a fixed aria-label template",
-      code: "const Search = ({ label, scope }) => (<div><div>{label}</div><input aria-label={`Search ${scope}`} /></div>);",
+      name: "aria-label template built from the label",
+      code: "const Search = ({ label }) => (<div><div>{label}</div><input aria-label={`${label} search`} /></div>);",
     },
     {
       name: "file input hidden by class",
@@ -136,9 +128,19 @@ ruleTester.run("label-prop-linked", rule, {
       errors: [{ messageId: "notLinked", data: { component: "Field", prop: "label", control: "input" } }],
     },
     {
-      name: "a named search box does not link the label to another control",
-      code: `const Picker = ({ label }) => (<div><p>{label}</p><input aria-label="Search" /><div role="listbox" /></div>);`,
-      errors: [{ messageId: "notLinked", data: { component: "Picker", prop: "label", control: "div" } }],
+      name: "fixed aria-label beside the shown label",
+      code: `const ColorPicker = ({ label }) => (<div><div>{label}</div><input aria-label="Select custom color" /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "ColorPicker", prop: "label", control: "input" } }],
+    },
+    {
+      name: "fixed aria-label in braces",
+      code: `const ColorPicker = ({ label }) => (<div><div>{label}</div><input aria-label={"Select custom color"} /></div>);`,
+      errors: [{ messageId: "notLinked", data: { component: "ColorPicker", prop: "label", control: "input" } }],
+    },
+    {
+      name: "aria-label template that leaves out the label",
+      code: "const Search = ({ label, scope }) => (<div><div>{label}</div><input aria-label={`Search ${scope}`} /></div>);",
+      errors: [{ messageId: "notLinked", data: { component: "Search", prop: "label", control: "input" } }],
     },
     {
       name: "a linked branch does not cover an unlinked one",

@@ -1,6 +1,6 @@
 # label-prop-linked
 
-Flags a component that shows its `label` prop as text but renders a control with neither a link to that text nor a fixed name of its own.
+Flags a component that shows its `label` prop as text but renders a control with no link to that text.
 
 ## Why
 
@@ -30,6 +30,8 @@ const InputText = ({ label, name }) => (
 
 Also linked: the control inside `<label>`, `aria-labelledby` on the control, `aria-label={label}`, or the label as the control's own content (a switch button).
 
+A fixed `aria-label` does not count, like `aria-label="Email"` or `` aria-label={`Search ${scope}`} ``. It names the control the same way on every screen that uses the component, so the agent reads a name that is not the label shown, and two of these fields on one screen share it. An `aria-label` built from the label, like `` aria-label={`${label} search`} ``, counts.
+
 `htmlFor` links the label only when an element in the component has that id and can take a label: a visible input, select, textarea, button, meter, output or progress, a component that may render one, or a custom element like `<x-date-input>`, which may be form-associated. A `<div role="combobox">` cannot.
 
 ## Not reported
@@ -38,7 +40,6 @@ Also linked: the control inside `<label>`, `aria-labelledby` on the control, `ar
 - A component with no name, like `export default ({ label }) => ...`. The rule tells a component from another function by its capitalized name.
 - An input, select or textarea that a `<label htmlFor>` in the component names, whatever text it shows.
 - A control that shares its id with an earlier element, like `<div id="x" />` before `<input id="x" />`. HTML links `<label htmlFor="x">` only to the first one, but the rule counts it as naming the control.
-- Controls that already carry a fixed `aria-label`, written as text or as a template with text of its own, like `` `Search ${scope}` ``.
 - Controls with an `aria-labelledby` id that no element has. The id can belong to text outside the component, like a dialog title, so the rule can't tell a typo from a name set elsewhere.
 - Controls hidden with `hidden`, `aria-hidden` or Tailwind's `hidden` class. They are left out of the accessibility tree, so no agent reads their name.
 
