@@ -10,7 +10,6 @@ ruleTester.run("toggle-has-state", rule, {
   valid: [
     wrap(`<button aria-expanded={open} onClick={() => setOpen(!open)}>Menu</button>`),
     wrap(`<button aria-pressed={open} onClick={() => setOpen(!open)}>Bold</button>`),
-    { name: "aria-expanded set to false still says the state", code: wrap(`<button aria-expanded={false} onClick={() => setOpen(!open)}>Menu</button>`) },
     { name: "spread may carry aria-expanded", code: wrap(`<button {...props} onClick={() => setOpen(!open)}>Menu</button>`) },
     { name: "role switch with aria-checked", code: wrap(`<button role="switch" aria-checked={open} onClick={() => setOpen(!open)}>Menu</button>`) },
     { name: "role tab with aria-selected", code: wrap(`<button role="tab" aria-selected={open} onClick={() => setOpen(!open)}>Menu</button>`) },
@@ -50,6 +49,9 @@ ruleTester.run("toggle-has-state", rule, {
     { name: "title that reads the state", code: wrap(`<button title={open ? "Close" : "Open"} onClick={() => setOpen(!open)}><MenuIcon /></button>`), errors: err() },
     { name: "icon that reads the state", code: wrap(`<button onClick={() => setOpen(!open)}><ChevronIcon direction={open ? "up" : "down"} /></button>`), errors: err() },
     { name: "class name that reads the state", code: wrap(`<button className={open ? "on" : ""} onClick={() => setOpen(!open)}>Menu</button>`), errors: err() },
+    { name: "fixed aria-expanded", code: wrap(`<button aria-expanded={false} onClick={() => setOpen(!open)}>Menu</button>`), errors: err() },
+    { name: "fixed aria-pressed", code: wrap(`<button aria-pressed="true" onClick={() => setOpen(!open)}>Bold</button>`), errors: err() },
+    { name: "second setter shows the content", code: wrap(`<button onClick={() => { setSeen(!seen); setOpen(!open); }}>Menu</button>`, undefined, "const [seen, setSeen] = useState(false); const [open, setOpen] = useState(false);"), errors: err() },
     { name: "aria-expanded React drops", code: wrap(`<button aria-expanded={undefined} onClick={() => setOpen(!open)}>Menu</button>`), errors: err() },
     { name: "role switch without aria-checked", code: wrap(`<button role="switch" onClick={() => setOpen(!open)}>Menu</button>`), errors: roleErr("switch", "aria-checked") },
     { name: "role checkbox with aria-pressed", code: wrap(`<button role="checkbox" aria-pressed={open} onClick={() => setOpen(!open)}>Menu</button>`), errors: roleErr("checkbox", "aria-checked") },
