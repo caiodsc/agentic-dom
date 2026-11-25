@@ -26,6 +26,7 @@ Focus exclusively on problems that make AI browser agents struggle to identify, 
 - Document limitations honestly.
 - Every sentence in the docs matches what the code does today, and a change in behavior updates those sentences in the same PR.
 - A rule page's "Not reported" list is a decision. A pattern listed there stays skipped until that list changes first.
+- Code a rule can't follow goes in its page's one item for that code, as an example, not as its own item.
 - Avoid speculative heuristics and unnecessary abstractions.
 - A rule passes only the fixes its page lists, the ones an agent reads reliably, and reports weaker ways to say the same thing, even when that adds warnings.
 - A report must lead to a fix that gives the agent something the DOM lacked or got wrong. Visible text already names an element, so no rule asks for an `aria-label` that only repeats it.
