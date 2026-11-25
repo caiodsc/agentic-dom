@@ -28,6 +28,10 @@ ruleTester.run("label-prop-linked", rule, {
       code: `const Field = ({ label }) => (<div><span>{label}</span><input aria-label={label} /></div>);`,
     },
     {
+      name: "label read with brackets",
+      code: `function Field(props) { return <div><span>{props["label"]}</span><input /></div>; }`,
+    },
+    {
       name: "label handed to another component",
       code: `const Field = ({ label }) => <Base label={label} />;`,
     },
