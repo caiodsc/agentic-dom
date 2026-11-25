@@ -33,14 +33,13 @@ function EmailField({ error }) {
 }
 ```
 
-`aria-errormessage` does not count, since browsers expose it only while the control is also marked invalid. The error counts as shown when the component renders it as a child, like `{error}` or `{error.message}`, also inside `{error && <p>{error}</p>}`. A control is an `<input>`, `<textarea>` or `<select>` that is not hidden, or an element with a control role like `combobox` or `textbox`.
+`aria-errormessage` does not count, since browsers expose it only while the control is also marked invalid. Error text inside `role="alert"` does not count either, since the alert is not tied to the field and an agent cannot tell which field it is about. The error counts as shown when the component renders it as a child, like `{error}` or `{error.message}`, also inside `{error && <p>{error}</p>}`. A control is an `<input>`, `<textarea>` or `<select>` that is not hidden, or an element with a control role like `combobox` or `textbox`.
 
 ## Not reported
 
 - A component where any control has `aria-describedby` or a spread (`{...props}`), which may carry it. One linked control is enough, since the others may be a search box or a part of the same field.
 - An error handed to another component as a prop, like `<FieldError error={error} />`.
 - A boolean error that renders other text, like `{error && <p>Required</p>}`.
-- Error text inside an element with `role="alert"`, which an agent reads as an error already.
 - A control rendered by another component, like `<Input />`.
 - An `aria-describedby` id that matches no element. The rule does not check ids.
 

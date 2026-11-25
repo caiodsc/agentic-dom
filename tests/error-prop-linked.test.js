@@ -12,7 +12,6 @@ ruleTester.run("error-prop-linked", rule, {
     { name: "one linked control is enough", code: `function Field({ error }) { return <div><input placeholder="Search" /><div role="combobox" aria-describedby="e" /><p id="e">{error}</p></div>; }` },
     { name: "error handed to another component", code: `function Field({ error }) { return <div><input /><FieldError error={error} /></div>; }` },
     { name: "boolean error that renders other text", code: `function Field({ error }) { return <div><input />{error && <p>Required</p>}</div>; }` },
-    { name: "error inside role alert", code: `function Field({ error }) { return <div><input />{error && <p role="alert">{error}</p>}</div>; }` },
     { name: "control rendered by another component", code: `function Field({ error }) { return <div><Input /><p>{error}</p></div>; }` },
     { name: "hidden control", code: `function Field({ error }) { return <div><input type="hidden" /><p>{error}</p></div>; }` },
     { name: "error used in a class name", code: `function Field({ error }) { return <input className={error ? "red" : ""} />; }` },
@@ -30,6 +29,7 @@ ruleTester.run("error-prop-linked", rule, {
     { name: "props object", code: `function Field(props) { return <div><input /><p>{props.error}</p></div>; }`, errors: [err] },
     { name: "control with a role", code: `function Field({ error }) { return <div><div role="combobox" /><p>{error}</p></div>; }`, errors: [err] },
     { name: "forwardRef component", code: `const Field = forwardRef(({ error }, ref) => <div><input ref={ref} /><p>{error}</p></div>);`, errors: [err] },
+    { name: "error inside role alert", code: `function Field({ error }) { return <div><input />{error && <p role="alert">{error}</p>}</div>; }`, errors: [err] },
     { name: "aria-errormessage", code: `function Field({ error }) { return <div><input aria-invalid aria-errormessage="e" /><p id="e">{error}</p></div>; }`, errors: [err] },
     { name: "aria-describedby React drops", code: `function Field({ error }) { return <div><input aria-describedby="" /><p>{error}</p></div>; }`, errors: [err] },
     {
