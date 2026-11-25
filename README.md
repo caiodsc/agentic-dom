@@ -35,7 +35,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 **Built for agents.** Every rule targets something an AI agent gets stuck on: a field it can't name, a button it can't explain, two controls it can't tell apart. It doesn't replace your accessibility plugin.
 
-**Reads JSX like React renders it.** The rules read each file without running it, so they judge a value by where it comes from. A value React drops, like `false` or `""`, counts as missing. A name counts as different on each row only when it comes from the row, not from the component's props.
+**Reasons about rendered JSX.** The rules read each file without running it and trace where each value comes from. A value React renders as nothing, like `false` or `""`, counts as missing. A name counts as row-specific only when its value traces back to the current row.
 
 **Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby` or `aria-label`.
 
