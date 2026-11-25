@@ -3,15 +3,17 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const [app, rule, base = "main"] = process.argv.slice(2);
-if (!app || !rule) {
+const [dir, rule, base = "main"] = process.argv.slice(2);
+if (!dir || !rule) {
   console.error("Usage: node scripts/compare-rule.js <app dir> <rule> [base ref, default main]");
   process.exit(1);
 }
+const app = resolve(dir);
 
-const root = new URL("..", import.meta.url).pathname;
+const root = fileURLToPath(new URL("..", import.meta.url));
 const require = createRequire(import.meta.url);
 const baseDir = mkdtempSync(join(tmpdir(), "agentic-dom-"));
 process.on("exit", () => rmSync(baseDir, { recursive: true, force: true }));
@@ -29,7 +31,7 @@ function files(dir, out = []) {
     if (entry.name === "node_modules" || entry.name.startsWith(".")) continue;
     const path = join(dir, entry.name);
     if (entry.isDirectory()) files(path, out);
-    else if (/\.[jt]sx$/.test(entry.name)) out.push(path);
+    else if (/\.(js|jsx|tsx)$/.test(entry.name)) out.push(path);
   }
   return out;
 }
@@ -39,7 +41,7 @@ function reports(dir) {
   if (!existsSync(file)) return new Map();
   const linter = new Linter({ configType: "flat", cwd: app });
   const config = [{
-    files: ["**/*.jsx", "**/*.tsx"],
+    files: ["**/*.{js,jsx,tsx}"],
     languageOptions: { ...(parser && { parser }), parserOptions: { ecmaFeatures: { jsx: true } } },
     plugins: { a: { rules: { r: require(file) } } },
     rules: { "a/r": "warn" },

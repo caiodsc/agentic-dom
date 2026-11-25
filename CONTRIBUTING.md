@@ -38,7 +38,7 @@ A new rule is worth adding when the pattern makes a browser agent fail a real ta
 node scripts/compare-rule.js <app dir> <rule>
 ```
 
-A third argument compares with another branch or commit instead of `main`. To parse `.tsx` files, the app needs `@typescript-eslint/parser` installed.
+A third argument compares with another branch or commit instead of `main`. To parse `.tsx` files, the app needs `@typescript-eslint/parser` installed. The rule runs with its default options and without the app's `agentic-dom` settings.
 
 ## README images
 
