@@ -29,7 +29,7 @@ function Filters({ options }) {
 
 A button counts as selectable when its `onClick` calls a `useState` setter, written inline or in a const in the same component, and its `className` or `style` compares that state with `===` or `==`, like `filter === o.id`. The message gives that comparison as the value to use.
 
-`aria-current` also counts, for the current page or step. A value React drops, like `aria-pressed={undefined}`, does not count. A button with `role="tab"` or `role="option"` passes only with `aria-selected`, and one with `role="radio"`, `role="switch"` or `role="checkbox"` only with `aria-checked`, since those roles say their state only through that attribute. `aria-selected` on a button with no role does not count, since a plain button has no selected state.
+`aria-current` also counts, for the current page or step. A fixed value, like `aria-pressed={false}`, does not count, since it cannot follow the state after a click. Nor does a value React drops, like `aria-pressed={undefined}`. A button with `role="tab"` or `role="option"` passes only with `aria-selected`, and one with `role="radio"`, `role="switch"`, `role="checkbox"`, `role="menuitemradio"` or `role="menuitemcheckbox"` only with `aria-checked`, since those roles say their state only through that attribute. `aria-selected` on a button with no role does not count, since a plain button has no selected state.
 
 ## Not reported
 
