@@ -31,7 +31,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 ## Principles
 
-1. **Quiet when unsure.** A rule reports only what the code shows for certain, because a warning you learn to ignore is worse than a missed case.
+1. **Quiet when unsure.** A rule reports only what it can tell from the code with confidence, because a warning you learn to ignore is worse than a missed case.
 2. **Built for agents.** Every rule targets something an AI agent gets stuck on, not every accessibility issue.
 3. **Reasons about JSX values.** The rules trace each value through the code without running it, and a value React renders as nothing, like `false` or `""`, counts as missing.
 4. **Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby` or `aria-label`.
