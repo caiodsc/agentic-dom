@@ -30,6 +30,16 @@ A rule change touches:
 
 A new rule is worth adding when the pattern makes a browser agent fail a real task, it rarely reports correct code, and its message says what to add.
 
+## Checking a rule change on a real app
+
+`scripts/compare-rule.js` lints a React app with one rule from your working tree and from `main`, then lists each report that is new (`+`), gone (`-`) or worded differently (`~`):
+
+```sh
+node scripts/compare-rule.js <app dir> <rule>
+```
+
+A third argument compares with another branch or commit instead of `main`. To parse `.tsx` files, the app needs `@typescript-eslint/parser` installed. The rule runs with its default options and without the app's `agentic-dom` settings.
+
 ## README images
 
 `scripts/readme-assets.js` builds the images in `assets/`. The terminal image is a real ESLint run over `scripts/readme-demo`. When you change a rule message or a demo file, run:
