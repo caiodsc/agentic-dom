@@ -72,10 +72,10 @@ Each message says what an agent sees and what to add, so the coding agent that w
 
 ## See it in action
 
-**1. A field with no name**
+**1. A field with no name** (Flagged by [`label-prop-linked`](docs/rules/label-prop-linked.md))
 
 ```jsx
-// Flagged by label-prop-linked. Rendered with label="Email".
+// Rendered with label="Email".
 
 // ❌ Before. Agent reads: textbox → "Which field is this?"
 const Field = ({ label }) => (
@@ -99,11 +99,9 @@ const Field = ({ label }) => {
 
 <br>
 
-**2. A disabled button with no reason**
+**2. A disabled button with no reason** (Flagged by [`disabled-has-reason`](docs/rules/disabled-has-reason.md))
 
 ```jsx
-// Flagged by disabled-has-reason.
-
 // ❌ Before. Agent reads: button "Pay", disabled, no description → "Why can't I pay?"
 const PayButton = ({ hasCard }) => (
   <button disabled={!hasCard}>Pay</button>
@@ -122,11 +120,9 @@ const PayButton = ({ hasCard }) => (
 
 <br>
 
-**3. The same button on every row**
+**3. The same button on every row** (Flagged by [`repeated-action-context`](docs/rules/repeated-action-context.md))
 
 ```jsx
-// Flagged by repeated-action-context.
-
 // ❌ Before. Agent reads: button "Edit", "Edit", "Edit" → "Which one is Ben's?"
 const TeamList = ({ users }) =>
   users.map((user) => (
