@@ -36,3 +36,4 @@ A button counts as a toggle when its `onClick` calls a `useState` setter with `!
 - State from props or from a custom hook, like `useToggle()`.
 - A handler written as a function declaration, wrapped in `useCallback` or read from an object, like `handlers.toggle`.
 - An updater with a block body, like `(v) => { return !v; }`.
+- Content shown by more than one condition, like `open && ready && <Menu />`.
