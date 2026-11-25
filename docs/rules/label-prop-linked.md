@@ -35,6 +35,7 @@ Also linked: the control inside `<label>`, `aria-labelledby` on the control, `ar
 ## Not reported
 
 - The label handed to another component (`<Base label={label} />`). The rule cannot see what `Base` does.
+- A component with no name, like `export default ({ label }) => ...`. The rule tells a component from another function by its capitalized name.
 - An input, select or textarea that a `<label htmlFor>` in the component names, whatever text it shows.
 - A control that shares its id with an earlier element, like `<div id="x" />` before `<input id="x" />`. HTML links `<label htmlFor="x">` only to the first one, but the rule counts it as naming the control.
 - Controls that already carry a fixed `aria-label`, written as text or as a template with text of its own, like `` `Search ${scope}` ``.
