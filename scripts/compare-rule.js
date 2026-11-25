@@ -14,7 +14,8 @@ if (!app || !rule) {
 const root = new URL("..", import.meta.url).pathname;
 const require = createRequire(import.meta.url);
 const baseDir = mkdtempSync(join(tmpdir(), "agentic-dom-"));
-execFileSync("sh", ["-c", `git -C "${root}" archive "${base}" lib | tar -x -C "${baseDir}"`]);
+process.on("exit", () => rmSync(baseDir, { recursive: true, force: true }));
+execFileSync("tar", ["-x", "-C", baseDir], { input: execFileSync("git", ["-C", root, "archive", base, "lib"]) });
 
 let parser;
 try {
@@ -58,7 +59,6 @@ function reports(dir) {
 
 const before = reports(baseDir);
 const after = reports(root);
-rmSync(baseDir, { recursive: true });
 
 console.log(`${base}: ${before.size} reports. Working tree: ${after.size} reports.`);
 for (const [at, message] of after) {
