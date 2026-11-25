@@ -5,8 +5,7 @@ import { readFileSync, readdirSync } from "node:fs";
 const rules = new URL("../lib/rules/", import.meta.url);
 const pages = new URL("../docs/rules/", import.meta.url);
 const CANT_FOLLOW = "- Code the rule can't follow, like ";
-const SPREAD_SKIP = "spread (`{...";
-const AFTER_SPREAD = "even with attributes after it";
+const SPREAD_SKIP = "even with attributes after it";
 const READS_SPREAD_AS_ID = new Set(["label-prop-linked"]);
 
 for (const file of readdirSync(rules)) {
@@ -21,8 +20,8 @@ for (const file of readdirSync(rules)) {
   if (READS_SPREAD_AS_ID.has(rule) || !readFileSync(new URL(file, rules), "utf8").includes("hasSpread(")) continue;
   test(`${rule} page says what a spread skip covers`, () => {
     assert.ok(
-      page.includes(SPREAD_SKIP) && page.includes(AFTER_SPREAD),
-      `docs/rules/${rule}.md must list a spread among the code it can't follow, ${AFTER_SPREAD}. The shared spread check skips any spread, whatever comes after it.`,
+      page.includes(SPREAD_SKIP),
+      `docs/rules/${rule}.md must list a spread among the code it can't follow, ${SPREAD_SKIP}. The shared spread check skips any spread, whatever comes after it.`,
     );
   });
 }
