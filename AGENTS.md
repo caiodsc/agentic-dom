@@ -27,5 +27,6 @@ Focus exclusively on problems that make AI browser agents struggle to identify, 
 - Every sentence in the docs matches what the code does today, and a change in behavior updates those sentences in the same PR.
 - A rule page's "Not reported" list is a decision. A pattern listed there stays skipped until that list changes first.
 - Avoid speculative heuristics and unnecessary abstractions.
+- A rule passes only the fixes its page lists, the ones an agent reads reliably, and reports weaker ways to say the same thing.
 
 **Build tools that make interfaces easier for agents to operate, not tools that merely produce more warnings.**
