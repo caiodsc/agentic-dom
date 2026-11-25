@@ -28,13 +28,12 @@ function Filters() {
 
 A button counts as a toggle when its `onClick` calls a `useState` setter with `!x` or `(v) => !v`, written inline or in a const in the same component. The state must show or hide JSX: `x && <JSX>`, `!x && <JSX>` or `x ? <JSX> : …`. The message gives `!x` when the content shows while the state is false, like `collapsed`.
 
-`aria-pressed` also counts, with any value.
+`aria-pressed` also counts, with any value, for an on/off button like "Bold" or "Edit". Text that changes with the state, like `{open ? "Hide" : "Show"}`, does not count, since the agent has to guess the state from the words.
 
 ## Not reported
 
 - A button with a spread (`{...props}`), which may carry `aria-expanded`.
 - A button with `role="switch"`, `role="checkbox"` or `role="tab"`, which carry their own state.
-- A button whose text, `aria-label` or `title` reads the state, like `{open ? "Hide" : "Show"}`. An icon prop that reads it, like `direction={open ? "up" : "down"}`, does not count.
 - State from props or from a custom hook, like `useToggle()`.
 - A handler written as a function declaration, wrapped in `useCallback` or read from an object, like `handlers.toggle`.
 - An updater with a block body, like `(v) => { return !v; }`.
