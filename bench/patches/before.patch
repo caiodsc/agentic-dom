@@ -1,3 +1,23 @@
+diff --git a/src/components/atomic-crm/notes/Note.tsx b/src/components/atomic-crm/notes/Note.tsx
+index 22afb49..104975f 100644
+--- a/src/components/atomic-crm/notes/Note.tsx
++++ b/src/components/atomic-crm/notes/Note.tsx
+@@ -133,7 +133,6 @@ export const Note = ({
+                     size="sm"
+                     onClick={handleEnterEditMode}
+                     className="p-1 h-auto cursor-pointer"
+-                    aria-label={translate("resources.notes.action.edit")}
+                   />
+                 }
+               >
+@@ -153,7 +152,6 @@ export const Note = ({
+                     size="sm"
+                     onClick={handleDelete}
+                     className="p-1 h-auto cursor-pointer"
+-                    aria-label={translate("resources.notes.action.delete")}
+                   />
+                 }
+               >
 diff --git a/src/components/atomic-crm/tasks/AddTask.tsx b/src/components/atomic-crm/tasks/AddTask.tsx
 index f9daf7f..705e7c9 100644
 --- a/src/components/atomic-crm/tasks/AddTask.tsx

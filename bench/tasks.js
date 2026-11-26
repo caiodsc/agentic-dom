@@ -53,4 +53,19 @@ export default [
       return contact.tags.join() === "2";
     },
   },
+  {
+    id: "delete-note",
+    rule: "icon-button-has-name",
+    source: "planted",
+    start: "#/contacts/1/show",
+    prompt: 'Delete the note that starts with "Occaecati temporibus" from this contact.',
+    check: async (dp) => {
+      // Deleting a note is undoable, so the app writes it only after the undo notice closes.
+      await new Promise((r) => setTimeout(r, 8000));
+      const { data } = await dp.getList("contact_notes", {
+        pagination: { page: 1, perPage: 100 }, sort: { field: "id", order: "ASC" }, filter: { contact_id: 1 },
+      });
+      return data.map((n) => n.id).join() === "89,561";
+    },
+  },
 ];
