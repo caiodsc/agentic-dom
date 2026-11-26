@@ -176,6 +176,8 @@ async function attempt({ task, variant, run }, port) {
     const before = await snapshot(browser);
     const agent = await runAgent(task, port, join(dir, `${task.id}-${run}.jsonl`));
     const summary = summarize(agent.events);
+    // The app saves an undoable change when its notice closes, and the notice stays open while the mouse is over it.
+    await browser.contexts()[0].pages()[0]?.mouse.move(0, 0).catch(() => {});
     await wait(UNDO_MS);
     const after = await snapshot(browser).catch(() => null);
     const changes = after ? diff(before, after) : [];

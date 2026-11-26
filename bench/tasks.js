@@ -85,8 +85,8 @@ export default [
     start: "#/deals",
     prompt: 'Move the deal "Tempora aspernatur voluptatum" to the Won stage.',
     expect: (changes) => find(changes, "deals", 4)?.after.stage === "won",
-    // Moving a card renumbers the other cards in both columns.
-    touches: (c) => c.resource === "deals" && (c.id === 4 || (c.type === "changed" && c.fields.every((f) => f === "index"))),
+    // Moving a card renumbers the other cards in both columns, and the app stamps updated_at on every deal it updates.
+    touches: (c) => c.resource === "deals" && (c.id === 4 || (c.type === "changed" && c.fields.every((f) => f === "index" || f === "updated_at"))),
   },
   {
     id: "remove-deal-contact",
