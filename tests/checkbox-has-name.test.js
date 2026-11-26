@@ -51,6 +51,7 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "only values React drops inside", code: `<div role="checkbox" aria-checked={on}>{false}{null}{" "}{/* empty */}</div>`, errors },
     { name: "only an expression that gives a boolean inside", code: `<Checkbox checked={checked}>{!checked}{count > 0}</Checkbox>`, errors },
     { name: "only an || or ?? that picks a value React drops", code: `<Checkbox checked={checked}>{false || null}{undefined ?? false}</Checkbox>`, errors },
+    { name: "Label component with no prop and only hidden text", code: `<Label><Checkbox /><span aria-hidden="true">Remember me</span></Label>`, errors },
     { name: "label attribute on an input", code: `<input type="checkbox" label="Remember me" />`, errors },
     { name: "empty label around it", code: `<label><input type="checkbox" /></label>`, errors },
     { name: "htmlFor on an element that is not a label", code: `<><div htmlFor="task">Task</div><input type="checkbox" id="task" /></>`, errors },
