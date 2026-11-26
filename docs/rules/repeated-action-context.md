@@ -6,7 +6,7 @@ Flags a button or link inside `.map()` whose name is the same on every row.
 
 The rule never runs the code. It looks at where each part of the name comes from:
 
-- From the row, like `r.name`, a field destructured from it, the index, or a variable in the loop built from them. The name changes per row, so it passes.
+- From the row, like `r.name`, a field destructured from it, the index, or a variable in the loop built from them. The name can change per row, so it passes.
 - From outside the row, like `t("edit")`, a prop or a const outside the loop. Every row gets the same name, so it is reported.
 - From a value the rule can't trace, like a spread or a variable assigned again. It is not reported. [Not reported](#not-reported) lists these.
 
@@ -44,6 +44,7 @@ rows.map((r) => (
 ## Not reported
 
 - Code the rule can't follow, like a spread (`{...rowProps(r)}`) on the button, even with attributes after it, or a name from a variable in the loop that is assigned again after its declaration (`if (r.locked) label = "View"`) or that is not written-out text and is also passed to a function, has a method called on it or is put in an object or array (`onClick={() => track(label)}`).
+- A name that reads the row but repeats anyway, like `` aria-label={`Edit ${r.status}`} `` when two rows share a status. The rule checks where the name comes from, not that each row gets a different one.
 - Text that reads the row (`{r.name}`), also inside an expression React may not show, like `{false && r.name}`.
 - Icon-only buttons with no text. They have no name to repeat. A button with no name at all is a different problem.
 - An icon-only button whose `aria-label` is `true` or `false`, also through a const. React writes that word as its name, but the rule reads it as no label.
