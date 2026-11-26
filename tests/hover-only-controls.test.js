@@ -37,6 +37,21 @@ function Menu({ items }) {
 }` },
     { name: "condition that is not a plain state", code: withHover(`<span className={isHovered && ready ? "" : "invisible"}><button>Edit</button></span>`) },
     { name: "class from a variable", code: withHover(`<span className={classes}><button>Edit</button></span>`) },
+    { name: "hidden is not undone by visible", code: `<div className="hidden group-hover:visible"><button>Edit</button></div>` },
+    { name: "hidden on both sides of the hover state", code: withHover(`<span className={isHovered ? "invisible" : "hidden"}><button>Edit</button></span>`) },
+    { name: "condition on a property", code: withHover(`<span className={!row.isHovered ? "invisible" : ""}><button>Edit</button></span>`) },
+    { name: "computed class key", code: withHover(`<span className={clsx({ [hideClass]: !isHovered, ...rest })}><button>Edit</button></span>`) },
+    { name: "hover state set to false only", code: `
+function Row() {
+  const [shown, setShown] = useState(true);
+  return <li onMouseEnter={() => setShown(false)} onMouseLeave={reset}><span className={shown ? "" : "invisible"}><button>Edit</button></span></li>;
+}` },
+    { name: "handler from a prop", code: `
+function Row({ onEnter }) {
+  const [hover] = useState(false);
+  const label = "Edit", { size } = props;
+  return <li onMouseEnter={onEnter} onPointerOver="x"><span className={hover ? "" : "invisible"}><button>{label}</button></span></li>;
+}` },
   ],
   invalid: [
     { code: `<span className="invisible group-hover:visible"><button onClick={onEdit}>Edit</button></span>`, errors: reported() },
@@ -49,6 +64,10 @@ function Menu({ items }) {
     { name: "negated hover state", code: withHover(`<span className={!isHovered ? "hidden" : "flex"}><button>Edit</button></span>`), errors: reported("span", "hidden") },
     { name: "hover state with &&", code: withHover(`<span className={cn("ml-2", !isHovered && "invisible")}><button>Edit</button></span>`), errors: reported() },
     { name: "hover state in a class object", code: withHover(`<span className={clsx({ invisible: !isHovered })}><button>Edit</button></span>`), errors: reported() },
+    { name: "class in a template literal", code: `<span className={\`invisible group-hover:visible \${size}\`}><button>Edit</button></span>`, errors: reported() },
+    { name: "hover state in a string concatenation", code: withHover(`<span className={"ml-2 " + (isHovered ? "" : "invisible")}><button>Edit</button></span>`), errors: reported() },
+    { name: "hover state in a class array", code: withHover(`<span className={cn(["ml-2", !isHovered && "invisible"])}><button>Edit</button></span>`), errors: reported() },
+    { name: "two hiding conditions on one element", code: withHover(`<div className={cn(!isHovered && "invisible", { hidden: !isHovered })}><button>Edit</button><button>Delete</button></div>`), errors: reported("div") },
     { name: "a form field inside", code: withHover(`<span className={isHovered ? "" : "invisible"}><input type="checkbox" /></span>`), errors: reported() },
     {
       name: "handler declared apart",
