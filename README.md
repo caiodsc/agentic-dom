@@ -163,6 +163,8 @@ const TeamList = ({ users }) =>
 | 9 | [collapsed-content-inert](docs/rules/collapsed-content-inert.md) | An element collapses to zero height but keeps its content in the page | warn |
 | 10 | [empty-button-has-name](docs/rules/empty-button-has-name.md) | A button that shows no text and has no name, like a switch with only its knob | error |
 
+Some traps come from how a page behaves while it runs, so no lint can see them. [Traps the lint cannot see](docs/runtime-traps.md) lists them.
+
 <br>
 
 ## Setup
