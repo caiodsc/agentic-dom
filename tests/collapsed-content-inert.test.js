@@ -8,6 +8,7 @@ ruleTester.run("collapsed-content-inert", rule, {
     `<div className={open ? "max-h-96" : "max-h-0"} inert={!open}>{children}</div>`,
     { name: "inert with no value", code: `<div className={c ? "h-0" : ""} inert>{children}</div>` },
     { name: "hidden", code: `<div className={c ? "h-0" : ""} hidden={c}>{children}</div>` },
+    { name: "invisible next to the collapse class", code: `<div className={c ? "max-h-0 invisible" : "max-h-96"}>{children}</div>` },
     { name: "spread may set inert", code: `<div {...props} className={c ? "h-0" : ""}>{children}</div>` },
     { name: "component, which may not pass inert on", code: `<Panel className={c ? "h-0" : ""}>{children}</Panel>` },
     { name: "member element", code: `<motion.div className={c ? "h-0" : ""}>{children}</motion.div>` },
@@ -32,6 +33,7 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "other collapse classes set", code: `<div className={c ? "h-0" : ""}>{children}</div>`, options: [{ collapseClasses: ["collapsed"] }] },
   ],
   invalid: [
+    { name: "invisible only on the open side", code: `<div className={c ? "h-0" : "invisible"}>{children}</div>`, errors: reported("c") },
     {
       code: `<div className={isCollapsed ? "max-h-0 opacity-0" : "max-h-none"}>{children}</div>`,
       errors: reported("isCollapsed"),

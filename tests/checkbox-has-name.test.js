@@ -1,0 +1,41 @@
+import { ruleTester } from "./setup.js";
+import rule from "../lib/rules/checkbox-has-name.js";
+
+const errors = [{ messageId: "noName" }];
+
+ruleTester.run("checkbox-has-name", rule, {
+  valid: [
+    `<label><input type="checkbox" /> Remember me</label>`,
+    `<input type="checkbox" aria-label="Remember me" />`,
+    { name: "aria-labelledby", code: `<><Checkbox aria-labelledby={textId} /><span id={textId}>{task.text}</span></>` },
+    { name: "title", code: `<input type="checkbox" title="Select all" />` },
+    { name: "label prop", code: `<Checkbox label="Remember me" />` },
+    { name: "text inside", code: `<Checkbox>Remember me</Checkbox>` },
+    { name: "expression inside", code: `<Checkbox>{t("remember")}</Checkbox>` },
+    { name: "content deeper inside", code: `<div role="checkbox" aria-checked={on}><div><span>Remember me</span></div></div>` },
+    { name: "inside a Label component", code: `<Label><Checkbox /> Remember me</Label>` },
+    { name: "inside a member Label", code: `<Form.Label><Checkbox /> Remember me</Form.Label>` },
+    { name: "label with htmlFor before", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id="remember" /></>` },
+    { name: "label with htmlFor after", code: `<><Checkbox id={id} /><Label htmlFor={id}>Remember me</Label></>` },
+    { name: "spread may carry a name", code: `<Checkbox {...props} />` },
+    { name: "spread before aria-label React drops", code: `<Checkbox {...props} aria-label={undefined} />` },
+    { name: "hidden", code: `<input type="checkbox" hidden />` },
+    { name: "inside aria-hidden", code: `<div aria-hidden="true"><input type="checkbox" /></div>` },
+    { name: "another input type", code: `<input type="text" />` },
+    { name: "lowercase name ending in Checkbox", code: `<myCheckbox />` },
+    { name: "mapped to another kind", code: `<Checkbox />`, settings: { "agentic-dom": { components: { Checkbox: { as: "none" } } } } },
+  ],
+  invalid: [
+    { code: `<input type="checkbox" />`, errors },
+    { code: `<Checkbox checked={done} onCheckedChange={toggle} />`, errors },
+    { name: "member component", code: `<ui.Checkbox />`, errors },
+    { name: "role checkbox", code: `<div role="checkbox" aria-checked={on} onClick={toggle} />`, errors },
+    { name: "id no label points at", code: `<Checkbox id={labelId} checked={done} />`, errors },
+    { name: "label htmlFor another id", code: `<><label htmlFor="a">A</label><input type="checkbox" id="b" /></>`, errors },
+    { name: "empty aria-label", code: `<input type="checkbox" aria-label="" />`, errors },
+    { name: "only an icon inside", code: `<Checkbox><CheckIcon /></Checkbox>`, errors },
+    { name: "text beside it but no label", code: `<div><Checkbox /> Remember me</div>`, errors },
+    { name: "mapped component", code: `<Toggle />`, settings: { "agentic-dom": { components: { Toggle: { as: "checkbox" } } } }, errors },
+    { name: "uppercase type", code: `<input type="CHECKBOX" />`, errors },
+  ],
+});

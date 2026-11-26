@@ -34,7 +34,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 1. **Quiet when unsure.** A rule reports only what it can tell from the code with confidence, because a warning you learn to ignore is worse than a missed case.
 2. **Built for agents.** Every rule targets something an AI agent gets stuck on, not every accessibility issue.
 3. **Reasons about JSX values.** The rules trace each value through the code without running it, and a value React renders as nothing, like `false` or `""`, counts as missing.
-4. **Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby`, `aria-label`, `aria-expanded`, `aria-pressed`, `aria-checked`, `aria-selected` or `inert`. A weaker way to say the same thing never passes, even when that means more warnings. A `title` as a description is one, like the reason a button is disabled, since it shows on screen only on hover. As the name of a button that shows only an icon it passes, since the browser uses it as the name when nothing else names the button.
+4. **Standard fixes.** Every message asks for plain HTML or ARIA: a `<label>`, `aria-labelledby`, `aria-describedby`, `aria-label`, `aria-expanded`, `aria-pressed`, `aria-checked`, `aria-selected` or `inert`. The one class is `invisible` for collapsed content, since some agent tools ignore `inert`. A weaker way to say the same thing never passes, even when that means more warnings. A `title` as a description is one, like the reason a button is disabled, since it shows on screen only on hover. As the name of a button that shows only an icon it passes, since the browser uses it as the name when nothing else names the button.
 5. **Limits written down.** Each rule page lists what it skips on purpose under "Not reported", and a skipped case stays skipped until that list changes first.
 
 <br>
@@ -161,12 +161,13 @@ const TeamList = ({ users }) =>
 | 7 | [selected-has-state](docs/rules/selected-has-state.md) | A button looks selected but never says whether it is selected | warn |
 | 8 | [label-in-name](docs/rules/label-in-name.md) | A button or link whose `aria-label` leaves out the text it shows | warn |
 | 9 | [collapsed-content-inert](docs/rules/collapsed-content-inert.md) | An element collapses to zero height but keeps its content in the page | warn |
+| 10 | [checkbox-has-name](docs/rules/checkbox-has-name.md) | A checkbox that has no name | error |
 
 <br>
 
 ## Setup
 
-**Your components.** The rules treat components whose name ends in `Button` as buttons and in `Link` as links, and read their name from their text or `aria-label`. Map anything else in settings. A component that builds its name from other props can be mapped to `as: "none"` to skip it:
+**Your components.** The rules treat components whose name ends in `Button` as buttons, in `Link` as links and in `Checkbox` as checkboxes, and read their name from their text or `aria-label`. Map anything else in settings. A component that builds its name from other props can be mapped to `as: "none"` to skip it:
 
 ```js
 {
