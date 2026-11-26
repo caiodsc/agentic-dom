@@ -1,10 +1,10 @@
-import { execFileSync, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
+import { OFFLINE, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
 import allTasks from "./tasks.js";
 
 const { values: opts } = parseArgs({
@@ -13,20 +13,22 @@ const { values: opts } = parseArgs({
     tasks: { type: "string" },
     runs: { type: "string", default: "1" },
     model: { type: "string", default: "haiku" },
+    concurrency: { type: "string", default: "1" },
+    "max-cost": { type: "string", default: "20" },
   },
 });
 
-const here = fileURLToPath(new URL(".", import.meta.url));
-const app = join(here, "app");
-const APP_PORT = 5174;
-const CDP_PORT = 9333;
-const APP_URL = `http://127.0.0.1:${APP_PORT}/`;
+const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
-const ALL = { pagination: { page: 1, perPage: 1000 }, sort: { field: "id", order: "ASC" }, filter: {} };
+// Deleting is undoable, so the app writes a delete only after the undo notice closes.
+const UNDO_MS = 8000;
+const RESOURCES = ["sales", "tags", "companies", "contacts", "contact_notes", "deals", "deal_notes", "tasks", "configuration"];
+// A reply that says the agent did not finish. Any other reply counts as a claim that it did.
+const GAVE_UP = /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|wasn't able|was not able|failed|did ?n[o']t|no (such|matching))\b/i;
 
 const SYSTEM_PROMPT = "You operate a web app through the browser tools. Do the user's task in the app.";
 const prompt = (task) =>
-  `A CRM is open in the browser at ${APP_URL}${task.start}. ${task.prompt} ` +
+  `A CRM is open in the browser. ${task.prompt} ` +
   "Do not reload the page or open a new one: the demo data lives in the page and resets on reload. " +
   "When you are done, reply with one sentence saying what you did, or why you could not do it.";
 
@@ -34,50 +36,21 @@ const tasks = opts.tasks ? allTasks.filter((t) => opts.tasks.split(",").includes
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 const outDir = join(here, "results", "raw", stamp);
 
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-async function waitFor(url) {
-  for (let i = 0; i < 120; i++) {
-    try {
-      if ((await fetch(url)).ok) return;
-    } catch {}
-    await wait(500);
-  }
-  throw new Error(`${url} did not come up`);
-}
-
-function useVariant(variant) {
-  execFileSync("git", ["-C", app, "checkout", "-q", "--", "."]);
-  execFileSync("git", ["-C", app, "apply", join(here, "patches", `${variant}.patch`)]);
-}
-
-async function startApp() {
-  const vite = spawn("npx", ["vite", "--config", "vite.demo.config.ts", "--host", "127.0.0.1", "--port", String(APP_PORT), "--strictPort", "--force"], {
-    cwd: app,
-    env: { ...process.env, NODE_ENV: "CI" },
-    stdio: "ignore",
-    detached: true,
-  });
-  await waitFor(APP_URL);
-  return async () => {
-    process.kill(-vite.pid);
-    while (await fetch(APP_URL).then(() => true, () => false)) await wait(200);
-  };
-}
-
-async function startBrowser(url) {
+async function startBrowser(url, port) {
   const profile = mkdtempSync(join(tmpdir(), "bench-chrome-"));
   const chrome = spawn(chromium.executablePath(), [
     "--headless=new",
     // Chromium exits at start without it where AppArmor blocks its sandbox, as on Ubuntu 24.04.
     "--no-sandbox",
-    `--remote-debugging-port=${CDP_PORT}`,
+    OFFLINE,
+    `--remote-debugging-port=${port}`,
     `--user-data-dir=${profile}`,
     "--window-size=1440,900",
     "--no-first-run",
     url,
   ], { stdio: "ignore" });
-  await waitFor(`http://127.0.0.1:${CDP_PORT}/json/version`);
-  const browser = await chromium.connectOverCDP(`http://127.0.0.1:${CDP_PORT}`);
+  await waitFor(`http://127.0.0.1:${port}/json/version`);
+  const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   const page = browser.contexts()[0].pages()[0];
   await page.waitForFunction(() => window.__bench, null, { timeout: 30000 });
   return {
@@ -92,12 +65,12 @@ async function startBrowser(url) {
   };
 }
 
-function runAgent(task, transcriptFile) {
+function runAgent(task, port, transcriptFile) {
   const mcpConfig = {
     mcpServers: {
       browser: {
         command: join(here, "node_modules", ".bin", "playwright-mcp"),
-        args: ["--cdp-endpoint", `http://127.0.0.1:${CDP_PORT}`, "--image-responses", "omit"],
+        args: ["--cdp-endpoint", `http://127.0.0.1:${port}`, "--image-responses", "omit"],
       },
     },
   };
@@ -154,47 +127,105 @@ function summarize(events) {
     tools: toolCalls,
     inputTokens: (usage.input_tokens ?? 0) + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0),
     outputTokens: usage.output_tokens ?? 0,
-    costUsd: result.total_cost_usd,
+    costUsd: result.total_cost_usd ?? 0,
     durationMs: result.duration_ms,
-    answer: result.result,
+    answer: result.result ?? "",
   };
 }
 
-async function check(browser, task, answer) {
-  const pages = browser.contexts().flatMap((c) => c.pages());
-  for (const page of pages) {
-    const has = await page.evaluate(() => Boolean(window.__bench)).catch(() => false);
-    if (has) return page.evaluate(`(${task.check})(window.__bench.dataProvider, ${JSON.stringify(ALL)}, ${JSON.stringify(answer ?? "")})`);
+// Every record of every resource, read through the demo's data provider in the page that holds it.
+async function snapshot(browser) {
+  for (const page of browser.contexts().flatMap((c) => c.pages())) {
+    if (!(await page.evaluate(() => Boolean(window.__bench)).catch(() => false))) continue;
+    return page.evaluate(async (resources) => {
+      const all = { pagination: { page: 1, perPage: 100000 }, sort: { field: "id", order: "ASC" }, filter: {} };
+      const data = {};
+      for (const r of resources) data[r] = (await window.__bench.dataProvider.getList(r, all)).data;
+      return data;
+    }, RESOURCES);
   }
-  return false;
+  return null;
 }
 
-const rows = [];
-const variants = opts.variants.split(",");
-for (let run = 1; run <= Number(opts.runs); run++) {
-  // Alternating the order keeps drift over a long run from landing on one version only.
-  for (const variant of run % 2 ? variants : [...variants].reverse()) {
-    useVariant(variant);
-    const stopApp = await startApp();
-    try {
-      for (const task of tasks) {
-        const dir = join(outDir, variant);
-        mkdirSync(dir, { recursive: true });
-        const { browser, stop } = await startBrowser(APP_URL + task.start);
-        const agent = await runAgent(task, join(dir, `${task.id}-${run}.jsonl`));
-        const summary = summarize(agent.events);
-        const pass = await check(browser, task, summary.answer).catch(() => false);
-        await stop();
-        const row = { variant, task: task.id, rule: task.rule, source: task.source, run, model: opts.model, pass, timedOut: agent.timedOut, ...summary };
-        rows.push(row);
-        writeFileSync(join(dir, `${task.id}-${run}.json`), JSON.stringify(row, null, 2));
-        console.log(`${variant} ${task.id} #${run}: ${pass ? "PASS" : "FAIL"} in ${row.toolCalls} tool calls, ${row.inputTokens} input tokens`);
+function diff(before, after) {
+  const changes = [];
+  for (const resource of RESOURCES) {
+    const was = new Map(before[resource].map((r) => [r.id, r]));
+    const is = new Map(after[resource].map((r) => [r.id, r]));
+    for (const [id, record] of is) if (!was.has(id)) changes.push({ resource, id, type: "added", fields: Object.keys(record), after: record });
+    for (const [id, record] of was) {
+      if (!is.has(id)) {
+        changes.push({ resource, id, type: "removed", fields: [], before: record });
+        continue;
       }
-    } finally {
-      await stopApp();
+      const now = is.get(id);
+      // Counters like nb_contacts are recomputed by the data provider whenever a related record changes.
+      const fields = [...new Set([...Object.keys(record), ...Object.keys(now)])]
+        .filter((f) => !f.startsWith("nb_") && JSON.stringify(record[f]) !== JSON.stringify(now[f]));
+      if (fields.length) changes.push({ resource, id, type: "changed", fields, before: record, after: now });
     }
   }
+  return changes;
 }
-execFileSync("git", ["-C", app, "checkout", "-q", "--", "."]);
+
+async function attempt({ task, variant, run }, port) {
+  const dir = join(outDir, variant);
+  mkdirSync(dir, { recursive: true });
+  const { browser, stop } = await startBrowser(appUrl(variant) + task.start, port);
+  try {
+    const before = await snapshot(browser);
+    const agent = await runAgent(task, port, join(dir, `${task.id}-${run}.jsonl`));
+    const summary = summarize(agent.events);
+    await wait(UNDO_MS);
+    const after = await snapshot(browser).catch(() => null);
+    const changes = after ? diff(before, after) : [];
+    const pass = Boolean(after) && Boolean(await task.expect(changes, summary.answer, before));
+    const collateral = changes.filter((c) => !task.touches(c, before)).map(({ resource, id, type, fields }) => ({ resource, id, type, fields }));
+    const claimed = !GAVE_UP.test(summary.answer);
+    return {
+      variant, task: task.id, run, model: opts.model,
+      pass, collateral: collateral.length, collateralChanges: collateral, claimed, silentFailure: claimed && !pass,
+      lostPage: !after, timedOut: agent.timedOut, ...summary,
+    };
+  } finally {
+    await stop();
+  }
+}
+
+const variants = opts.variants.split(",");
+const jobs = [];
+for (let run = 1; run <= Number(opts.runs); run++) {
+  for (const task of tasks) {
+    // Alternating which version goes first keeps drift over a long run from landing on one version only.
+    for (const variant of run % 2 ? variants : [...variants].reverse()) jobs.push({ task, variant, run });
+  }
+}
+
+buildVariants();
+const stopServers = await serveVariants();
+const rows = [];
+let spent = 0;
+let next = 0;
+const maxCost = Number(opts["max-cost"]);
+try {
+  await Promise.all(Array.from({ length: Number(opts.concurrency) }, async (_, worker) => {
+    while (next < jobs.length && spent < maxCost) {
+      const job = jobs[next++];
+      const row = await attempt(job, FIRST_CDP_PORT + worker).catch((error) => ({
+        variant: job.variant, task: job.task.id, run: job.run, model: opts.model, error: String(error), pass: false, costUsd: 0,
+      }));
+      spent += row.costUsd;
+      rows.push(row);
+      writeFileSync(join(outDir, job.variant, `${job.task.id}-${job.run}.json`), JSON.stringify(row, null, 2));
+      console.log(
+        `${row.variant} ${row.task} #${row.run}: ${row.error ? `ERROR ${row.error}` : `${row.pass ? "PASS" : "FAIL"}, ${row.collateral} collateral, ${row.toolCalls} tool calls`}` +
+          ` (US$ ${spent.toFixed(2)} spent)`,
+      );
+    }
+  }));
+} finally {
+  await stopServers();
+}
+if (spent >= maxCost) console.log(`Stopped at the US$ ${maxCost} cap with ${jobs.length - rows.length} attempts not run.`);
 writeFileSync(join(outDir, "summary.json"), JSON.stringify(rows, null, 2));
 console.log(`Results in ${outDir}`);

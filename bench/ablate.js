@@ -1,0 +1,79 @@
+// Writes patches/before.patch: the app with after.patch, minus every attribute whose removal the lint reports.
+// Usage: node ablate.js [lint checkout, default the repo root]
+import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { makeLinter, sourceFiles } from "./lint.js";
+
+// Attributes the rules ask for. Visible text is never removed, so the page looks the same.
+const ATTRS = new Set([
+  "aria-label", "aria-labelledby", "title", "aria-describedby", "aria-invalid", "aria-errormessage",
+  "aria-pressed", "aria-checked", "aria-selected", "aria-expanded", "inert", "htmlFor",
+]);
+
+const here = fileURLToPath(new URL(".", import.meta.url));
+const app = join(here, "app");
+const lib = resolve(process.argv[2] ?? join(here, ".."));
+const git = (...args) => execFileSync("git", ["-C", app, ...args], { encoding: "utf8", maxBuffer: 1 << 26 });
+
+git("checkout", "-q", "--", ".");
+git("apply", join(here, "patches", "after.patch"));
+const { parser, lintSource } = makeLinter(app, lib);
+
+// An attribute the app's styles select on, like Tailwind's `aria-expanded:bg-muted`, changes the look, so it stays.
+const styled = new Set();
+for (const path of sourceFiles(join(app, "src"))) {
+  for (const [, name] of readFileSync(path, "utf8").matchAll(/(aria-[a-z]+|inert)(?::|\])/g)) styled.add(name);
+}
+
+function attributes(source) {
+  const found = [];
+  (function walk(node) {
+    if (!node || typeof node.type !== "string") return;
+    if (node.type === "JSXAttribute" && node.name.type === "JSXIdentifier" && ATTRS.has(node.name.name) && !styled.has(node.name.name)) {
+      found.push(node);
+    }
+    for (const key of Object.keys(node)) {
+      const value = node[key];
+      if (key === "parent" || !value || typeof value !== "object") continue;
+      for (const child of Array.isArray(value) ? value : [value]) walk(child);
+    }
+  })(parser.parse(source, { jsx: true, range: true, loc: true }));
+  return found;
+}
+
+// Removes the attribute and the blank space before it, or its whole line when it is alone on it.
+function without(source, [start, end]) {
+  const lineStart = source.lastIndexOf("\n", start - 1) + 1;
+  const lineEnd = source.indexOf("\n", end);
+  if (source.slice(lineStart, start).trim() === "" && source.slice(end, lineEnd).trim() === "") {
+    return source.slice(0, lineStart) + source.slice(lineEnd + 1);
+  }
+  let from = start;
+  while (from > 0 && /[ \t]/.test(source[from - 1])) from--;
+  return source.slice(0, from) + source.slice(end);
+}
+
+const removed = [];
+for (const path of sourceFiles(join(app, "src"))) {
+  let source = readFileSync(path, "utf8");
+  let reports = lintSource(path, source).length;
+  // From the end of the file, so the ranges still to try do not move.
+  for (const attr of attributes(source).sort((a, b) => b.range[0] - a.range[0])) {
+    const next = without(source, attr.range);
+    const nextReports = lintSource(path, next);
+    if (nextReports.length > reports) {
+      removed.push(`${relative(app, path)}:${attr.loc?.start.line ?? ""} ${attr.name.name}`);
+      source = next;
+      reports = nextReports.length;
+    }
+  }
+  writeFileSync(path, source);
+}
+
+writeFileSync(join(here, "patches", "before.patch"), git("diff"));
+git("checkout", "-q", "--", ".");
+console.log(`Kept because the styles select on them: ${[...styled].filter((a) => ATTRS.has(a)).join(", ")}`);
+console.log(`${removed.length} attributes removed:`);
+for (const r of removed.reverse()) console.log(`  ${r}`);
