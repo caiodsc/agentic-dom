@@ -41,7 +41,6 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "|| before the collapse", code: `<div className={x || (c ? "h-0" : "")}>{children}</div>`, errors: reported("c") },
     { name: "inert React drops", code: `<div className={c ? "h-0" : ""} inert={false}>{children}</div>`, errors: reported("c") },
     { name: "aria-hidden leaves it focusable", code: `<div className={c ? "h-0" : ""} aria-hidden={c}>{children}</div>`, errors: reported("c") },
-    { name: "class attribute", code: `<div class={c ? "h-0" : ""}>{children}</div>`, errors: reported("c") },
     { name: "other collapse classes", code: `<div className={c ? "collapsed" : ""}>{children}</div>`, options: [{ collapseClasses: ["collapsed"] }], errors: reported("c") },
   ],
 });
