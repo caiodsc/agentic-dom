@@ -13,6 +13,7 @@ ruleTester.run("icon-button-has-name", rule, {
   valid: [
     `<button aria-label="Close"><CloseIcon /></button>`,
     `<button aria-labelledby="close-text"><CloseIcon /></button>`,
+    { name: "title on the button", code: `<button title="Close"><CloseIcon /></button>` },
     `<button><CloseIcon /> Close</button>`,
     `<Button aria-label={t("close")}><CloseIcon /></Button>`,
     { name: "spread on the button may carry a name", code: `<button {...props}><CloseIcon /></button>` },
@@ -56,7 +57,6 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "icon or nothing", code: `<button>{open ? <CloseIcon /> : undefined}{busy ? "" : <PlusIcon />}</button>`, errors: [{ messageId: "noName" }] },
     { name: "empty expression beside the icon", code: `<button>{/* close */}<CloseIcon /></button>`, errors: [{ messageId: "noName" }] },
     { name: "aria-label React drops", code: `<button aria-label=""><CloseIcon /></button>`, errors: [{ messageId: "noName" }] },
-    { name: "title on the button", code: `<button title="Close"><CloseIcon /></button>`, errors: [{ messageId: "noName" }] },
     { name: "icon with its own aria-label", code: `<button><CloseIcon aria-label="Close" /></button>`, errors: [{ messageId: "noName" }] },
     { name: "icon with its own title", code: `<button><CloseIcon title="Close" /></button>`, errors: [{ messageId: "noName" }] },
     { name: "svg with a title child", code: `<button><svg><title>Close</title><path d="M0 0" /></svg></button>`, errors: [{ messageId: "noName" }] },
