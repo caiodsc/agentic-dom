@@ -34,3 +34,4 @@ A button counts as a toggle when its `onClick` calls a `useState` setter with `!
 
 - Code the rule can't follow, like a spread (`{...props}`) on the button, even with attributes after it, state from props or from a custom hook (`useToggle()`), a handler written as a function declaration, wrapped in `useCallback` or read from an object (`handlers.toggle`), an updater with a block body (`(v) => { return !v; }`) or content shown by more than one condition (`open && ready && <Menu />`).
 - A state attribute that reads another value, like `aria-expanded={busy}`. The rule does not check which state it follows.
+- A button that only its own condition hides, like a "Show more" button inside `!open && …` that goes away once it is clicked. A condition around the button hides the button, not the content it shows.

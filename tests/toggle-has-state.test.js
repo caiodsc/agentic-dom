@@ -39,6 +39,8 @@ ruleTester.run("toggle-has-state", rule, {
     { name: "method call in the handler", code: wrap(`<button onClick={() => menu.toggle()}>Menu</button>`) },
     { name: "not a button", code: wrap(`<div onClick={() => setOpen(!open)}>Menu</div>`) },
     { name: "button with no onClick", code: wrap(`<button>Menu</button>`) },
+    { name: "button inside the content its state hides", code: wrap("", `{!open && <button onClick={() => setOpen(!open)}>Show more</button>}`) },
+    { name: "button on the side of a ternary its state hides", code: wrap("", `{open ? <Menu /> : <button onClick={() => setOpen(!open)}>Open</button>}`) },
   ],
   invalid: [
     { code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`), errors: err() },
@@ -50,6 +52,7 @@ ruleTester.run("toggle-has-state", rule, {
     { name: "ternary with JSX first", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{open ? <Menu /> : null}"), errors: err() },
     { name: "ternary with JSX second", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{open ? null : <><Menu /></>}"), errors: err("!open") },
     { name: "negated ternary with JSX on both sides", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{!open ? <Menu /> : <Summary />}"), errors: err() },
+    { name: "button its state hides, next to content the state shows", code: wrap("", `{!open && <button onClick={() => setOpen(!open)}>Show more</button>}{open && <Menu />}`), errors: err() },
     { name: "text that reads the state", code: wrap(`<button onClick={() => setOpen(!open)}>{open ? "Hide" : "Show"}</button>`), errors: err() },
     { name: "aria-label that reads the state", code: wrap(`<button aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}><MenuIcon /></button>`), errors: err() },
     { name: "title that reads the state", code: wrap(`<button title={open ? "Close" : "Open"} onClick={() => setOpen(!open)}><MenuIcon /></button>`), errors: err() },
