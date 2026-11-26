@@ -12,7 +12,9 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "component, which may not pass inert on", code: `<Panel className={c ? "h-0" : ""}>{children}</Panel>` },
     { name: "member element", code: `<motion.div className={c ? "h-0" : ""}>{children}</motion.div>` },
     { name: "no content", code: `<div className={c ? "h-0" : ""} />` },
-    { name: "only things React renders as nothing inside", code: `<div className={c ? "h-0" : ""}>{/* later */}{null}{false}{""}{undefined}</div>` },
+    { name: "only things React renders as nothing inside", code: `<div className={c ? "h-0" : ""}>{/* later */}{null}{false}{""}{void 0}</div>` },
+    { name: "a collapse class on both sides of nested ternaries", code: `<div className={c ? "h-0" : d ? "h-0" : ""}>{children}</div>` },
+    { name: "object keys set to a fixed value", code: `<div className={clsx({ "h-0": true, "max-h-0": false })}>{children}</div>` },
     { name: "inert with the same condition", code: `<div className={a && b ? "h-0" : ""} inert={a && b}>{children}</div>` },
     { name: "only whitespace inside", code: `<div className={c ? "h-0" : ""}>
     </div>` },
@@ -52,6 +54,7 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "hidden on the opposite condition", code: `<div className={c ? "h-0" : ""} hidden={!c}>{children}</div>`, errors: reported("c") },
     { name: "inert on the opposite compound condition", code: `<div className={a && b ? "" : "h-0"} inert={a && b}>{children}</div>`, errors: reported("!(a && b)") },
     { name: "an element inside", code: `<div className={c ? "h-0" : ""}><button>Approve</button></div>`, errors: reported("c") },
+    { name: "a name inside, which can be a local named undefined", code: `<div className={c ? "h-0" : ""}>{undefined}</div>`, errors: reported("c") },
     { name: "a number inside is content", code: `<div className={c ? "h-0" : ""}>{0}</div>`, errors: reported("c") },
     { name: "inert React drops", code: `<div className={c ? "h-0" : ""} inert={false}>{children}</div>`, errors: reported("c") },
     { name: "aria-hidden leaves it focusable", code: `<div className={c ? "h-0" : ""} aria-hidden={c}>{children}</div>`, errors: reported("c") },
