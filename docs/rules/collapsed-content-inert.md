@@ -22,7 +22,7 @@ A collapsed panel with `max-h-0` hides its content from the eye only. The button
 </div>
 ```
 
-`hidden` also passes. An `inert` or `hidden` set to the opposite condition, like `inert={open}` on a panel that collapses when `!open`, is still reported. The rule reads the class value through ternaries, `&&`, template literals, string concatenation and class helpers like `clsx`, `cn` or `twMerge`, including their arrays and objects.
+`hidden` also passes. An `inert` or `hidden` set to the opposite condition, like `inert={open}` on a panel that collapses when `!open`, is still reported. The rule reads the class value through ternaries, `&&`, template literals, string concatenation and class helpers like `clsx`, `cn` or `twMerge`, including their arrays and objects. When more than one part collapses the element, the message joins their conditions with `||`.
 
 ## Not reported
 
