@@ -1,0 +1,39 @@
+diff --git a/src/components/atomic-crm/contacts/ContactMergeButton.tsx b/src/components/atomic-crm/contacts/ContactMergeButton.tsx
+index 5efa9f8..6817c59 100644
+--- a/src/components/atomic-crm/contacts/ContactMergeButton.tsx
++++ b/src/components/atomic-crm/contacts/ContactMergeButton.tsx
+@@ -291,12 +291,21 @@ const ContactMergeDialog = ({ open, onClose }: ContactMergeDialogProps) => {
+           )}
+         </div>
+ 
++        {!winnerId && (
++          <p id="merge-reason" className="text-sm text-muted-foreground">
++            Choose the target contact to merge into.
++          </p>
++        )}
+         <DialogFooter>
+           <Button variant="ghost" onClick={onClose} disabled={isMerging}>
+             <CircleX />
+             {translate("ra.action.cancel")}
+           </Button>
+-          <Button onClick={handleMerge} disabled={!winnerId || isMerging}>
++          <Button
++            onClick={handleMerge}
++            disabled={!winnerId || isMerging}
++            aria-describedby={!winnerId ? "merge-reason" : undefined}
++          >
+             <Merge />
+             {isMerging
+               ? translate("resources.contacts.merge.merging", {
+diff --git a/src/components/atomic-crm/settings/SettingsTags.tsx b/src/components/atomic-crm/settings/SettingsTags.tsx
+index 499f88c..ac98c15 100644
+--- a/src/components/atomic-crm/settings/SettingsTags.tsx
++++ b/src/components/atomic-crm/settings/SettingsTags.tsx
+@@ -39,6 +39,7 @@ export const SettingsTags = () => {
+                 variant="outline"
+                 size="sm"
+                 onClick={() => setEditedTag(tag)}
++                aria-label={`${translate("ra.action.edit")} ${tag.name}`}
+               >
+                 <Pencil />
+                 {translate("ra.action.edit")}

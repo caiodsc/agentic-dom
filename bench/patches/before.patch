@@ -1,0 +1,12 @@
+diff --git a/src/components/atomic-crm/tasks/AddTask.tsx b/src/components/atomic-crm/tasks/AddTask.tsx
+index f9daf7f..705e7c9 100644
+--- a/src/components/atomic-crm/tasks/AddTask.tsx
++++ b/src/components/atomic-crm/tasks/AddTask.tsx
+@@ -102,7 +102,6 @@ export const AddTask = ({
+             size="sm"
+           >
+             <Plus className="w-4 h-4" />
+-            {translate("resources.tasks.action.add")}
+           </Button>
+         </div>
+       )}
