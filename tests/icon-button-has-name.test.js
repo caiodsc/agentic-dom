@@ -33,6 +33,7 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "lowercase element ending in Icon", code: `<button><myIcon /></button>` },
     { name: "component mapped to none", code: `<Action><CloseIcon /></Action>`, settings: { "agentic-dom": { components: { Action: { as: "none" } } } } },
     { name: "same name from another package", code: `import { Plus } from "./plus";\n<button><Plus /></button>` },
+    { name: "require of an icon package", code: `const { Trash2 } = require("lucide-react");\n<button><Trash2 /></button>` },
     { name: "local name that hides an icon import", code: `import { Plus } from "lucide-react";\nconst A = ({ Plus }) => <button><Plus /></button>;` },
     { name: "custom iconPattern replaces the default", code: `<button><CloseIcon /></button>`, options: [{ iconPattern: "^Lucide" }] },
   ],
