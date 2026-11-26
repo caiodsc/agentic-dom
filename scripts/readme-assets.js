@@ -176,19 +176,19 @@ function flow(t) {
 
 function hero(t) {
   const scenes = [
-    { tab: "Icon only", see: { without: "icon", with: "icon" },
+    { tab: "Icon button", see: { without: "icon", with: "icon" },
       without: { reads: [["button"]], thought: "What does this button do?" },
       with: { reads: [['button "Delete"']], thought: "The delete button." } },
-    { tab: "Disabled", see: { without: "pay", with: "payReason" },
+    { tab: "Disabled button", see: { without: "pay", with: "payReason" },
       without: { reads: [['button "Pay"', "disabled"]], thought: "Why can't I pay?" },
       with: { reads: [['button "Pay"', 'disabled · "Add a card to pay."']], thought: "Add a card first." } },
-    { tab: "Repeated", see: { without: "rows", with: "rows" },
+    { tab: "Repeated buttons", see: { without: "rows", with: "rows" },
       without: { reads: [['button "Edit"'], ['button "Edit"'], ['button "Edit"']], thought: "Which one is Ben's?" },
       with: { reads: [['button "Edit Ana"'], ['button "Edit Ben"'], ['button "Edit Carl"']], thought: '"Edit Ben".' } },
-    { tab: "Toggle", see: { without: "toggle", with: "toggle" },
+    { tab: "Toggle button", see: { without: "toggle", with: "toggle" },
       without: { reads: [['button "Filters"']], thought: "Is the panel open?" },
       with: { reads: [['button "Filters"', "not expanded"]], thought: "It's closed." } },
-    { tab: "Selected", see: { without: "views", with: "views" },
+    { tab: "Selected button", see: { without: "views", with: "views" },
       without: { reads: [['button "Day"'], ['button "Week"'], ['button "Month"']], thought: "Which view is on?" },
       with: { reads: [['button "Day"', "pressed"], ['button "Week"'], ['button "Month"']], thought: "Day is on." } },
   ];
@@ -270,12 +270,12 @@ function hero(t) {
   });
   let tx = 16;
   scenes.forEach((scene, i) => {
-    const w = scene.tab.length * 7.6 + 28;
+    const w = scene.tab.length * 7.6 + 20;
     const a = (i * 2 * phase).toFixed(2);
     const b = ((i * 2 + 2) * phase).toFixed(2);
     keys.push(`@keyframes u${i}{0%,${a}%{transform:scaleX(0)}${b}%,100%{transform:scaleX(1)}}`);
     out += `<g ${show(i * 2, i * 2 + 2)}><rect x="${tx}" y="11" width="${w}" height="30" rx="15" fill="${t.brand}" opacity=".14"/>` +
-      `<rect x="${tx + 14}" y="46" width="${w - 28}" height="3" rx="1.5" fill="${t.good}" style="transform-box:fill-box;transform-origin:left;animation:u${i} ${cycle}s linear infinite"/></g>` +
+      `<rect x="${tx + 10}" y="46" width="${w - 20}" height="3" rx="1.5" fill="${t.good}" style="transform-box:fill-box;transform-origin:left;animation:u${i} ${cycle}s linear infinite"/></g>` +
       `<text class="tab" x="${tx + w / 2}" y="31" text-anchor="middle">${scene.tab}</text>`;
     tx += w + 6;
   });
@@ -298,7 +298,8 @@ const readme = readFileSync(`${root}README.md`, "utf8");
 for (const dir of ["before", "after"]) {
   for (const file of readdirSync(`${demo}/${dir}`)) {
     const code = readFileSync(`${demo}/${dir}/${file}`, "utf8").replace(/^import .*\n+/gmu, "").replace(/^export /gmu, "");
-    if (!readme.includes(code)) throw new Error(`README.md must show readme-demo/${dir}/${file} without export and imports.`);
+    // Some demos only feed the hero and are not in the README.
+    if (readme.includes(`const ${basename(file, ".jsx")} = `) && !readme.includes(code)) throw new Error(`README.md must show readme-demo/${dir}/${file} without export and imports.`);
   }
 }
 

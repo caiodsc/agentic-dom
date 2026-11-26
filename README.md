@@ -23,7 +23,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
   <img alt="Without agentic-dom, an AI agent reads a button with no name and asks what it does, reads a disabled Pay button and asks why it can't pay, reads three buttons named Edit and asks which one is Ben's, reads a Filters button and asks if the panel is open, and reads Day, Week and Month buttons and asks which view is on. With agentic-dom, it reads button Delete, a disabled Pay button described as Add a card to pay, buttons named Edit Ana, Edit Ben and Edit Carl, a Filters button that is not expanded, and a Day button that is pressed" src="assets/hero-light.svg">
 </picture>
 
-<sub>Computed by rendering the components in <a href="#see-it-in-action">See it in action</a>, not mocked.</sub>
+<sub>Computed by rendering the components in <a href="scripts/readme-demo">scripts/readme-demo</a>, not mocked.</sub>
 
 </div>
 
@@ -144,69 +144,6 @@ const TeamList = ({ users }) =>
       </button>
     </li>
   ));
-```
-
-<br>
-
-**4. A toggle that never says if it is open** (Flagged by [`toggle-has-state`](docs/rules/toggle-has-state.md))
-
-```jsx
-// ❌ Before. Agent reads: button "Filters" → "Is the panel open?"
-const Filters = () => {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button onClick={() => setOpen(!open)}>Filters</button>
-      {open && <FilterPanel />}
-    </>
-  );
-};
-
-// ✅ After. Agent reads: button "Filters", not expanded → "It's closed."
-const Filters = () => {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button aria-expanded={open} onClick={() => setOpen(!open)}>
-        Filters
-      </button>
-      {open && <FilterPanel />}
-    </>
-  );
-};
-```
-
-<br>
-
-**5. A choice shown only by its style** (Flagged by [`selected-has-state`](docs/rules/selected-has-state.md))
-
-```jsx
-// Rendered with views={["Day", "Week", "Month"]}.
-
-// ❌ Before. Agent reads: button "Day", "Week", "Month" → "Which view is on?"
-const ViewPicker = ({ views }) => {
-  const [view, setView] = useState(views[0]);
-  return views.map((v) => (
-    <button key={v} className={view === v ? "on" : ""} onClick={() => setView(v)}>
-      {v}
-    </button>
-  ));
-};
-
-// ✅ After. Agent reads: button "Day", pressed · "Week" · "Month" → "Day is on."
-const ViewPicker = ({ views }) => {
-  const [view, setView] = useState(views[0]);
-  return views.map((v) => (
-    <button
-      key={v}
-      aria-pressed={view === v}
-      className={view === v ? "on" : ""}
-      onClick={() => setView(v)}
-    >
-      {v}
-    </button>
-  ));
-};
 ```
 
 <br>
