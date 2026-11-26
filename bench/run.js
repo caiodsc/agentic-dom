@@ -15,7 +15,7 @@ const { values: opts } = parseArgs({
     model: { type: "string", default: "haiku" },
     concurrency: { type: "string", default: "1" },
     "max-cost": { type: "string", default: "20" },
-    // A results folder to finish: attempts already saved there are skipped.
+    // The name of a folder in results/raw to finish: attempts already saved there are skipped.
     resume: { type: "string" },
   },
 });
