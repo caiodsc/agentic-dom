@@ -16,6 +16,8 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "content deeper inside", code: `<div role="checkbox" aria-checked={on}><div><span>Remember me</span></div></div>` },
     { name: "inside a Label component", code: `<Label><Checkbox /> Remember me</Label>` },
     { name: "inside a member Label", code: `<Form.Label><Checkbox /> Remember me</Form.Label>` },
+    { name: "Label component that may take its text from a prop", code: `<Label text={t("remember")}><Checkbox /></Label>` },
+    { name: "text deeper in the label", code: `<label><input type="checkbox" /><span>Remember me</span></label>` },
     { name: "label with htmlFor before", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id="remember" /></>` },
     { name: "id written as a template string", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id={\`remember\`} /></>` },
     { name: "htmlFor in single quotes", code: `<><label htmlFor='remember'>Remember me</label><input type="checkbox" id="remember" /></>` },
@@ -40,5 +42,9 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "text beside it but no label", code: `<div><Checkbox /> Remember me</div>`, errors },
     { name: "mapped component", code: `<Toggle />`, settings: { "agentic-dom": { components: { Toggle: { as: "checkbox" } } } }, errors },
     { name: "uppercase type", code: `<input type="CHECKBOX" />`, errors },
+    { name: "only values React drops inside", code: `<div role="checkbox" aria-checked={on}>{false}{null}{" "}{/* empty */}</div>`, errors },
+    { name: "label attribute on an input", code: `<input type="checkbox" label="Remember me" />`, errors },
+    { name: "empty label around it", code: `<label><input type="checkbox" /></label>`, errors },
+    { name: "label holding only a blank string", code: `<label><input type="checkbox" />{""}</label>`, errors },
   ],
 });
