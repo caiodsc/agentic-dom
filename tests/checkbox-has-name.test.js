@@ -21,6 +21,7 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "label with htmlFor before", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id="remember" /></>` },
     { name: "id written as a template string", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id={\`remember\`} /></>` },
     { name: "htmlFor in single quotes", code: `<><label htmlFor='remember'>Remember me</label><input type="checkbox" id="remember" /></>` },
+    { name: "component rendering a label with htmlFor", code: `<><Typography as="label" htmlFor="task">Task</Typography><input type="checkbox" id="task" /></>` },
     { name: "label with htmlFor after", code: `<><Checkbox id={id} /><Label htmlFor={id}>Remember me</Label></>` },
     { name: "spread may carry a name", code: `<Checkbox {...props} />` },
     { name: "spread before aria-label React drops", code: `<Checkbox {...props} aria-label={undefined} />` },
@@ -45,6 +46,8 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "only values React drops inside", code: `<div role="checkbox" aria-checked={on}>{false}{null}{" "}{/* empty */}</div>`, errors },
     { name: "label attribute on an input", code: `<input type="checkbox" label="Remember me" />`, errors },
     { name: "empty label around it", code: `<label><input type="checkbox" /></label>`, errors },
+    { name: "htmlFor on an element that is not a label", code: `<><div htmlFor="task">Task</div><input type="checkbox" id="task" /></>`, errors },
+    { name: "label holding only hidden text", code: `<label><input type="checkbox" /><span aria-hidden="true">Remember me</span></label>`, errors },
     { name: "label holding only a blank string", code: `<label><input type="checkbox" />{""}</label>`, errors },
   ],
 });
