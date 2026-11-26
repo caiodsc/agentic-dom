@@ -58,6 +58,8 @@ export async function serveVariants() {
     const dir = join(here, "dist", variant);
     return createServer((req, res) => {
       let file = join(dir, decodeURIComponent(new URL(req.url, "http://x").pathname));
+      // A source map holds the app's source code, and the agent must reach the app only through its pages.
+      if (file.endsWith(".map")) return res.writeHead(404).end();
       if (!file.startsWith(dir) || !existsSync(file) || statSync(file).isDirectory()) file = join(dir, "index.html");
       res.writeHead(200, { "content-type": TYPES[extname(file)] ?? "application/octet-stream" });
       createReadStream(file).pipe(res);
