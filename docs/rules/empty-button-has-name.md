@@ -28,11 +28,11 @@ An agent reads a button by its name. A button whose content is only empty elemen
 
 A component with `render={<Button />}`, as in Base UI, counts as that button around its own children. A name, an `id` or a spread on either element counts.
 
-A `<button>` with no children counts as empty. Any button also counts as empty when it has at least one child element or fragment and every child is blank text, also inside `{" "}`, a value React renders as nothing (`null`, `undefined`, `true`, `false`, `""`), or a fragment (`<>…</>`), `span`, `div` or `i` with only such children. A `span`, `div` or `i` hidden with `aria-hidden="true"`, `hidden` or the `hidden` class also counts as blank, since the browser leaves it out of the name.
+A `<button>` with no children counts as empty, and so does an `<input type="button">` with no `value`. Any button also counts as empty when it has at least one child element or fragment and every child is blank text, also inside `{" "}`, a value React renders as nothing (`null`, `undefined`, `true`, `false`, `""`), or a fragment (`<>…</>`), `span`, `div` or `i` with only such children. A `span`, `div` or `i` hidden with `aria-hidden="true"`, `hidden` or the `hidden` class also counts as blank, since the browser leaves it out of the name.
 
 ## Not reported
 
-- Code the rule can't follow, like a spread (`{...props}`) on the button or on an element inside it, even with attributes after it, a child written as any other expression (`{label}`), a component inside the button (`<Avatar />`), a component button with no children (`<Button />`), a `<button>` that gets its content from a `children` or `dangerouslySetInnerHTML` prop, or a `<button>` handed to another element as a prop.
+- Code the rule can't follow, like a spread (`{...props}`) on the button or on an element inside it, even with attributes after it, a child written as any other expression (`{label}`), a component inside the button (`<Avatar />`), a component button with no children (`<Button />`), a `<button>` that gets its content from a `children` or `dangerouslySetInnerHTML` prop, or a `<button>` with no children handed to another element as a prop, also behind `a ? b : c` or `a && b`.
 - A button with an `id`, since a `<label htmlFor>` elsewhere can name it, and a button inside a `<label>` that holds anything besides the button.
 - Any other element inside the button, like an `<img>`, whose `alt` names the button, or an `<svg>`, which `icon-button-has-name` checks.
 - An `aria-labelledby` id that no element has, or an element with no text. The rule checks that the button points at a name, not that the name exists or what it says.
