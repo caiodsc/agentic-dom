@@ -162,6 +162,7 @@ const TeamList = ({ users }) =>
 | 8 | [label-in-name](docs/rules/label-in-name.md) | A button or link whose `aria-label` leaves out the text it shows | warn |
 | 9 | [collapsed-content-inert](docs/rules/collapsed-content-inert.md) | An element collapses to zero height but keeps its content in the page | warn |
 | 10 | [empty-button-has-name](docs/rules/empty-button-has-name.md) | A button that shows no text and has no name, like a switch with only its knob | error |
+| 11 | [hover-only-controls](docs/rules/hover-only-controls.md) | Controls left out of the page until the mouse is over them | warn |
 
 <br>
 
