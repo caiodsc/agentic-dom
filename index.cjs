@@ -1,3 +1,4 @@
+const checkboxHasName = require("./lib/rules/checkbox-has-name.js");
 const collapsedContentInert = require("./lib/rules/collapsed-content-inert.js");
 const emptyButtonHasName = require("./lib/rules/empty-button-has-name.js");
 const disabledHasReason = require("./lib/rules/disabled-has-reason.js");
@@ -13,6 +14,7 @@ const { name, version } = require("./package.json");
 const plugin = {
   meta: { name, version },
   rules: {
+    "checkbox-has-name": checkboxHasName,
     "collapsed-content-inert": collapsedContentInert,
     "disabled-has-reason": disabledHasReason,
     "empty-button-has-name": emptyButtonHasName,
@@ -28,6 +30,7 @@ const plugin = {
 };
 
 const rules = {
+  "agentic-dom/checkbox-has-name": "error",
   "agentic-dom/collapsed-content-inert": "warn",
   "agentic-dom/disabled-has-reason": "warn",
   "agentic-dom/empty-button-has-name": "error",
