@@ -1,6 +1,6 @@
 # Pre-registration
 
-Written and committed before any run of these tasks. The report links back to this commit, and any change after it is listed there with its reason.
+Written and committed before any run of these tasks. Any change after this commit is listed at the end of this file with its reason.
 
 ## Question
 
@@ -9,7 +9,7 @@ Two versions of Atomic CRM look the same to a person, pixel for pixel. One of th
 ## Versions
 
 - **after**: Atomic CRM with `patches/after.patch`. That patch fixes every report the lint gives on the published app. An agent wrote it from the lint output alone. The lint gives 0 reports on it.
-- **before**: `after`, minus every attribute whose removal the lint reports. `ablate.js` writes it. It tries each attribute the rules ask for, one at a time, and keeps the removal only when the file's report count rises. It never removes visible text. It skips attributes the app's styles select on, so the look cannot change. The lint gives 29 reports on it.
+- **before**: `after`, minus every attribute whose removal the lint reports. `ablate.js` writes it. It tries each attribute the rules ask for, one at a time, and keeps the removal only when the file's report count rises. It never removes visible text. It skips attributes the app's styles select on, so the look cannot change. The lint gives 30 reports on it.
 - `parity.js` screenshots the start screen of every task in both versions with a fixed clock and no outside hosts. All 11 screens match pixel for pixel.
 
 ## Tasks
@@ -31,7 +31,7 @@ Each task's check reads the demo data before and after the run. A check passes o
 - Haiku: 20 attempts per task and version.
 - Sonnet: 5 attempts per task and version.
 - Every attempt starts a new browser on the task's start screen with fresh demo data.
-- The run stops at US$ 20 in total. Attempts it did not reach are listed in the report.
+- The run stops at US$ 20 in total. `run.js` prints how many attempts it did not reach.
 
 ## Hypotheses
 
@@ -50,7 +50,7 @@ Each task's check reads the demo data before and after the run. A check passes o
 
 ## Changes allowed after this commit
 
-A Haiku pilot with 2 attempts per task and version runs first. If a check marks a correct run as failed, or a correct run as collateral, the check is fixed and the fix is listed in the report. Prompts, tasks, versions and measures do not change. Pilot attempts are not part of the results.
+A Haiku pilot with 2 attempts per task and version runs first. If a check marks a correct run as failed, or a correct run as collateral, the check is fixed and the fix is listed below. Prompts, tasks, versions and measures do not change. Pilot attempts are not part of the results.
 
 ## Limits known in advance
 
@@ -60,3 +60,10 @@ A Haiku pilot with 2 attempts per task and version runs first. If a check marks 
 - Some controls have no name in both versions because the lint does not report them yet: an icon button in the header, the remove buttons in the settings lists and the task checkboxes.
 - In `after.patch`, one value was fixed by hand. The lint suggested `aria-expanded={!displayMore}` for a button that sits inside the content the condition hides, which states the opposite.
 - One app, one agent setup.
+
+## Changes after this commit
+
+1. The app saves an edit when its undo notice closes, and the notice stays open while the mouse is over it. `run.js` moves the mouse away before reading the data.
+2. The `move-deal` check allows `updated_at` on the cards it renumbers. The demo data stamps it on every deal it updates.
+3. The app server refuses source maps, so the agent cannot read the app's code through the browser.
+4. A newer rule, `empty-button-has-name`, reported the tag color buttons on `after`. `after.patch` now names them. `before` is unchanged, and the lint counts 30 reports on it instead of 29.
