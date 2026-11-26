@@ -176,15 +176,21 @@ function flow(t) {
 
 function hero(t) {
   const scenes = [
-    { tab: "Icon button", see: { without: "icon", with: "icon" },
+    { tab: "Icon only", see: { without: "icon", with: "icon" },
       without: { reads: [["button"]], thought: "What does this button do?" },
       with: { reads: [['button "Delete"']], thought: "The delete button." } },
-    { tab: "Disabled button", see: { without: "pay", with: "payReason" },
+    { tab: "Disabled", see: { without: "pay", with: "payReason" },
       without: { reads: [['button "Pay"', "disabled"]], thought: "Why can't I pay?" },
       with: { reads: [['button "Pay"', 'disabled · "Add a card to pay."']], thought: "Add a card first." } },
-    { tab: "Repeated buttons", see: { without: "rows", with: "rows" },
+    { tab: "Repeated", see: { without: "rows", with: "rows" },
       without: { reads: [['button "Edit"'], ['button "Edit"'], ['button "Edit"']], thought: "Which one is Ben's?" },
       with: { reads: [['button "Edit Ana"'], ['button "Edit Ben"'], ['button "Edit Carl"']], thought: '"Edit Ben".' } },
+    { tab: "Toggle", see: { without: "toggle", with: "toggle" },
+      without: { reads: [['button "Filters"']], thought: "Is the panel open?" },
+      with: { reads: [['button "Filters"', "not expanded"]], thought: "It's closed." } },
+    { tab: "Selected", see: { without: "views", with: "views" },
+      without: { reads: [['button "Day"'], ['button "Week"'], ['button "Month"']], thought: "Which view is on?" },
+      with: { reads: [['button "Day"', "pressed"], ['button "Week"'], ['button "Month"']], thought: "Day is on." } },
   ];
   const W = 900;
   const BAR = 52;
@@ -192,7 +198,7 @@ function hero(t) {
   const PW = RX - 20;
   const HEAD = BAR + 48;
   const height = HEAD + 148;
-  const cycle = 48;
+  const cycle = scenes.length * 16;
   const phase = 100 / (scenes.length * 2);
   const keys = [];
   let n = 0;
@@ -209,6 +215,13 @@ function hero(t) {
   const ui = {
     icon: `${box(lx, top + 8, 44, 38)}<path transform="translate(${lx + 12} ${top + 17})" d="M2 5h16M7 5V2h6v3M4 5l1 13h10l1-13" ` +
       `fill="none" stroke="${t.text}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    toggle: `${box(lx, top + 8, 120, 38)}<text class="ue" x="${lx + 16}" y="${top + 32}">Filters</text>` +
+      `<path d="M${lx + 92} ${top + 24}l5 5 5-5" fill="none" stroke="${t.text}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    views: ["Day", "Week", "Month"].map((name, i) => {
+      const x = lx + i * 86;
+      const on = i === 0 ? `<rect x="${x}" y="${top + 8}" width="80" height="38" rx="6" fill="${t.brand}" opacity=".14"/>` : "";
+      return `${box(x, top + 8, 80, 38)}${on}<text class="ue" x="${x + 40}" y="${top + 32}" text-anchor="middle">${name}</text>`;
+    }).join(""),
     pay: `${box(lx, top + 8, 120, 38)}<text class="ub" x="${lx + 60}" y="${top + 32}" text-anchor="middle">Pay</text>`,
     rows: ["Ana", "Ben", "Carl"].map((name, i) => {
       const y = top - 12 + i * 44;
