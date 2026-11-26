@@ -47,6 +47,8 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "label attribute on an input", code: `<input type="checkbox" label="Remember me" />`, errors },
     { name: "empty label around it", code: `<label><input type="checkbox" /></label>`, errors },
     { name: "htmlFor on an element that is not a label", code: `<><div htmlFor="task">Task</div><input type="checkbox" id="task" /></>`, errors },
+    { name: "empty label with htmlFor", code: `<><label htmlFor="task"></label><input type="checkbox" id="task" /></>`, errors },
+    { name: "htmlFor and id that React drops", code: `<><label htmlFor={null}>Task</label><input type="checkbox" id={null} /></>`, errors },
     { name: "label holding only hidden text", code: `<label><input type="checkbox" /><span aria-hidden="true">Remember me</span></label>`, errors },
     { name: "label holding only a blank string", code: `<label><input type="checkbox" />{""}</label>`, errors },
   ],

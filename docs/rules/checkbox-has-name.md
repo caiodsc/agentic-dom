@@ -30,7 +30,7 @@ A checkbox in a list row or a table cell often sits next to its text without bei
 </label>
 ```
 
-A checkbox is an `<input type="checkbox">`, an element with `role="checkbox"`, or a component whose name ends in `Checkbox`. It passes with `aria-label`, `aria-labelledby`, `title` or, on a component, a `label` prop. It also passes inside a `<label>` that holds text or an expression, inside a component whose name ends in `Label`, with text or an expression anywhere inside it, or with an `id` that a `htmlFor` on a `<label>` or a component in the same file names. An `<input>` has no `label` attribute, and React renders nothing for `{false}`, `{null}` or a blank string, and text with `aria-hidden="true"` is left out of the name, so none of these names it. An `id` that no `htmlFor` in the file names does not pass.
+A checkbox is an `<input type="checkbox">`, an element with `role="checkbox"`, or a component whose name ends in `Checkbox`. It passes with `aria-label`, `aria-labelledby`, `title` or, on a component, a `label` prop. It also passes inside a `<label>` that holds text or an expression, inside a component whose name ends in `Label`, with text or an expression anywhere inside it, or with an `id` that a `htmlFor` on a `<label>` that holds text or on a component in the same file names. An `<input>` has no `label` attribute, and React renders nothing for `{false}`, `{null}` or a blank string, and text with `aria-hidden="true"` is left out of the name, so none of these names it. An `id` that no `htmlFor` in the file names does not pass.
 
 ## Not reported
 
