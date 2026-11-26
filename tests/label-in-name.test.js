@@ -6,6 +6,8 @@ ruleTester.run("label-in-name", rule, {
     `<button aria-label="Delete invoice">Delete</button>`,
     `<a href="/orders" aria-label="View all orders">View all</a>`,
     { name: "case and punctuation differ", code: `<button aria-label="save, then close">Save!</button>` },
+    { name: "line break inside the text", code: `<button aria-label="Cancel now">Cancel<br />now</button>` },
+    { name: "hyphen only on one side", code: `<button aria-label="Email the team">E-mail</button>` },
     { name: "no aria-label", code: `<button>Save</button>` },
     { name: "aria-labelledby names it", code: `<button aria-labelledby="t" aria-label="Close">Cancel</button>` },
     { name: "spread may replace the aria-label", code: `<button {...props} aria-label="Close">Cancel</button>` },

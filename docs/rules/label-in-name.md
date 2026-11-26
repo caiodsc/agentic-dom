@@ -22,7 +22,7 @@ An `aria-label` replaces the text as the name. An agent that reads "Cancel" on t
 </button>
 ```
 
-Dropping the `aria-label` also works, since the text becomes the name. The match ignores case and punctuation and also finds the text inside a longer word, so `aria-label="save, then close"` passes for `Save!` and `aria-label="Learn about order statuses"` passes for `Status`.
+Dropping the `aria-label` also works, since the text becomes the name. The match ignores case, spaces and punctuation and also finds the text inside a longer word, so `aria-label="save, then close"` passes for `Save!` and `aria-label="Learn about order statuses"` passes for `Status`.
 
 ## Not reported
 
