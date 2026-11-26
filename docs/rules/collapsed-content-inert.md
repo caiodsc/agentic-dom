@@ -29,6 +29,7 @@ A collapsed panel with `max-h-0` hides its content from the eye only. The button
 - Code the rule can't follow, like a spread (`{...props}`) on the element, even with attributes after it, or a class from a variable (`className={classes}`).
 - A component, like `<Panel>` or `<motion.div>`, since the rule can't tell whether it passes `inert` on.
 - An element with no content, or one that is always collapsed (`className="h-0"`).
+- A collapse class inside another condition, like `a ? "flex" : b ? "h-0" : ""` or `x || (c && "h-0")`, since the rule would have to combine both conditions to name when it collapses.
 - A class that collapses only at some screen sizes, like `md:max-h-0`.
 - Content hidden another way, like `opacity-0` alone.
 

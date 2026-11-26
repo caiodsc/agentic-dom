@@ -22,6 +22,9 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "class from a variable", code: `<div className={classes}>{children}</div>` },
     { name: "collapse class on the falsy side of ||", code: `<div className={c || "h-0"}>{children}</div>` },
     { name: "object keys that are not collapse classes", code: `<div className={cn({ [key]: c, flex: c, ...rest })}>{children}</div>` },
+    { name: "collapse inside another ternary", code: `<div className={a ? "flex" : b ? "h-0" : "block"}>{children}</div>` },
+    { name: "collapse after ||", code: `<div className={x || (c ? "h-0" : "")}>{children}</div>` },
+    { name: "collapse after &&", code: `<div className={cn(a && (b ? "h-0" : ""))}>{children}</div>` },
     { name: "other collapse classes set", code: `<div className={c ? "h-0" : ""}>{children}</div>`, options: [{ collapseClasses: ["collapsed"] }] },
   ],
   invalid: [
@@ -39,8 +42,6 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "array", code: `<div className={cn(["overflow-hidden", c && "h-0"])}>{children}</div>`, errors: reported("c") },
     { name: "object", code: `<div className={clsx({ "max-h-0": collapsed })}>{children}</div>`, errors: reported("collapsed") },
     { name: "string concatenation", code: `<div className={"overflow-hidden " + (c ? "h-0" : "")}>{children}</div>`, errors: reported("c") },
-    { name: "nested ternary", code: `<div className={a ? "flex" : b ? "h-0" : "block"}>{children}</div>`, errors: reported("b") },
-    { name: "|| before the collapse", code: `<div className={x || (c ? "h-0" : "")}>{children}</div>`, errors: reported("c") },
     { name: "inert React drops", code: `<div className={c ? "h-0" : ""} inert={false}>{children}</div>`, errors: reported("c") },
     { name: "aria-hidden leaves it focusable", code: `<div className={c ? "h-0" : ""} aria-hidden={c}>{children}</div>`, errors: reported("c") },
     { name: "other collapse classes", code: `<div className={c ? "collapsed" : ""}>{children}</div>`, options: [{ collapseClasses: ["collapsed"] }], errors: reported("c") },
