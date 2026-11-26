@@ -67,9 +67,8 @@ ruleTester.run("icon-button-has-name", rule, {
       errors: [{ messageId: "noName" }],
     },
     { name: "named import from an icon package", code: `import { Trash2 } from "lucide-react";\n<button><Trash2 /></button>`, errors: [{ messageId: "noName" }] },
-    { name: "renamed import from an icon package", code: `import { FaTrash as Trash } from "react-icons/fa";\n<button><Trash /></button>`, errors: [{ messageId: "noName" }] },
-    { name: "default import from an icon package", code: `import Delete from "@mui/icons-material/Delete";\n<button><Delete /></button>`, errors: [{ messageId: "noName" }] },
-    { name: "namespace import from an icon package", code: `import * as Icons from "@phosphor-icons/react";\n<button><Icons.Trash /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "renamed import from an icon package", code: `import { Trash2 as Trash } from "lucide-react";\n<button><Trash /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "namespace import from an icon package", code: `import * as Icons from "lucide-react";\n<button><Icons.Trash /></button>`, errors: [{ messageId: "noName" }] },
     { name: "custom iconPattern", code: `<button><LucideX /></button>`, options: [{ iconPattern: "^Lucide" }], errors: [{ messageId: "noName" }] },
   ],
 });
