@@ -7,6 +7,7 @@ ruleTester.run("checkbox-has-name", rule, {
   valid: [
     `<label><input type="checkbox" /> Remember me</label>`,
     `<input type="checkbox" aria-label="Remember me" />`,
+    { name: "text inside a fragment", code: `<Checkbox><>Remember me</></Checkbox>` },
     { name: "aria-labelledby", code: `<><Checkbox aria-labelledby={textId} /><span id={textId}>{task.text}</span></>` },
     { name: "title", code: `<input type="checkbox" title="Select all" />` },
     { name: "label prop", code: `<Checkbox label="Remember me" />` },
