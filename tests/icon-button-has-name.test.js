@@ -33,6 +33,7 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "lowercase element ending in Icon", code: `<button><myIcon /></button>` },
     { name: "component mapped to none", code: `<Action><CloseIcon /></Action>`, settings: { "agentic-dom": { components: { Action: { as: "none" } } } } },
     { name: "same name from another package", code: `import { Plus } from "./plus";\n<button><Plus /></button>` },
+    { name: "local name that hides an icon import", code: `import { Plus } from "lucide-react";\nconst A = ({ Plus }) => <button><Plus /></button>;` },
     { name: "custom iconPattern replaces the default", code: `<button><CloseIcon /></button>`, options: [{ iconPattern: "^Lucide" }] },
   ],
   invalid: [
@@ -68,6 +69,7 @@ ruleTester.run("icon-button-has-name", rule, {
     },
     { name: "named import from an icon package", code: `import { Trash2 } from "lucide-react";\n<button><Trash2 /></button>`, errors: [{ messageId: "noName" }] },
     { name: "renamed import from an icon package", code: `import { Trash2 as Trash } from "lucide-react";\n<button><Trash /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "import written after the button", code: `const A = () => <button><Trash2 /></button>;\nimport { Trash2 } from "lucide-react";`, errors: [{ messageId: "noName" }] },
     { name: "namespace import from an icon package", code: `import * as Icons from "lucide-react";\n<button><Icons.Trash /></button>`, errors: [{ messageId: "noName" }] },
     { name: "custom iconPattern", code: `<button><LucideX /></button>`, options: [{ iconPattern: "^Lucide" }], errors: [{ messageId: "noName" }] },
   ],
