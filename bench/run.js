@@ -26,7 +26,7 @@ const ALL = { pagination: { page: 1, perPage: 1000 }, sort: { field: "id", order
 
 const SYSTEM_PROMPT = "You operate a web app through the browser tools. Do the user's task in the app.";
 const prompt = (task) =>
-  `A CRM is open in the browser at ${APP_URL}. ${task.prompt} ` +
+  `A CRM is open in the browser at ${APP_URL}${task.start}. ${task.prompt} ` +
   "Do not reload the page or open a new one: the demo data lives in the page and resets on reload. " +
   "When you are done, reply with one sentence saying what you did, or why you could not do it.";
 
@@ -58,10 +58,13 @@ async function startApp() {
     detached: true,
   });
   await waitFor(APP_URL);
-  return () => process.kill(-vite.pid);
+  return async () => {
+    process.kill(-vite.pid);
+    while (await fetch(APP_URL).then(() => true, () => false)) await wait(200);
+  };
 }
 
-async function startBrowser() {
+async function startBrowser(url) {
   const profile = mkdtempSync(join(tmpdir(), "bench-chrome-"));
   const chrome = spawn(chromium.executablePath(), [
     "--headless=new",
@@ -71,7 +74,7 @@ async function startBrowser() {
     `--user-data-dir=${profile}`,
     "--window-size=1440,900",
     "--no-first-run",
-    APP_URL,
+    url,
   ], { stdio: "ignore" });
   await waitFor(`http://127.0.0.1:${CDP_PORT}/json/version`);
   const browser = await chromium.connectOverCDP(`http://127.0.0.1:${CDP_PORT}`);
@@ -157,36 +160,39 @@ function summarize(events) {
   };
 }
 
-async function check(browser, task) {
+async function check(browser, task, answer) {
   const pages = browser.contexts().flatMap((c) => c.pages());
   for (const page of pages) {
     const has = await page.evaluate(() => Boolean(window.__bench)).catch(() => false);
-    if (has) return page.evaluate(`(${task.check})(window.__bench.dataProvider, ${JSON.stringify(ALL)})`);
+    if (has) return page.evaluate(`(${task.check})(window.__bench.dataProvider, ${JSON.stringify(ALL)}, ${JSON.stringify(answer ?? "")})`);
   }
   return false;
 }
 
 const rows = [];
-for (const variant of opts.variants.split(",")) {
-  useVariant(variant);
-  const stopApp = await startApp();
-  try {
-    for (const task of tasks) {
-      for (let run = 1; run <= Number(opts.runs); run++) {
+const variants = opts.variants.split(",");
+for (let run = 1; run <= Number(opts.runs); run++) {
+  // Alternating the order keeps drift over a long run from landing on one version only.
+  for (const variant of run % 2 ? variants : [...variants].reverse()) {
+    useVariant(variant);
+    const stopApp = await startApp();
+    try {
+      for (const task of tasks) {
         const dir = join(outDir, variant);
         mkdirSync(dir, { recursive: true });
-        const { browser, stop } = await startBrowser();
+        const { browser, stop } = await startBrowser(APP_URL + task.start);
         const agent = await runAgent(task, join(dir, `${task.id}-${run}.jsonl`));
-        const pass = await check(browser, task).catch(() => false);
+        const summary = summarize(agent.events);
+        const pass = await check(browser, task, summary.answer).catch(() => false);
         await stop();
-        const row = { variant, task: task.id, rule: task.rule, source: task.source, run, model: opts.model, pass, timedOut: agent.timedOut, ...summarize(agent.events) };
+        const row = { variant, task: task.id, rule: task.rule, source: task.source, run, model: opts.model, pass, timedOut: agent.timedOut, ...summary };
         rows.push(row);
         writeFileSync(join(dir, `${task.id}-${run}.json`), JSON.stringify(row, null, 2));
         console.log(`${variant} ${task.id} #${run}: ${pass ? "PASS" : "FAIL"} in ${row.toolCalls} tool calls, ${row.inputTokens} input tokens`);
       }
+    } finally {
+      await stopApp();
     }
-  } finally {
-    stopApp();
   }
 }
 execFileSync("git", ["-C", app, "checkout", "-q", "--", "."]);
