@@ -93,5 +93,7 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "unnamed button in a callback that is not a map", code: `render(() => <button><CloseIcon /></button>);`, errors: [{ messageId: "noName" }] },
     { name: "unnamed button in a function called right away", code: `(() => <button><CloseIcon /></button>)();`, errors: [{ messageId: "noName" }] },
     { name: "unnamed button outside any element or function", code: `const close = <button><CloseIcon /></button>;`, errors: [{ messageId: "noName" }] },
+    { name: "unnamed buttons on the two sides of a ternary", code: `<div>{editing ? <button onClick={save}><CheckIcon /></button> : <button onClick={edit}><EditIcon /></button>}</div>`, errors: [{ messageId: "noName" }, { messageId: "noName" }] },
+    { name: "ternary of unnamed buttons beside another unnamed button", code: `<div>{editing ? <button onClick={save}><CheckIcon /></button> : <button onClick={edit}><EditIcon /></button>}<button onClick={remove}><TrashIcon /></button></div>`, errors: [{ messageId: "noNameAmongUnnamed" }, { messageId: "noNameAmongUnnamed" }, { messageId: "noNameAmongUnnamed" }] },
   ],
 });
