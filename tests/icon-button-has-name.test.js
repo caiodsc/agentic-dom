@@ -36,6 +36,11 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "same name from another package", code: `import { Plus } from "./plus";\n<button><Plus /></button>` },
     { name: "require of an icon package", code: `const { Trash2 } = require("lucide-react");\n<button><Trash2 /></button>` },
     { name: "local name that hides an icon import", code: `import { Plus } from "lucide-react";\nconst A = ({ Plus }) => <button><Plus /></button>;` },
+    { name: "name on the rendered button", code: `<TooltipTrigger render={<Button aria-label="Edit" />}><EditIcon /></TooltipTrigger>` },
+    { name: "name on the component that renders the button", code: `<TooltipTrigger aria-label="Edit" render={<Button />}><EditIcon /></TooltipTrigger>` },
+    { name: "spread on the rendered button", code: `<TooltipTrigger render={<Button {...props} />}><EditIcon /></TooltipTrigger>` },
+    { name: "rendered element that is not a button", code: `<TooltipTrigger render={<span />}><EditIcon /></TooltipTrigger>` },
+    { name: "render given a function", code: `<TooltipTrigger render={(props) => <Button {...props} />}><EditIcon /></TooltipTrigger>` },
     { name: "custom iconPattern replaces the default", code: `<button><CloseIcon /></button>`, options: [{ iconPattern: "^Lucide" }] },
   ],
   invalid: [
@@ -72,6 +77,7 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "renamed import from an icon package", code: `import { Trash2 as Trash } from "lucide-react";\n<button><Trash /></button>`, errors: [{ messageId: "noName" }] },
     { name: "import written after the button", code: `const A = () => <button><Trash2 /></button>;\nimport { Trash2 } from "lucide-react";`, errors: [{ messageId: "noName" }] },
     { name: "namespace import from an icon package", code: `import * as Icons from "lucide-react";\n<button><Icons.Trash /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "icon inside a component that renders a button", code: `<TooltipTrigger render={<Button onClick={edit} />}><EditIcon /></TooltipTrigger>`, errors: [{ messageId: "noName" }] },
     { name: "custom iconPattern", code: `<button><LucideX /></button>`, options: [{ iconPattern: "^Lucide" }], errors: [{ messageId: "noName" }] },
   ],
 });
