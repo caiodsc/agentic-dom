@@ -185,6 +185,12 @@ function hero(t) {
     { tab: "Repeated buttons", see: { without: "rows", with: "rows" },
       without: { reads: [['button "Edit"'], ['button "Edit"'], ['button "Edit"']], thought: "Which one is Ben's?" },
       with: { reads: [['button "Edit Ana"'], ['button "Edit Ben"'], ['button "Edit Carl"']], thought: '"Edit Ben".' } },
+    { tab: "Toggle button", see: { without: "toggle", with: "toggle" },
+      without: { reads: [['button "Filters"']], thought: "Is the panel open?" },
+      with: { reads: [['button "Filters"', "not expanded"]], thought: "It's closed." } },
+    { tab: "Selected button", see: { without: "views", with: "views" },
+      without: { reads: [['button "Day"'], ['button "Week"'], ['button "Month"']], thought: "Which view is on?" },
+      with: { reads: [['button "Day"', "pressed"], ['button "Week"'], ['button "Month"']], thought: "Day is on." } },
   ];
   const W = 900;
   const BAR = 52;
@@ -192,7 +198,7 @@ function hero(t) {
   const PW = RX - 20;
   const HEAD = BAR + 48;
   const height = HEAD + 148;
-  const cycle = 48;
+  const cycle = scenes.length * 16;
   const phase = 100 / (scenes.length * 2);
   const keys = [];
   let n = 0;
@@ -209,6 +215,13 @@ function hero(t) {
   const ui = {
     icon: `${box(lx, top + 8, 44, 38)}<path transform="translate(${lx + 12} ${top + 17})" d="M2 5h16M7 5V2h6v3M4 5l1 13h10l1-13" ` +
       `fill="none" stroke="${t.text}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    toggle: `${box(lx, top + 8, 120, 38)}<text class="ue" x="${lx + 16}" y="${top + 32}">Filters</text>` +
+      `<path d="M${lx + 92} ${top + 24}l5 5 5-5" fill="none" stroke="${t.text}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    views: ["Day", "Week", "Month"].map((name, i) => {
+      const x = lx + i * 86;
+      const on = i === 0 ? `<rect x="${x}" y="${top + 8}" width="80" height="38" rx="6" fill="${t.brand}" opacity=".14"/>` : "";
+      return `${box(x, top + 8, 80, 38)}${on}<text class="ue" x="${x + 40}" y="${top + 32}" text-anchor="middle">${name}</text>`;
+    }).join(""),
     pay: `${box(lx, top + 8, 120, 38)}<text class="ub" x="${lx + 60}" y="${top + 32}" text-anchor="middle">Pay</text>`,
     rows: ["Ana", "Ben", "Carl"].map((name, i) => {
       const y = top - 12 + i * 44;
@@ -257,12 +270,12 @@ function hero(t) {
   });
   let tx = 16;
   scenes.forEach((scene, i) => {
-    const w = scene.tab.length * 7.6 + 28;
+    const w = scene.tab.length * 7.6 + 20;
     const a = (i * 2 * phase).toFixed(2);
     const b = ((i * 2 + 2) * phase).toFixed(2);
     keys.push(`@keyframes u${i}{0%,${a}%{transform:scaleX(0)}${b}%,100%{transform:scaleX(1)}}`);
     out += `<g ${show(i * 2, i * 2 + 2)}><rect x="${tx}" y="11" width="${w}" height="30" rx="15" fill="${t.brand}" opacity=".14"/>` +
-      `<rect x="${tx + 14}" y="46" width="${w - 28}" height="3" rx="1.5" fill="${t.good}" style="transform-box:fill-box;transform-origin:left;animation:u${i} ${cycle}s linear infinite"/></g>` +
+      `<rect x="${tx + 10}" y="46" width="${w - 20}" height="3" rx="1.5" fill="${t.good}" style="transform-box:fill-box;transform-origin:left;animation:u${i} ${cycle}s linear infinite"/></g>` +
       `<text class="tab" x="${tx + w / 2}" y="31" text-anchor="middle">${scene.tab}</text>`;
     tx += w + 6;
   });
@@ -285,7 +298,8 @@ const readme = readFileSync(`${root}README.md`, "utf8");
 for (const dir of ["before", "after"]) {
   for (const file of readdirSync(`${demo}/${dir}`)) {
     const code = readFileSync(`${demo}/${dir}/${file}`, "utf8").replace(/^import .*\n+/gmu, "").replace(/^export /gmu, "");
-    if (!readme.includes(code)) throw new Error(`README.md must show readme-demo/${dir}/${file} without export and imports.`);
+    // Some demos only feed the hero and are not in the README.
+    if (readme.includes(`const ${basename(file, ".jsx")} = `) && !readme.includes(code)) throw new Error(`README.md must show readme-demo/${dir}/${file} without export and imports.`);
   }
 }
 

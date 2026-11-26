@@ -20,10 +20,10 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
-  <img alt="Without agentic-dom, an AI agent reads a button with no name and asks what it does, reads a disabled Pay button and asks why it can't pay, and reads three buttons named Edit and asks which one is Ben's. With agentic-dom, it reads button Delete, a disabled Pay button described as Add a card to pay, and buttons named Edit Ana, Edit Ben and Edit Carl" src="assets/hero-light.svg">
+  <img alt="Without agentic-dom, an AI agent reads a button with no name and asks what it does, reads a disabled Pay button and asks why it can't pay, reads three buttons named Edit and asks which one is Ben's, reads a Filters button and asks if the panel is open, and reads Day, Week and Month buttons and asks which view is on. With agentic-dom, it reads button Delete, a disabled Pay button described as Add a card to pay, buttons named Edit Ana, Edit Ben and Edit Carl, a Filters button that is not expanded, and a Day button that is pressed" src="assets/hero-light.svg">
 </picture>
 
-<sub>Computed by rendering the components in <a href="#see-it-in-action">See it in action</a>, not mocked.</sub>
+<sub>Computed by rendering the components in <a href="scripts/readme-demo">scripts/readme-demo</a>, not mocked.</sub>
 
 </div>
 
