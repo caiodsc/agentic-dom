@@ -10,11 +10,13 @@ ruleTester.run("label-in-name", rule, {
     { name: "aria-labelledby names it", code: `<button aria-labelledby="t" aria-label="Close">Cancel</button>` },
     { name: "spread may replace the aria-label", code: `<button {...props} aria-label="Close">Cancel</button>` },
     { name: "aria-label from an expression", code: `<button aria-label={label}>Cancel</button>` },
-    { name: "aria-label with no words", code: `<button aria-label="">Cancel</button>` },
+    { name: "empty aria-label", code: `<button aria-label=" ">Cancel</button>` },
     { name: "text from an expression", code: `<button aria-label="Close">{text}</button>` },
     { name: "component with a runtime prop", code: `<button aria-label="Close"><Trans id={key} /></button>` },
     { name: "icon only", code: `<button aria-label="Close"><CloseIcon /></button>` },
     { name: "symbol only", code: `<button aria-label="Close">×</button>` },
+    { name: "text inside a longer word", code: `<button aria-label="Learn about order statuses">Status</button>` },
+    { name: "input button with a value", code: `<input type="button" value="Cancel" aria-label="Close" />` },
     { name: "not a button or link", code: `<div aria-label="Summary">Totals</div>` },
   ],
   invalid: [
@@ -31,6 +33,16 @@ ruleTester.run("label-in-name", rule, {
       name: "icon beside the text",
       code: `<Button aria-label="Upload file"><UploadIcon /> Drop a PDF here</Button>`,
       errors: [{ messageId: "missingText", data: { kind: "button", text: "Drop a PDF here", label: "Upload file" } }],
+    },
+    {
+      name: "aria-label with only a symbol",
+      code: `<button aria-label="×">Cancel</button>`,
+      errors: [{ messageId: "missingText", data: { kind: "button", text: "Cancel", label: "×" } }],
+    },
+    {
+      name: "aria-labelledby React drops",
+      code: `<button aria-labelledby={undefined} aria-label="Close">Cancel</button>`,
+      errors: [{ messageId: "missingText" }],
     },
   ],
 });
