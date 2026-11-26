@@ -159,6 +159,7 @@ const TeamList = ({ users }) =>
 | 5 | [error-prop-linked](docs/rules/error-prop-linked.md) | A component shows its `error` prop but never links it to its control | warn |
 | 6 | [toggle-has-state](docs/rules/toggle-has-state.md) | A button shows and hides content but never says whether it is shown | warn |
 | 7 | [selected-has-state](docs/rules/selected-has-state.md) | A button looks selected but never says whether it is selected | warn |
+| 8 | [label-in-name](docs/rules/label-in-name.md) | A button or link whose `aria-label` leaves out the text it shows | warn |
 
 <br>
 
