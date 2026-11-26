@@ -43,7 +43,6 @@ function attributes(source) {
   return found;
 }
 
-// Removes the attribute and the blank space before it, or its whole line when it is alone on it.
 function without(source, [start, end]) {
   const lineStart = source.lastIndexOf("\n", start - 1) + 1;
   const lineEnd = source.indexOf("\n", end);

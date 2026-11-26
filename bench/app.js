@@ -25,16 +25,15 @@ export async function waitFor(url) {
   throw new Error(`${url} did not come up`);
 }
 
-export function useVariant(variant) {
+function useVariant(variant) {
   execFileSync("git", ["-C", app, "checkout", "-q", "--", "."]);
   execFileSync("git", ["-C", app, "apply", join(here, "patches", `${variant}.patch`)]);
 }
 
-export function resetApp() {
+function resetApp() {
   execFileSync("git", ["-C", app, "checkout", "-q", "--", "."]);
 }
 
-// Builds every version to dist/<variant>, then puts the app's sources back.
 export function buildVariants() {
   try {
     for (const variant of VARIANTS) {
@@ -52,7 +51,6 @@ export function buildVariants() {
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".json": "application/json", ".woff2": "font/woff2" };
 
-// Serves every built version and returns a function that stops them.
 export async function serveVariants() {
   const servers = VARIANTS.map((variant) => {
     const dir = join(here, "dist", variant);

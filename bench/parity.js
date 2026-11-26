@@ -1,6 +1,4 @@
-// Screenshots each task's start screen in both versions and counts the pixels that differ.
 // The versions differ only in attributes an agent reads, so every screen should match exactly.
-// It also counts the lines of the agent's page snapshot that differ, which is what each screen takes away from the agent.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "playwright";
@@ -47,7 +45,6 @@ function missing(a, b) {
   return a.split("\n").filter((line) => (left.get(line) ? (left.set(line, left.get(line) - 1), false) : true));
 }
 
-// Counts differing pixels by drawing both screenshots on a canvas.
 const page = await browser.newPage();
 let failed = 0;
 for (const [start, { before, after }] of Object.entries(shots)) {

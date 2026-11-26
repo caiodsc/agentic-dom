@@ -1,5 +1,4 @@
 // Everyday CRM tasks, written from what the app does, not from where patches/before.patch removed attributes.
-// `start` is the screen the agent begins on.
 // `expect(changes, answer, before)` says whether the task got done, from the data changes the run made and the agent's last reply.
 // `touches(change, before)` says whether a change is part of the task. Any other change counts as collateral.
 // A change is { resource, id, type: "added" | "removed" | "changed", fields, before, after }.
@@ -7,7 +6,6 @@
 const find = (changes, resource, id, type = "changed") => changes.find((c) => c.resource === resource && c.id === id && c.type === type);
 const added = (changes, resource) => changes.filter((c) => c.resource === resource && c.type === "added").map((c) => c.after);
 const idOf = (before, resource, match) => before[resource].find(match)?.id;
-// Matches changes by "resource", "resource:id" or "resource:added".
 const on = (...keys) => (c) => keys.some((k) => k === c.resource || k === `${c.resource}:${c.id}` || k === `${c.resource}:${c.type}`);
 const sameSet = (a = [], b = []) => [...a].sort().join() === [...b].sort().join();
 

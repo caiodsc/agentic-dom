@@ -22,7 +22,7 @@ const { values: opts } = parseArgs({
 
 const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
-// Deleting is undoable, so the app writes a delete only after the undo notice closes.
+// The app saves an undoable change only after its undo notice closes.
 const UNDO_MS = 8000;
 const RESOURCES = ["sales", "tags", "companies", "contacts", "contact_notes", "deals", "deal_notes", "tasks", "configuration"];
 // A reply that says the agent did not finish. Any other reply counts as a claim that it did.
@@ -42,7 +42,7 @@ async function startBrowser(url, port) {
   const profile = mkdtempSync(join(tmpdir(), "bench-chrome-"));
   const chrome = spawn(chromium.executablePath(), [
     "--headless=new",
-    // Chromium exits at start without it where AppArmor blocks its sandbox, as on Ubuntu 24.04.
+    // Chromium exits at start without it where AppArmor blocks its sandbox.
     "--no-sandbox",
     OFFLINE,
     `--remote-debugging-port=${port}`,
@@ -135,7 +135,6 @@ function summarize(events) {
   };
 }
 
-// Every record of every resource, read through the demo's data provider in the page that holds it.
 async function snapshot(browser) {
   for (const page of browser.contexts().flatMap((c) => c.pages())) {
     if (!(await page.evaluate(() => Boolean(window.__bench)).catch(() => false))) continue;
@@ -178,7 +177,7 @@ async function attempt({ task, variant, run }, port) {
     const before = await snapshot(browser);
     const agent = await runAgent(task, port, join(dir, `${task.id}-${run}.jsonl`));
     const summary = summarize(agent.events);
-    // The app saves an undoable change when its notice closes, and the notice stays open while the mouse is over it.
+    // The undo notice stays open while the mouse is over it.
     await browser.contexts()[0].pages()[0]?.mouse.move(0, 0).catch(() => {});
     await wait(UNDO_MS);
     const after = await snapshot(browser).catch(() => null);
