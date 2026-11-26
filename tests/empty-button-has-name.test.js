@@ -21,6 +21,9 @@ ruleTester.run("empty-button-has-name", rule, {
     { name: "spread on the inner element", code: `<button><span {...knobProps} /></button>` },
     { name: "id a label can point at", code: `<button id="cancelled"><span className="knob" /></button>` },
     { name: "inside a label", code: `<label>Show cancelled <button><span className="knob" /></button></label>` },
+    { name: "inside a label with its text further out", code: `<label><span>Show cancelled</span><div><button><span className="knob" /></button></div></label>` },
+    { name: "name on a rendered button", code: `<TooltipTrigger render={<Button aria-label="Delete" />}><span className="knob" /></TooltipTrigger>` },
+    { name: "spread on a rendered button", code: `<TooltipTrigger render={<Button {...props} />}><span className="knob" /></TooltipTrigger>` },
   ],
   invalid: [
     { code: `<button onClick={toggle}><span className="knob" /></button>`, errors: [{ messageId: "noName" }] },
@@ -31,6 +34,11 @@ ruleTester.run("empty-button-has-name", rule, {
     { name: "values React renders as nothing", code: `<button><span />{null}{false}{""}{/* knob */}</button>`, errors: [{ messageId: "noName" }] },
     { name: "fragment with empty elements", code: `<button><><span className="knob" /></></button>`, errors: [{ messageId: "noName" }] },
     { name: "inside another element", code: `<div><button><span className="knob" /></button></div>`, errors: [{ messageId: "noName" }] },
+    { name: "title on the inner element", code: `<button><span title="Delete" /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "inside an empty label", code: `<label><button><span className="knob" /></button></label>`, errors: [{ messageId: "noName" }] },
+    { name: "shown on a condition", code: `<div>{open && <button><span className="knob" /></button>}</div>`, errors: [{ messageId: "noName" }] },
+    { name: "whitespace in an expression", code: `<button>{" "}<span className="knob" /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "rendered button", code: `<TooltipTrigger render={<Button />}><span className="knob" /></TooltipTrigger>`, errors: [{ messageId: "noName" }] },
     { name: "empty name attribute", code: `<button aria-label=""><span className="knob" /></button>`, errors: [{ messageId: "noName" }] },
   ],
 });

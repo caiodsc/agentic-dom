@@ -24,14 +24,16 @@ An agent reads a button by its name. A button whose content is only empty elemen
 </button>
 ```
 
-`aria-label` and `title` also count. So does one of them on an element inside the button, since the browser builds the button's name from its content.
+`aria-label` and `title` also count. So does `aria-label` or `aria-labelledby` on an element inside the button, since the browser builds the button's name from its content. A `title` there only shows a tooltip, so it does not count.
 
-A button counts as empty when it has at least one child element or fragment and every child is blank text, a value React renders as nothing (`null`, `undefined`, `true`, `false`, `""`), or a fragment (`<>…</>`), `span`, `div` or `i` with only such children.
+A component with `render={<Button />}`, as in Base UI, counts as that button around its own children. A name, an `id` or a spread on either element counts.
+
+A button counts as empty when it has at least one child element or fragment and every child is blank text, also inside `{" "}`, a value React renders as nothing (`null`, `undefined`, `true`, `false`, `""`), or a fragment (`<>…</>`), `span`, `div` or `i` with only such children.
 
 ## Not reported
 
 - Code the rule can't follow, like a spread (`{...props}`) on the button or on an element inside it, even with attributes after it, a child written as any other expression (`{label}`), a component inside the button (`<Avatar />`) or a button with no children.
-- A button with an `id`, since a `<label htmlFor>` elsewhere can name it, and a button inside a `<label>`.
+- A button with an `id`, since a `<label htmlFor>` elsewhere can name it, and a button inside a `<label>` that holds anything besides the button.
 - Any other element inside the button, like an `<img>`, whose `alt` names the button, or an `<svg>`, which `icon-button-has-name` checks.
 - An `aria-labelledby` id that no element has, or an element with no text. The rule checks that the button points at a name, not that the name exists or what it says.
 - Links that show no text.
