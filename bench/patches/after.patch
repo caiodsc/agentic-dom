@@ -37,3 +37,15 @@ index 499f88c..ac98c15 100644
                >
                  <Pencil />
                  {translate("ra.action.edit")}
+diff --git a/src/components/atomic-crm/tags/TagChip.tsx b/src/components/atomic-crm/tags/TagChip.tsx
+index 18b5095..6de7929 100644
+--- a/src/components/atomic-crm/tags/TagChip.tsx
++++ b/src/components/atomic-crm/tags/TagChip.tsx
+@@ -30,6 +30,7 @@ export function TagChip({ tag, onUnlink }: TagChipProps) {
+       >
+         {tag.name}
+         <button
++          aria-label={`Remove tag ${tag.name}`}
+           onClick={(e) => {
+             e.stopPropagation();
+             onUnlink();

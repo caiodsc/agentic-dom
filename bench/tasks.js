@@ -42,4 +42,15 @@ export default [
       return tasks.some((t) => t.contact_id === 68 && /send the proposal/i.test(t.text));
     },
   },
+  {
+    id: "remove-tag",
+    rule: "icon-button-has-name",
+    source: "real",
+    start: "#/contacts/6/show",
+    prompt: 'Remove the tag "musician" from this contact.',
+    check: async (dp) => {
+      const contact = (await dp.getOne("contacts", { id: 6 })).data;
+      return contact.tags.join() === "2";
+    },
+  },
 ];
