@@ -12,6 +12,8 @@ ruleTester.run("collapsed-content-inert", rule, {
     { name: "component, which may not pass inert on", code: `<Panel className={c ? "h-0" : ""}>{children}</Panel>` },
     { name: "member element", code: `<motion.div className={c ? "h-0" : ""}>{children}</motion.div>` },
     { name: "no content", code: `<div className={c ? "h-0" : ""} />` },
+    { name: "only whitespace inside", code: `<div className={c ? "h-0" : ""}>
+    </div>` },
     { name: "always collapsed", code: `<div className="h-0 w-full">{children}</div>` },
     { name: "collapsed on both sides", code: `<div className={c ? "max-h-0" : "h-0"}>{children}</div>` },
     { name: "no collapse class", code: `<div className={c ? "flex" : "hidden"}>{children}</div>` },
