@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
@@ -15,6 +15,8 @@ const { values: opts } = parseArgs({
     model: { type: "string", default: "haiku" },
     concurrency: { type: "string", default: "1" },
     "max-cost": { type: "string", default: "20" },
+    // A results folder to finish: attempts already saved there are skipped.
+    resume: { type: "string" },
   },
 });
 
@@ -33,7 +35,7 @@ const prompt = (task) =>
   "When you are done, reply with one sentence saying what you did, or why you could not do it.";
 
 const tasks = opts.tasks ? allTasks.filter((t) => opts.tasks.split(",").includes(t.id)) : allTasks;
-const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+const stamp = opts.resume ?? new Date().toISOString().replace(/[:.]/g, "-");
 const outDir = join(here, "results", "raw", stamp);
 
 async function startBrowser(url, port) {
@@ -199,7 +201,9 @@ const jobs = [];
 for (let run = 1; run <= Number(opts.runs); run++) {
   for (const task of tasks) {
     // Alternating which version goes first keeps drift over a long run from landing on one version only.
-    for (const variant of run % 2 ? variants : [...variants].reverse()) jobs.push({ task, variant, run });
+    for (const variant of run % 2 ? variants : [...variants].reverse()) {
+      if (!existsSync(join(outDir, variant, `${task.id}-${run}.json`))) jobs.push({ task, variant, run });
+    }
   }
 }
 
@@ -229,5 +233,8 @@ try {
   await stopServers();
 }
 if (spent >= maxCost) console.log(`Stopped at the US$ ${maxCost} cap with ${jobs.length - rows.length} attempts not run.`);
-writeFileSync(join(outDir, "summary.json"), JSON.stringify(rows, null, 2));
+const saved = variants.flatMap((variant) =>
+  readdirSync(join(outDir, variant)).filter((f) => f.endsWith(".json")).map((f) => JSON.parse(readFileSync(join(outDir, variant, f), "utf8"))),
+);
+writeFileSync(join(outDir, "summary.json"), JSON.stringify(saved, null, 2));
 console.log(`Results in ${outDir}`);
