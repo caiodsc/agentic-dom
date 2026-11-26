@@ -17,6 +17,8 @@ ruleTester.run("checkbox-has-name", rule, {
     { name: "inside a Label component", code: `<Label><Checkbox /> Remember me</Label>` },
     { name: "inside a member Label", code: `<Form.Label><Checkbox /> Remember me</Form.Label>` },
     { name: "label with htmlFor before", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id="remember" /></>` },
+    { name: "id written as a template string", code: `<><label htmlFor="remember">Remember me</label><input type="checkbox" id={\`remember\`} /></>` },
+    { name: "htmlFor in single quotes", code: `<><label htmlFor='remember'>Remember me</label><input type="checkbox" id="remember" /></>` },
     { name: "label with htmlFor after", code: `<><Checkbox id={id} /><Label htmlFor={id}>Remember me</Label></>` },
     { name: "spread may carry a name", code: `<Checkbox {...props} />` },
     { name: "spread before aria-label React drops", code: `<Checkbox {...props} aria-label={undefined} />` },
