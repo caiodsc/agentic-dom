@@ -37,6 +37,7 @@ A collapsed panel with `max-h-0` hides its content from the eye only. The button
 - An element with no content, or only what React renders as nothing (`{null}`, `{false}`, a comment), or one that is always collapsed (`className="h-0"`).
 - A collapse class inside another condition, like `a ? "flex" : b ? "h-0" : ""` or `x || (c && "h-0")`, since the rule would have to combine both conditions to name when it collapses.
 - A class that collapses only at some screen sizes, like `md:max-h-0`.
+- A child with the `visible` class inside a collapsed element that has `invisible`, even though that child shows again.
 - Content hidden another way, like `opacity-0` alone.
 
 ## Options
