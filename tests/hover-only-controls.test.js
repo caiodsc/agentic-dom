@@ -61,6 +61,7 @@ function Menu() {
     { name: "object key turned off", code: `<span className={clsx({ invisible: false, "group-hover:visible": true })}><button>Edit</button></span>` },
     { name: "hidden on both sides of the hover state", code: withHover(`<span className={isHovered ? "invisible" : "hidden"}><button>Edit</button></span>`) },
     { name: "condition on a property", code: withHover(`<span className={!row.isHovered ? "invisible" : ""}><button>Edit</button></span>`) },
+    { name: "ternary in a class object with a branch that is not a literal", code: withHover(`<span className={clsx({ invisible: isHovered ? hide : true })}><button>Edit</button></span>`) },
     { name: "computed class key", code: withHover(`<span className={clsx({ [hideClass]: !isHovered, ...rest })}><button>Edit</button></span>`) },
     { name: "hover state set to false only", code: `
 function Row() {
