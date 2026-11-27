@@ -1,5 +1,5 @@
 #!/bin/sh
-# Downloads each app into real-apps/<name> at a fixed commit, so a scan of it gives the same reports every time.
+# A commit, not a branch, so a scan of an app gives the same reports every time.
 set -e
 cd "$(dirname "$0")/.."
 while read -r name repo commit; do
