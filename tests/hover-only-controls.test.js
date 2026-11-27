@@ -82,6 +82,8 @@ function Row({ onEnter }) {
     { name: "hide and hover classes joined by concatenation", code: `<span className={"invisible " + "group-hover:visible"}><button>Edit</button></span>`, errors: reported() },
     { name: "hide and hover classes in a template and its expression", code: `<span className={\`invisible \${"group-hover:visible"}\`}><button>Edit</button></span>`, errors: reported() },
     { name: "hide and hover classes in a class array", code: `<span className={cn(["invisible", "group-hover:visible"])}><button>Edit</button></span>`, errors: reported() },
+    { name: "hover state with a class helper in the hiding branch", code: withHover(`<span className={isHovered ? "" : cn("invisible", size)}><button>Edit</button></span>`), errors: reported() },
+    { name: "hover state with && and a class helper", code: withHover(`<span className={!isHovered && cn("invisible")}><button>Edit</button></span>`), errors: reported() },
     { name: "class in a template literal", code: `<span className={\`invisible group-hover:visible \${size}\`}><button>Edit</button></span>`, errors: reported() },
     { name: "hover state in a string concatenation", code: withHover(`<span className={"ml-2 " + (isHovered ? "" : "invisible")}><button>Edit</button></span>`), errors: reported() },
     { name: "hover state in a class array", code: withHover(`<span className={cn(["ml-2", !isHovered && "invisible"])}><button>Edit</button></span>`), errors: reported() },
