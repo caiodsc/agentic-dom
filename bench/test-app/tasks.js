@@ -1,9 +1,9 @@
 import { GAVE_UP } from "../app.js";
 
-const find = (changes, id, type = "changed") => changes.find((c) => c.resource === "members" && c.id === id && c.type === type);
+const find = (changes, id, type = "changed") => changes.find((c) => c.id === id && c.type === type);
 // A change to another field of the same member is collateral too.
 const member = (id, type, ...fields) => (c) =>
-  c.resource === "members" && c.id === id && c.type === type && c.fields.every((f) => fields.includes(f));
+  c.id === id && c.type === type && c.fields.every((f) => fields.includes(f));
 const RESENT = (id) => (changes) => find(changes, id)?.fields.join() === "invited_at";
 
 export default [

@@ -22,7 +22,6 @@ const { values: opts } = parseArgs({
 
 const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
-const RESOURCES = ["members"];
 const SETTLE_MS = 1000;
 
 const SYSTEM_PROMPT = "You operate a web app through the browser tools. Do the user's task in the app.";
@@ -135,32 +134,25 @@ function summarize(events) {
 async function snapshot(browser) {
   for (const page of browser.contexts().flatMap((c) => c.pages())) {
     if (!(await page.evaluate(() => Boolean(window.__bench)).catch(() => false))) continue;
-    return page.evaluate(async (resources) => {
-      const all = { pagination: { page: 1, perPage: 100000 }, sort: { field: "id", order: "ASC" }, filter: {} };
-      const data = {};
-      for (const r of resources) data[r] = (await window.__bench.dataProvider.getList(r, all)).data;
-      return data;
-    }, RESOURCES);
+    return page.evaluate(() => window.__bench.members());
   }
   return null;
 }
 
 function diff(before, after) {
   const changes = [];
-  for (const resource of RESOURCES) {
-    const was = new Map(before[resource].map((r) => [r.id, r]));
-    const is = new Map(after[resource].map((r) => [r.id, r]));
-    for (const [id, record] of is) if (!was.has(id)) changes.push({ resource, id, type: "added", fields: Object.keys(record), after: record });
-    for (const [id, record] of was) {
-      if (!is.has(id)) {
-        changes.push({ resource, id, type: "removed", fields: [], before: record });
-        continue;
-      }
-      const now = is.get(id);
-      const fields = [...new Set([...Object.keys(record), ...Object.keys(now)])]
-        .filter((f) => JSON.stringify(record[f]) !== JSON.stringify(now[f]));
-      if (fields.length) changes.push({ resource, id, type: "changed", fields, before: record, after: now });
+  const was = new Map(before.map((r) => [r.id, r]));
+  const is = new Map(after.map((r) => [r.id, r]));
+  for (const [id, record] of is) if (!was.has(id)) changes.push({ id, type: "added", fields: Object.keys(record), after: record });
+  for (const [id, record] of was) {
+    if (!is.has(id)) {
+      changes.push({ id, type: "removed", fields: [], before: record });
+      continue;
     }
+    const now = is.get(id);
+    const fields = [...new Set([...Object.keys(record), ...Object.keys(now)])]
+      .filter((f) => JSON.stringify(record[f]) !== JSON.stringify(now[f]));
+    if (fields.length) changes.push({ id, type: "changed", fields, before: record, after: now });
   }
   return changes;
 }
@@ -177,7 +169,7 @@ async function attempt({ task, variant, run }, port) {
     const after = await snapshot(browser).catch(() => null);
     const changes = after ? diff(before, after) : [];
     const pass = Boolean(after) && Boolean(await task.expect(changes, summary.answer, before));
-    const collateral = changes.filter((c) => !task.touches(c, before)).map(({ resource, id, type, fields }) => ({ resource, id, type, fields }));
+    const collateral = changes.filter((c) => !task.touches(c, before)).map(({ id, type, fields }) => ({ id, type, fields }));
     const claimed = !GAVE_UP.test(summary.answer);
     return {
       variant, task: task.id, run, model: opts.model,

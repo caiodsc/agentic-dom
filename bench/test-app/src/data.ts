@@ -52,11 +52,7 @@ export function inviteMember(name: string, email: string) {
 // The benchmark reads the data through this, before and after each run.
 declare global {
   interface Window {
-    __bench: { dataProvider: { getList: (resource: string) => Promise<{ data: Member[] }> } }
+    __bench: { members: () => Member[] }
   }
 }
-window.__bench = {
-  dataProvider: {
-    getList: async (resource) => ({ data: resource === "members" ? structuredClone(members) : [] }),
-  },
-}
+window.__bench = { members: () => structuredClone(members) }
