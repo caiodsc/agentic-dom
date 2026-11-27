@@ -18,6 +18,7 @@ ruleTester.run("hover-only-controls", rule, {
     { name: "opacity keeps the controls in the page", code: `<span className="opacity-0 group-hover:opacity-100 focus-within:opacity-100"><button>Edit</button></span>` },
     { name: "opacity from hover state", code: withHover(`<span className={isHovered ? "opacity-100" : "opacity-0"}><button>Edit</button></span>`) },
     { name: "hidden on hover, not until hover", code: withHover(`<span className={isHovered ? "invisible" : ""}><button>Edit</button></span>`) },
+    { name: "component mapped to none", code: `<span className="invisible group-hover:visible"><TooltipButton /></span>`, settings: { "agentic-dom": { components: { TooltipButton: { as: "none" } } } } },
     { name: "nothing to click inside", code: `<span className="invisible group-hover:visible"><EditIcon /></span>` },
     { name: "nothing to click inside, from hover state", code: withHover(`<span className={isHovered ? "" : "hidden"}>Saved</span>`) },
     { name: "hidden on small screens only", code: `<div className="hidden md:flex"><button>Edit</button></div>` },
