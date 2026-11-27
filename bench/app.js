@@ -27,7 +27,7 @@ export function workspace() {
 // Each version is served on its own port, so runs of both can go at the same time.
 export const appUrl = (variant) => `http://127.0.0.1:${5180 + VARIANTS.indexOf(variant) + 1}/`;
 
-// Outside hosts, like avatar images, answer at different speeds and would make two loads of one screen differ.
+// Outside hosts answer at different speeds and would make two loads of one screen differ.
 export const OFFLINE = "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1";
 
 export const wait = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -5,7 +5,6 @@ import { chromium } from "playwright";
 import { OFFLINE, VARIANTS, appUrl, buildVariants, here, serveVariants } from "./app.js";
 import tasks from "./test-app/tasks.js";
 
-
 const starts = [...new Set(tasks.map((t) => t.start))];
 const outDir = join(here, "results", "parity");
 const shots = {};

@@ -157,9 +157,8 @@ function diff(before, after) {
         continue;
       }
       const now = is.get(id);
-      // Counters like nb_contacts are recomputed by the data provider whenever a related record changes.
       const fields = [...new Set([...Object.keys(record), ...Object.keys(now)])]
-        .filter((f) => !f.startsWith("nb_") && JSON.stringify(record[f]) !== JSON.stringify(now[f]));
+        .filter((f) => JSON.stringify(record[f]) !== JSON.stringify(now[f]));
       if (fields.length) changes.push({ resource, id, type: "changed", fields, before: record, after: now });
     }
   }
