@@ -2,14 +2,13 @@ import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
-import { GAVE_UP, OFFLINE, appProfile, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
+import { GAVE_UP, OFFLINE, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
+import allTasks from "./test-app/tasks.js";
 
 const { values: opts } = parseArgs({
   options: {
-    app: { type: "string", default: "atomic" },
     variants: { type: "string", default: "before,after" },
     tasks: { type: "string" },
     runs: { type: "string", default: "1" },
@@ -21,20 +20,19 @@ const { values: opts } = parseArgs({
   },
 });
 
-const profile = appProfile(opts.app);
-const { default: allTasks } = await import(pathToFileURL(profile.tasks).href);
 const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
-const RESOURCES = profile.resources;
+const RESOURCES = ["members"];
+const SETTLE_MS = 1000;
 
 const SYSTEM_PROMPT = "You operate a web app through the browser tools. Do the user's task in the app.";
 const prompt = (task) =>
-  `${profile.description} is open in the browser. ${task.prompt} ` +
+  `A team admin app is open in the browser. ${task.prompt} ` +
   "Do not reload the page or open a new one: the demo data lives in the page and resets on reload. " +
   "When you are done, reply with one sentence saying what you did, or why you could not do it.";
 
 const tasks = opts.tasks ? allTasks.filter((t) => opts.tasks.split(",").includes(t.id)) : allTasks;
-const stamp = opts.resume ?? `${profile.name}-${new Date().toISOString().replace(/[:.]/g, "-")}`;
+const stamp = opts.resume ?? new Date().toISOString().replace(/[:.]/g, "-");
 const outDir = join(here, "results", "raw", stamp);
 
 async function startBrowser(url, port) {
@@ -176,16 +174,14 @@ async function attempt({ task, variant, run }, port) {
     const before = await snapshot(browser);
     const agent = await runAgent(task, port, join(dir, `${task.id}-${run}.jsonl`));
     const summary = summarize(agent.events);
-    // The undo notice stays open while the mouse is over it.
-    await browser.contexts()[0].pages()[0]?.mouse.move(0, 0).catch(() => {});
-    await wait(profile.settleMs);
+    await wait(SETTLE_MS);
     const after = await snapshot(browser).catch(() => null);
     const changes = after ? diff(before, after) : [];
     const pass = Boolean(after) && Boolean(await task.expect(changes, summary.answer, before));
     const collateral = changes.filter((c) => !task.touches(c, before)).map(({ resource, id, type, fields }) => ({ resource, id, type, fields }));
     const claimed = !GAVE_UP.test(summary.answer);
     return {
-      app: profile.name, variant, task: task.id, run, model: opts.model,
+      variant, task: task.id, run, model: opts.model,
       pass, collateral: collateral.length, collateralChanges: collateral, claimed, silentFailure: claimed && !pass,
       lostPage: !after, timedOut: agent.timedOut, ...summary,
     };
@@ -205,8 +201,8 @@ for (let run = 1; run <= Number(opts.runs); run++) {
   }
 }
 
-buildVariants(profile);
-const stopServers = await serveVariants(profile);
+buildVariants();
+const stopServers = await serveVariants();
 const rows = [];
 let spent = 0;
 let next = 0;
@@ -216,7 +212,7 @@ try {
     while (next < jobs.length && spent < maxCost) {
       const job = jobs[next++];
       const row = await attempt(job, FIRST_CDP_PORT + worker).catch((error) => ({
-        app: profile.name, variant: job.variant, task: job.task.id, run: job.run, model: opts.model, error: String(error), pass: false, costUsd: 0,
+        variant: job.variant, task: job.task.id, run: job.run, model: opts.model, error: String(error), pass: false, costUsd: 0,
       }));
       spent += row.costUsd;
       rows.push(row);

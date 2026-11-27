@@ -1,21 +1,17 @@
 // The versions differ only in attributes an agent reads, so every screen should match exactly.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
-import { parseArgs } from "node:util";
 import { chromium } from "playwright";
-import { OFFLINE, VARIANTS, appProfile, appUrl, buildVariants, here, serveVariants } from "./app.js";
+import { OFFLINE, VARIANTS, appUrl, buildVariants, here, serveVariants } from "./app.js";
+import tasks from "./test-app/tasks.js";
 
-const { values: opts } = parseArgs({ options: { app: { type: "string", default: "atomic" } } });
-const profile = appProfile(opts.app);
-const { default: tasks } = await import(pathToFileURL(profile.tasks).href);
 
 const starts = [...new Set(tasks.map((t) => t.start))];
-const outDir = join(here, "results", "parity", profile.name);
+const outDir = join(here, "results", "parity");
 const shots = {};
 
-buildVariants(profile);
-const stopServers = await serveVariants(profile);
+buildVariants();
+const stopServers = await serveVariants();
 const browser = await chromium.launch({ args: [OFFLINE] });
 try {
   for (const variant of VARIANTS) {

@@ -1,10 +1,9 @@
 // Writes the app's before.patch: its after version, minus every attribute whose removal the lint reports.
-// Usage: node ablate.js [--app atomic|test-app] [lint checkout, default the repo root]
+// Usage: node ablate.js [lint checkout, default the repo root]
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { parseArgs } from "node:util";
-import { appProfile, dropWorkspace, here, useVariant, workspace } from "./app.js";
+import { PATCHES, dropWorkspace, here, useVariant, workspace } from "./app.js";
 import { makeLinter, sourceFiles } from "./lint.js";
 
 // Attributes the rules ask for. Visible text is never removed, so the page looks the same.
@@ -13,13 +12,11 @@ const ATTRS = new Set([
   "aria-pressed", "aria-checked", "aria-selected", "aria-expanded", "inert", "htmlFor",
 ]);
 
-const { values: opts, positionals } = parseArgs({ options: { app: { type: "string", default: "atomic" } }, allowPositionals: true });
-const profile = appProfile(opts.app);
-const app = workspace(profile);
-const lib = resolve(positionals[0] ?? join(here, ".."));
+const app = workspace();
+const lib = resolve(process.argv[2] ?? join(here, ".."));
 const git = (...args) => execFileSync("git", ["-C", app, ...args], { encoding: "utf8", maxBuffer: 1 << 26 });
 
-useVariant(profile, app, "after");
+useVariant(app, "after");
 const { parser, lintSource } = makeLinter(app, lib);
 
 // An attribute the app's styles select on, like Tailwind's `aria-expanded:bg-muted`, changes the look, so it stays.
@@ -72,8 +69,8 @@ for (const path of sourceFiles(join(app, "src"))) {
   writeFileSync(path, source);
 }
 
-writeFileSync(join(profile.patches, "before.patch"), git("diff"));
-dropWorkspace(profile, app);
+writeFileSync(join(PATCHES, "before.patch"), git("diff"));
+dropWorkspace(app);
 console.log(`Kept because the styles select on them: ${[...styled].filter((a) => ATTRS.has(a)).join(", ")}`);
 console.log(`${removed.length} attributes removed:`);
 for (const r of removed.reverse()) console.log(`  ${r}`);

@@ -10,39 +10,14 @@ export const VARIANTS = ["before", "after"];
 // A reply that says the agent did not finish. Any other reply counts as a claim that it did.
 export const GAVE_UP = /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|wasn't able|was not able|failed|did ?n[o']t|no (such|matching))\b/i;
 
-const APPS = {
-  atomic: {
-    dir: join(here, "app"),
-    patches: join(here, "patches"),
-    tasks: join(here, "tasks.js"),
-    viteConfig: "vite.demo.config.ts",
-    description: "A CRM",
-    resources: ["sales", "tags", "companies", "contacts", "contact_notes", "deals", "deal_notes", "tasks", "configuration"],
-    // The app saves an undoable change only after its undo notice closes.
-    settleMs: 8000,
-  },
-  "test-app": {
-    dir: join(here, "test-app"),
-    patches: join(here, "test-app", "patches"),
-    tasks: join(here, "test-app", "tasks.js"),
-    viteConfig: "vite.config.ts",
-    description: "A team admin app",
-    resources: ["members"],
-    settleMs: 1000,
-  },
-};
-
-export function appProfile(name) {
-  if (!APPS[name]) throw new Error(`Unknown app ${name}. Known: ${Object.keys(APPS).join(", ")}`);
-  return { name, ...APPS[name] };
-}
+const app = join(here, "test-app");
+export const PATCHES = join(app, "patches");
 
 // The test app lives in this repo, so it is copied to a repo of its own first.
-export function workspace(profile) {
-  if (existsSync(join(profile.dir, ".git"))) return profile.dir;
-  const dir = mkdtempSync(join(tmpdir(), `bench-${profile.name}-`));
-  cpSync(profile.dir, dir, { recursive: true, filter: (src) => !/\/(node_modules|dist|patches)$/.test(src) });
-  symlinkSync(join(profile.dir, "node_modules"), join(dir, "node_modules"));
+export function workspace() {
+  const dir = mkdtempSync(join(tmpdir(), "bench-"));
+  cpSync(app, dir, { recursive: true, filter: (src) => !/\/(node_modules|dist|patches)$/.test(src) });
+  symlinkSync(join(app, "node_modules"), join(dir, "node_modules"));
   const git = (...args) => execFileSync("git", ["-C", dir, ...args]);
   git("init", "-q");
   git("add", "-A", ".");
@@ -67,41 +42,40 @@ export async function waitFor(url) {
   throw new Error(`${url} did not come up`);
 }
 
-const distDir = (profile, variant) => join(here, "dist", profile.name, variant);
+const distDir = (variant) => join(here, "dist", variant);
 
 // A missing patch means the version is the app as it is.
-export function useVariant(profile, dir, variant) {
+export function useVariant(dir, variant) {
   execFileSync("git", ["-C", dir, "checkout", "-q", "--", "."]);
-  const patch = join(profile.patches, `${variant}.patch`);
+  const patch = join(PATCHES, `${variant}.patch`);
   if (existsSync(patch)) execFileSync("git", ["-C", dir, "apply", patch]);
 }
 
-export function buildVariants(profile) {
-  const dir = workspace(profile);
+export function buildVariants() {
+  const dir = workspace();
   try {
     for (const variant of VARIANTS) {
-      useVariant(profile, dir, variant);
-      execFileSync("npx", ["vite", "build", "--config", profile.viteConfig, "--outDir", distDir(profile, variant), "--emptyOutDir"], {
+      useVariant(dir, variant);
+      execFileSync("npx", ["vite", "build", "--outDir", distDir(variant), "--emptyOutDir"], {
         cwd: dir,
         env: { ...process.env, NODE_ENV: "CI" },
         stdio: "ignore",
       });
     }
   } finally {
-    dropWorkspace(profile, dir);
+    dropWorkspace(dir);
   }
 }
 
-export function dropWorkspace(profile, dir) {
-  if (dir === profile.dir) execFileSync("git", ["-C", dir, "checkout", "-q", "--", "."]);
-  else rmSync(dir, { recursive: true, force: true });
+export function dropWorkspace(dir) {
+  rmSync(dir, { recursive: true, force: true });
 }
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".json": "application/json", ".woff2": "font/woff2" };
 
-export async function serveVariants(profile) {
+export async function serveVariants() {
   const servers = VARIANTS.map((variant) => {
-    const dir = distDir(profile, variant);
+    const dir = distDir(variant);
     return createServer((req, res) => {
       let file = join(dir, decodeURIComponent(new URL(req.url, "http://x").pathname));
       // A source map holds the app's source code, and the agent must reach the app only through its pages.
