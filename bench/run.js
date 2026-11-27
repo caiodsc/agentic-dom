@@ -90,12 +90,17 @@ function runAgent(task, port, origin, transcriptFile) {
     "--verbose",
     "--no-session-persistence",
   ];
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const agent = spawn("claude", args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
     let out = "";
     agent.stdout.on("data", (d) => (out += d));
     agent.stderr.on("data", (d) => (out += d));
     const timer = setTimeout(() => agent.kill("SIGTERM"), RUN_TIMEOUT_MS);
+    agent.on("error", (error) => {
+      clearTimeout(timer);
+      rmSync(cwd, { recursive: true, force: true });
+      reject(error);
+    });
     agent.on("close", (code) => {
       clearTimeout(timer);
       writeFileSync(transcriptFile, out);

@@ -45,7 +45,7 @@ export function removeMember(id: number) {
 }
 
 export function inviteMember(name: string, email: string) {
-  const id = Math.max(...members.map((m) => m.id)) + 1
+  const id = Math.max(0, ...members.map((m) => m.id)) + 1
   set([...members, { id, name, email, role: "Viewer", active: true, invited_at: new Date().toISOString() }])
 }
 
