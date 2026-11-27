@@ -38,13 +38,13 @@ A new rule is worth adding when the pattern makes a browser agent fail a real ta
 node scripts/compare-rule.js <app dir> <rule>
 ```
 
-A third argument compares with another branch or commit instead of `main`. To parse `.tsx` files, the app needs `@typescript-eslint/parser` installed. The rule runs with its default options and without the app's `agentic-dom` settings.
+A third argument compares with another branch or commit instead of `main`. The rule runs with its default options and without the app's `agentic-dom` settings.
 
-`scripts/real-apps.sh` downloads open source React apps into `real-apps/`, each at a fixed commit and with its dependencies, so a scan gives the same reports every time:
+`scripts/real-apps.sh` downloads open source React apps into `real-apps/`, each at a fixed commit, so a scan gives the same reports every time:
 
 ```sh
 sh scripts/real-apps.sh
-node scripts/compare-rule.js real-apps/atomic-crm <rule>
+node scripts/compare-rule.js real-apps/cal.com <rule>
 ```
 
 ## README images
