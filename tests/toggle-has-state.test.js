@@ -39,6 +39,7 @@ ruleTester.run("toggle-has-state", rule, {
     { name: "method call in the handler", code: wrap(`<button onClick={() => menu.toggle()}>Menu</button>`) },
     { name: "not a button", code: wrap(`<div onClick={() => setOpen(!open)}>Menu</div>`) },
     { name: "button with no onClick", code: wrap(`<button>Menu</button>`) },
+    { name: "condition that only wraps the button", code: wrap(`{!more && <button onClick={() => setMore(!more)}>Show options</button>}`, `<div className={more ? "open" : ""} />`, "const [more, setMore] = useState(false);") },
   ],
   invalid: [
     { code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`), errors: err() },
@@ -47,6 +48,7 @@ ruleTester.run("toggle-has-state", rule, {
     { name: "const handler", code: wrap(`<button onClick={toggle}>Menu</button>`, undefined, "const [open, setOpen] = useState(false); const toggle = () => setOpen(!open);"), errors: err() },
     { name: "function expression handler", code: wrap(`<button onClick={function () { setOpen(!open); }}>Menu</button>`), errors: err() },
     { name: "gate by a negated state", code: wrap(`<button onClick={() => setCollapsed(!collapsed)}>Menu</button>`, "{!collapsed && <Menu />}", "const [collapsed, setCollapsed] = useState(false);"), errors: err("!collapsed") },
+    { name: "condition around the button and one around the content", code: wrap(`{!more && <button onClick={() => setMore(!more)}>Show options</button>}`, "{more && <Options />}", "const [more, setMore] = useState(false);"), errors: err("more") },
     { name: "ternary with JSX first", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{open ? <Menu /> : null}"), errors: err() },
     { name: "ternary with JSX second", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{open ? null : <><Menu /></>}"), errors: err("!open") },
     { name: "negated ternary with JSX on both sides", code: wrap(`<button onClick={() => setOpen(!open)}>Menu</button>`, "{!open ? <Menu /> : <Summary />}"), errors: err() },
