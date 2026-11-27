@@ -52,6 +52,9 @@ function Menu() {
   return <li onClick={() => setIsHovered(true)}><span className={isHovered ? "" : "invisible"}><button>Edit</button></span></li>;
 }`,
     },
+    { name: "controls rendered only on hover inside a hover-hidden element", code: withHover(`<span className="invisible group-hover:visible">{isHovered && <button>Edit</button>}</span>`) },
+    { name: "controls rendered only on hover inside a hover-state element", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered ? <button>Edit</button> : null}</span>`) },
+    { name: "object key turned off", code: `<span className={clsx({ invisible: false, "group-hover:visible": true })}><button>Edit</button></span>` },
     { name: "hidden on both sides of the hover state", code: withHover(`<span className={isHovered ? "invisible" : "hidden"}><button>Edit</button></span>`) },
     { name: "condition on a property", code: withHover(`<span className={!row.isHovered ? "invisible" : ""}><button>Edit</button></span>`) },
     { name: "computed class key", code: withHover(`<span className={clsx({ [hideClass]: !isHovered, ...rest })}><button>Edit</button></span>`) },
@@ -84,6 +87,19 @@ function Row({ onEnter }) {
     { name: "hide and hover classes in a class array", code: `<span className={cn(["invisible", "group-hover:visible"])}><button>Edit</button></span>`, errors: reported() },
     { name: "hover state with a class helper in the hiding branch", code: withHover(`<span className={isHovered ? "" : cn("invisible", size)}><button>Edit</button></span>`), errors: reported() },
     { name: "hover state with && and a class helper", code: withHover(`<span className={!isHovered && cn("invisible")}><button>Edit</button></span>`), errors: reported() },
+    { name: "hide and hover classes as object keys always on", code: `<span className={clsx({ invisible: true, "group-hover:visible": true, ...rest })}><button>Edit</button></span>`, errors: reported() },
+    { name: "hide and hover classes joined from an array", code: `<span className={["invisible", "group-hover:visible"].filter(Boolean).join(" ")}><button>Edit</button></span>`, errors: reported() },
+    { name: "controls gated by another state", code: withHover(`<span className="invisible group-hover:visible">{canEdit && <button>Edit</button>}</span>`), errors: reported() },
+    { name: "a control that always renders beside one rendered on hover", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered && <button>Edit</button>}<button>Delete</button></span>`), errors: reported() },
+    {
+      name: "hover state set after a delay",
+      code: `
+function Row() {
+  const [hover, setHover] = useState(false);
+  return <li onMouseEnter={() => { setTimeout(() => setHover(true), 300); }}><span className={hover ? "" : "invisible"}><button>Edit</button></span></li>;
+}`,
+      errors: reported(),
+    },
     { name: "class in a template literal", code: `<span className={\`invisible group-hover:visible \${size}\`}><button>Edit</button></span>`, errors: reported() },
     { name: "hover state in a string concatenation", code: withHover(`<span className={"ml-2 " + (isHovered ? "" : "invisible")}><button>Edit</button></span>`), errors: reported() },
     { name: "hover state in a class array", code: withHover(`<span className={cn(["ml-2", !isHovered && "invisible"])}><button>Edit</button></span>`), errors: reported() },
