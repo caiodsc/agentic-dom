@@ -32,12 +32,12 @@ const [isHovered, setIsHovered] = useState(false);
 </span>
 ```
 
-The rule reports two shapes. The first is `invisible` or `hidden` with a hover variant that shows the element again, like `group-hover:visible` or `group-hover:flex`, in one class string, or with the hide class in the parts of a class value that always apply and the hover variant in any part. Tailwind's important marker, like `group-hover:!flex`, counts too. The second is a hide class tied to a state that a mouse enter handler (`onMouseEnter`, `onMouseOver`, `onPointerEnter` or `onPointerOver`) sets to `true`, in the same file. It reads the class value through ternaries, `&&`, template literals, string concatenation and class helpers like `clsx` or `cn`, including their arrays and objects. Controls are buttons, links and form fields, on the element or inside it, including components the rule knows as buttons or links.
+The rule reports two shapes. The first is `invisible` or `hidden` with a hover variant that shows the element again, like `group-hover:visible` or `group-hover:flex`, in one class string, or with the hide class in the parts of a class value that always apply and the hover variant in any part. Tailwind's important marker, like `group-hover:!flex`, counts too. When both `invisible` and `hidden` apply, the hover classes have to undo both. The second is a hide class tied to a state that a mouse enter handler (`onMouseEnter`, `onMouseOver`, `onPointerEnter` or `onPointerOver`) sets to `true`, in the same file. It reads the class value through ternaries, `&&`, template literals, string concatenation and class helpers like `clsx` or `cn`, including their arrays and objects. Controls are buttons, links and form fields, on the element or inside it, including components the rule knows as buttons or links.
 
 ## Not reported
 
 - Code the rule can't follow, like a class from a variable (`className={classes}`), a condition with more than one state (`hover && ready`), or a hover state set in another file or through a custom hook.
-- Controls rendered only on hover, like `{isHovered && <button>Edit</button>}`, since a hover popover often opens on focus too and the rule can't tell.
+- Controls rendered only on hover, like `{isHovered && <button>Edit</button>}` or `{isHovered && ready ? <button>Edit</button> : null}`, since a hover popover often opens on focus too and the rule can't tell.
 - An element with no controls inside, like an icon or a text that shows on hover.
 - An element hidden only at some screen sizes, like `hidden md:flex` or `invisible md:visible`, or shown on focus instead of hover, like `invisible group-focus-within:visible`.
 - A mouse enter handler that does something other than set a state to `true`, like highlighting the row under the mouse.
