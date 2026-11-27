@@ -103,6 +103,25 @@ function Row() {
 }`,
       errors: reported(),
     },
+    {
+      name: "hover state set through an updater with a body",
+      code: `
+function Row() {
+  const [hover, setHover] = useState(false);
+  return <li onMouseEnter={() => setHover(() => { return true; })}><span className={hover ? "" : "invisible"}><button>Edit</button></span></li>;
+}`,
+      errors: reported(),
+    },
+    {
+      name: "hover state from useState imported under another name",
+      code: `
+import { useState as useHoverState } from "react";
+function Row() {
+  const [hover, setHover] = useHoverState(false);
+  return <li onMouseEnter={() => setHover(true)}><span className={hover ? "" : "invisible"}><button>Edit</button></span></li>;
+}`,
+      errors: reported(),
+    },
     { name: "controls gated by another state", code: withHover(`<span className="invisible group-hover:visible">{canEdit && <button>Edit</button>}</span>`), errors: reported() },
     { name: "controls rendered only while the mouse is away", code: withHover(`<span className="invisible group-hover:visible">{!isHovered && <button>Edit</button>}</span>`), errors: reported() },
     { name: "controls in the branch taken while the mouse is away", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered ? null : <button>Edit</button>}</span>`), errors: reported() },
