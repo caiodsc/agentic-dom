@@ -100,6 +100,17 @@ function Row({ onEnter }) {
     { name: "controls behind ?? count as always rendered", code: withHover(`<span className="invisible group-hover:visible">{isHovered ?? <button>Edit</button>}</span>`), errors: reported() },
     { name: "a control that always renders beside one rendered on hover", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered && <button>Edit</button>}<button>Delete</button></span>`), errors: reported() },
     {
+      name: "hover state set through a helper the handler calls",
+      code: `
+function Row() {
+  const [hover, setHover] = useState(false);
+  function show() { track(); setHover(true); }
+  function track() { track(); }
+  return <li onMouseEnter={() => show()}><span className={hover ? "" : "invisible"}><button>Edit</button></span></li>;
+}`,
+      errors: reported(),
+    },
+    {
       name: "hover state set after a delay",
       code: `
 function Row() {
