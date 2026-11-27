@@ -4,11 +4,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
-import { OFFLINE, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
-import allTasks from "./tasks.js";
+import { OFFLINE, appProfile, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
 
 const { values: opts } = parseArgs({
   options: {
+    app: { type: "string", default: "atomic" },
     variants: { type: "string", default: "before,after" },
     tasks: { type: "string" },
     runs: { type: "string", default: "1" },
@@ -20,22 +20,22 @@ const { values: opts } = parseArgs({
   },
 });
 
+const profile = appProfile(opts.app);
+const { default: allTasks } = await import(profile.tasks);
 const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
-// The app saves an undoable change only after its undo notice closes.
-const UNDO_MS = 8000;
-const RESOURCES = ["sales", "tags", "companies", "contacts", "contact_notes", "deals", "deal_notes", "tasks", "configuration"];
+const RESOURCES = profile.resources;
 // A reply that says the agent did not finish. Any other reply counts as a claim that it did.
 const GAVE_UP = /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|wasn't able|was not able|failed|did ?n[o']t|no (such|matching))\b/i;
 
 const SYSTEM_PROMPT = "You operate a web app through the browser tools. Do the user's task in the app.";
 const prompt = (task) =>
-  `A CRM is open in the browser. ${task.prompt} ` +
+  `${profile.description} is open in the browser. ${task.prompt} ` +
   "Do not reload the page or open a new one: the demo data lives in the page and resets on reload. " +
   "When you are done, reply with one sentence saying what you did, or why you could not do it.";
 
 const tasks = opts.tasks ? allTasks.filter((t) => opts.tasks.split(",").includes(t.id)) : allTasks;
-const stamp = opts.resume ?? new Date().toISOString().replace(/[:.]/g, "-");
+const stamp = opts.resume ?? `${profile.name}-${new Date().toISOString().replace(/[:.]/g, "-")}`;
 const outDir = join(here, "results", "raw", stamp);
 
 async function startBrowser(url, port) {
@@ -179,14 +179,14 @@ async function attempt({ task, variant, run }, port) {
     const summary = summarize(agent.events);
     // The undo notice stays open while the mouse is over it.
     await browser.contexts()[0].pages()[0]?.mouse.move(0, 0).catch(() => {});
-    await wait(UNDO_MS);
+    await wait(profile.settleMs);
     const after = await snapshot(browser).catch(() => null);
     const changes = after ? diff(before, after) : [];
     const pass = Boolean(after) && Boolean(await task.expect(changes, summary.answer, before));
     const collateral = changes.filter((c) => !task.touches(c, before)).map(({ resource, id, type, fields }) => ({ resource, id, type, fields }));
     const claimed = !GAVE_UP.test(summary.answer);
     return {
-      variant, task: task.id, run, model: opts.model,
+      app: profile.name, variant, task: task.id, run, model: opts.model,
       pass, collateral: collateral.length, collateralChanges: collateral, claimed, silentFailure: claimed && !pass,
       lostPage: !after, timedOut: agent.timedOut, ...summary,
     };
@@ -206,8 +206,8 @@ for (let run = 1; run <= Number(opts.runs); run++) {
   }
 }
 
-buildVariants();
-const stopServers = await serveVariants();
+buildVariants(profile);
+const stopServers = await serveVariants(profile);
 const rows = [];
 let spent = 0;
 let next = 0;
@@ -217,7 +217,7 @@ try {
     while (next < jobs.length && spent < maxCost) {
       const job = jobs[next++];
       const row = await attempt(job, FIRST_CDP_PORT + worker).catch((error) => ({
-        variant: job.variant, task: job.task.id, run: job.run, model: opts.model, error: String(error), pass: false, costUsd: 0,
+        app: profile.name, variant: job.variant, task: job.task.id, run: job.run, model: opts.model, error: String(error), pass: false, costUsd: 0,
       }));
       spent += row.costUsd;
       rows.push(row);

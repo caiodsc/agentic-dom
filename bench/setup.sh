@@ -10,5 +10,6 @@ if [ ! -d app ]; then
   git -C app -c user.name=bench -c user.email=bench@localhost commit -qam "bench: common"
 fi
 (cd app && HUSKY=0 npm ci --no-audit --no-fund)
+(cd test-app && npm ci --no-audit --no-fund)
 npm ci --no-audit --no-fund
 npx playwright install chromium
