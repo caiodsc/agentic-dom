@@ -92,6 +92,7 @@ function Row({ onEnter }) {
     { name: "hover state with && and a class helper", code: withHover(`<span className={!isHovered && cn("invisible")}><button>Edit</button></span>`), errors: reported() },
     { name: "hide and hover classes as object keys always on", code: `<span className={clsx({ invisible: 1, "group-hover:visible": true, ...rest })}><button>Edit</button></span>`, errors: reported() },
     { name: "hide and hover classes joined from an array", code: `<span className={["invisible", "group-hover:visible"].filter(Boolean).join(" ")}><button>Edit</button></span>`, errors: reported() },
+    { name: "hover state in an array joined into the class", code: withHover(`<span className={[isHovered ? "visible" : "invisible"].join(" ")}><button>Edit</button></span>`), errors: reported() },
     { name: "controls gated by another state", code: withHover(`<span className="invisible group-hover:visible">{canEdit && <button>Edit</button>}</span>`), errors: reported() },
     { name: "controls rendered only while the mouse is away", code: withHover(`<span className="invisible group-hover:visible">{!isHovered && <button>Edit</button>}</span>`), errors: reported() },
     { name: "controls in the branch taken while the mouse is away", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered ? null : <button>Edit</button>}</span>`), errors: reported() },
