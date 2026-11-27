@@ -32,7 +32,7 @@ const [isHovered, setIsHovered] = useState(false);
 </span>
 ```
 
-The rule reports two shapes. The first is one class string with `invisible` or `hidden` and a hover variant that shows the element again, like `group-hover:visible` or `group-hover:flex`. The second is a hide class tied to a state that a mouse enter handler (`onMouseEnter`, `onMouseOver`, `onPointerEnter` or `onPointerOver`) sets to `true`, in the same file. It reads the class value through ternaries, `&&`, template literals, string concatenation and class helpers like `clsx` or `cn`, including their arrays and objects. Controls are buttons, links and form fields, on the element or inside it, including components the rule knows as buttons or links.
+The rule reports two shapes. The first is `invisible` or `hidden` with a hover variant that shows the element again, like `group-hover:visible` or `group-hover:flex`, in one class string or split across the parts of a class value that always apply. The second is a hide class tied to a state that a mouse enter handler (`onMouseEnter`, `onMouseOver`, `onPointerEnter` or `onPointerOver`) sets to `true`, in the same file. It reads the class value through ternaries, `&&`, template literals, string concatenation and class helpers like `clsx` or `cn`, including their arrays and objects. Controls are buttons, links and form fields, on the element or inside it, including components the rule knows as buttons or links.
 
 ## Not reported
 
