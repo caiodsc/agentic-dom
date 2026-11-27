@@ -47,20 +47,27 @@ async function startBrowser(url, port) {
     "--no-first-run",
     url,
   ], { stdio: "ignore" });
-  await waitFor(`http://127.0.0.1:${port}/json/version`);
-  const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
-  const page = browser.contexts()[0].pages()[0];
-  await page.waitForFunction(() => window.__bench, null, { timeout: 30000 });
-  return {
-    browser,
-    stop: async () => {
-      await browser.close().catch(() => {});
+  let browser;
+  const stop = async () => {
+    await browser?.close().catch(() => {});
+    if (chrome.exitCode === null && chrome.signalCode === null) {
       const exited = new Promise((r) => chrome.once("exit", r));
       chrome.kill();
       await exited;
-      rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
-    },
+    }
+    rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
   };
+  try {
+    await new Promise((resolve, reject) => chrome.once("spawn", resolve).once("error", reject));
+    await waitFor(`http://127.0.0.1:${port}/json/version`);
+    browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
+    const page = browser.contexts()[0].pages()[0];
+    await page.waitForFunction(() => window.__bench, null, { timeout: 30000 });
+  } catch (error) {
+    await stop();
+    throw error;
+  }
+  return { browser, stop };
 }
 
 function runAgent(task, port, origin, transcriptFile) {
@@ -196,6 +203,7 @@ for (let run = 1; run <= Number(opts.runs); run++) {
     for (const variant of run % 2 ? variants : [...variants].reverse()) {
       const file = join(outDir, variant, `${task.id}-${run}.json`);
       const done = existsSync(file) && JSON.parse(readFileSync(file, "utf8"));
+      if (done && done.model !== opts.model) throw new Error(`${file} was run with ${done.model}, not ${opts.model}.`);
       // An attempt that ended in an error runs again. A finished one counts toward the cap.
       if (done && !done.error) spent += done.costUsd;
       else jobs.push({ task, variant, run });
