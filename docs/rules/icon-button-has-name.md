@@ -35,7 +35,7 @@ A button counts as icon-only when every child is an icon or blank text, also ins
 </Tooltip>
 ```
 
-This is reported. A tooltip counts when it is a `Tooltip` or `Tooltip.Root` around the trigger, or around the trigger's parent with `asChild`, with a `TooltipContent`, `TooltipPopup`, `Tooltip.Content`, `Tooltip.Popup` or `Tooltip.Portal` that holds text or an expression.
+This is reported. A tooltip counts when it is a `Tooltip` or `Tooltip.Root` around the trigger, or around the trigger's parent with `asChild`, with a `TooltipContent`, `TooltipPopup`, `Tooltip.Content`, `Tooltip.Popup` or `Tooltip.Portal` that holds text or an expression. The rule does not see a name that a caller passes through the spread, so `<DeleteButton aria-label="Delete" />` still reports the button inside `DeleteButton`. Write the name on the button itself.
 
 ## Not reported
 
