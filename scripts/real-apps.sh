@@ -4,8 +4,8 @@ set -e
 cd "$(dirname "$0")/.."
 while read -r name repo commit; do
   dir="real-apps/$name"
-  if [ ! -d "$dir" ]; then
-    git init -q "$dir"
+  [ -d "$dir" ] || git init -q "$dir"
+  if [ "$(git -C "$dir" rev-parse -q --verify HEAD)" != "$commit" ]; then
     git -C "$dir" fetch -q --depth 1 "https://github.com/$repo.git" "$commit"
     git -C "$dir" checkout -q FETCH_HEAD
   fi
