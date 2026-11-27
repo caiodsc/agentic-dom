@@ -16,7 +16,6 @@ try {
   for (const variant of VARIANTS) {
     for (const start of starts) {
       const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-      // A fixed clock keeps relative dates like "2 hours ago" the same in both versions.
       await context.clock.setFixedTime(new Date("2026-01-15T10:00:00Z"));
       const page = await context.newPage();
       await page.goto(appUrl(variant) + start);
