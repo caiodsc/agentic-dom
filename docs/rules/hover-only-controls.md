@@ -39,5 +39,5 @@ The rule reports two shapes. The first is `invisible` or `hidden` with a hover v
 - Code the rule can't follow, like a class from a variable (`className={classes}`), a condition with more than one state (`hover && ready`), or a hover state set in another file or through a custom hook.
 - Controls rendered only on hover, like `{isHovered && <button>Edit</button>}`, since a hover popover often opens on focus too and the rule can't tell.
 - An element with no controls inside, like an icon or a text that shows on hover.
-- An element hidden only at some screen sizes, like `hidden md:flex`, or shown on focus instead of hover, like `invisible group-focus-within:visible`.
+- An element hidden only at some screen sizes, like `hidden md:flex` or `invisible md:visible`, or shown on focus instead of hover, like `invisible group-focus-within:visible`.
 - A mouse enter handler that does something other than set a state to `true`, like highlighting the row under the mouse.

@@ -55,6 +55,8 @@ function Menu() {
     { name: "controls rendered only on hover inside a hover-hidden element", code: withHover(`<span className="invisible group-hover:visible">{isHovered && <button>Edit</button>}</span>`) },
     { name: "controls rendered only on hover inside a hover-state element", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered ? <button>Edit</button> : null}</span>`) },
     { name: "controls in the branch taken when a negated hover state is false", code: withHover(`<span className="invisible group-hover:visible">{!isHovered ? null : <button>Edit</button>}</span>`) },
+    { name: "controls rendered only on hover behind ||", code: withHover(`<span className="invisible group-hover:visible">{!isHovered || <button>Edit</button>}</span>`) },
+    { name: "invisible on small screens only", code: `<div className="invisible md:visible group-hover:visible"><button>Edit</button></div>` },
     { name: "object key turned off", code: `<span className={clsx({ invisible: false, "group-hover:visible": true })}><button>Edit</button></span>` },
     { name: "hidden on both sides of the hover state", code: withHover(`<span className={isHovered ? "invisible" : "hidden"}><button>Edit</button></span>`) },
     { name: "condition on a property", code: withHover(`<span className={!row.isHovered ? "invisible" : ""}><button>Edit</button></span>`) },
@@ -94,6 +96,8 @@ function Row({ onEnter }) {
     { name: "controls rendered only while the mouse is away", code: withHover(`<span className="invisible group-hover:visible">{!isHovered && <button>Edit</button>}</span>`), errors: reported() },
     { name: "controls in the branch taken while the mouse is away", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered ? null : <button>Edit</button>}</span>`), errors: reported() },
     { name: "controls in the branch taken on a negated hover state", code: withHover(`<span className="invisible group-hover:visible">{!isHovered ? <button>Edit</button> : null}</span>`), errors: reported() },
+    { name: "controls rendered while the mouse is away behind ||", code: withHover(`<span className="invisible group-hover:visible">{isHovered || <button>Edit</button>}</span>`), errors: reported() },
+    { name: "controls behind ?? count as always rendered", code: withHover(`<span className="invisible group-hover:visible">{isHovered ?? <button>Edit</button>}</span>`), errors: reported() },
     { name: "a control that always renders beside one rendered on hover", code: withHover(`<span className={isHovered ? "" : "invisible"}>{isHovered && <button>Edit</button>}<button>Delete</button></span>`), errors: reported() },
     {
       name: "hover state set after a delay",
