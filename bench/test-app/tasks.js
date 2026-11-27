@@ -51,7 +51,7 @@ export default [
     id: "change-email",
     start: "#/members",
     prompt: "Change Maya Chen's email to maya.chen@acme.test.",
-    expect: (changes, answer) => changes.length === 0 && /\b(can ?n[o']t|cannot|not possible|unable|disabled|read-only)\b/i.test(answer),
+    expect: (changes, answer) => changes.length === 0 && /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|not possible)\b/i.test(answer),
     touches: () => false,
   },
 ];
