@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
-import { GAVE_UP, OFFLINE, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
+import { GAVE_UP, OFFLINE, appUrl, buildVariants, here, serveVariants, wait } from "./app.js";
 import allTasks from "./test-app/tasks.js";
 
 const { values: opts } = parseArgs({
@@ -20,7 +20,6 @@ const { values: opts } = parseArgs({
   },
 });
 
-const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
 const SETTLE_MS = 1000;
 
@@ -34,20 +33,22 @@ const tasks = opts.tasks ? allTasks.filter((t) => opts.tasks.split(",").includes
 const stamp = opts.resume ?? new Date().toISOString().replace(/[:.]/g, "-");
 const outDir = join(here, "results", "raw", stamp);
 
-async function startBrowser(url, port) {
+async function startBrowser(url) {
   const profile = mkdtempSync(join(tmpdir(), "bench-chrome-"));
   const chrome = spawn(chromium.executablePath(), [
     "--headless=new",
     // Chromium exits at start without it where AppArmor blocks its sandbox.
     "--no-sandbox",
     OFFLINE,
-    `--remote-debugging-port=${port}`,
+    // Port 0 lets Chromium pick a free port, so a browser another program left on a fixed port is never used.
+    "--remote-debugging-port=0",
     `--user-data-dir=${profile}`,
     "--window-size=1440,900",
     "--no-first-run",
     url,
   ], { stdio: "ignore" });
   let browser;
+  let port;
   const stop = async () => {
     await browser?.close().catch(() => {});
     if (chrome.exitCode === null && chrome.signalCode === null) {
@@ -59,7 +60,12 @@ async function startBrowser(url, port) {
   };
   try {
     await new Promise((resolve, reject) => chrome.once("spawn", resolve).once("error", reject));
-    await waitFor(`http://127.0.0.1:${port}/json/version`);
+    const portFile = join(profile, "DevToolsActivePort");
+    for (let i = 0; i < 120 && !port; i++) {
+      if (existsSync(portFile)) port = readFileSync(portFile, "utf8").split("\n")[0];
+      if (!port) await wait(500);
+    }
+    if (!port) throw new Error("Chromium did not open a debugging port");
     browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
     const page = browser.contexts()[0].pages()[0];
     await page.waitForFunction(() => window.__bench, null, { timeout: 30000 });
@@ -67,7 +73,7 @@ async function startBrowser(url, port) {
     await stop();
     throw error;
   }
-  return { browser, stop };
+  return { browser, port, stop };
 }
 
 function runAgent(task, port, origin, transcriptFile) {
@@ -170,10 +176,10 @@ function diff(before, after) {
   return changes;
 }
 
-async function attempt({ task, variant, run }, port) {
+async function attempt({ task, variant, run }) {
   const dir = join(outDir, variant);
   mkdirSync(dir, { recursive: true });
-  const { browser, stop } = await startBrowser(appUrl(variant) + task.start, port);
+  const { browser, port, stop } = await startBrowser(appUrl(variant) + task.start);
   try {
     const before = await snapshot(browser);
     const agent = await runAgent(task, port, new URL(appUrl(variant)).origin, join(dir, `${task.id}-${run}.jsonl`));
@@ -217,10 +223,10 @@ const rows = [];
 let next = 0;
 const maxCost = Number(opts["max-cost"]);
 try {
-  await Promise.all(Array.from({ length: Number(opts.concurrency) }, async (_, worker) => {
+  await Promise.all(Array.from({ length: Number(opts.concurrency) }, async () => {
     while (next < jobs.length && spent < maxCost) {
       const job = jobs[next++];
-      const row = await attempt(job, FIRST_CDP_PORT + worker).catch((error) => ({
+      const row = await attempt(job).catch((error) => ({
         variant: job.variant, task: job.task.id, run: job.run, model: opts.model, error: String(error), pass: false, costUsd: 0,
       }));
       spent += row.costUsd;
