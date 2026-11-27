@@ -49,7 +49,7 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "render given a function", code: `<TooltipTrigger render={(props) => <Button {...props} />}><EditIcon /></TooltipTrigger>` },
     { name: "spread with a name after it, under a tooltip", code: `<Tooltip><TooltipTrigger render={<Button {...props} aria-label="Delete" />}><TrashIcon /></TooltipTrigger><TooltipContent>Delete</TooltipContent></Tooltip>` },
     { name: "spread under a tooltip with no text", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent /></Tooltip>` },
-    { name: "spread under a tooltip that renders nothing", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent>{null}{false}{""}{/* later */}</TooltipContent></Tooltip>` },
+    { name: "spread under a tooltip that renders nothing", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent>{null}{false}{""}{/* later */}{false && "Delete"}</TooltipContent></Tooltip>` },
     { name: "spread under a tooltip given as a prop", code: `<Tooltip title="Delete"><IconButton {...props}><TrashIcon /></IconButton></Tooltip>` },
     { name: "custom iconPattern replaces the default", code: `<button><CloseIcon /></button>`, options: [{ iconPattern: "^Lucide" }] },
   ],
