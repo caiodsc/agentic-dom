@@ -63,12 +63,13 @@ async function startBrowser(url, port) {
   };
 }
 
-function runAgent(task, port, transcriptFile) {
+function runAgent(task, port, origin, transcriptFile) {
   const mcpConfig = {
     mcpServers: {
       browser: {
         command: join(here, "node_modules", ".bin", "playwright-mcp"),
-        args: ["--cdp-endpoint", `http://127.0.0.1:${port}`, "--image-responses", "omit"],
+        // Only its own version's server, so the agent cannot open the other version or another local service.
+        args: ["--cdp-endpoint", `http://127.0.0.1:${port}`, "--allowed-origins", origin, "--image-responses", "omit"],
       },
     },
   };
@@ -163,7 +164,7 @@ async function attempt({ task, variant, run }, port) {
   const { browser, stop } = await startBrowser(appUrl(variant) + task.start, port);
   try {
     const before = await snapshot(browser);
-    const agent = await runAgent(task, port, join(dir, `${task.id}-${run}.jsonl`));
+    const agent = await runAgent(task, port, new URL(appUrl(variant)).origin, join(dir, `${task.id}-${run}.jsonl`));
     const summary = summarize(agent.events);
     await wait(SETTLE_MS);
     const after = await snapshot(browser).catch(() => null);
@@ -183,11 +184,16 @@ async function attempt({ task, variant, run }, port) {
 
 const variants = opts.variants.split(",");
 const jobs = [];
+let spent = 0;
 for (let run = 1; run <= Number(opts.runs); run++) {
   for (const task of tasks) {
     // Alternating which version goes first keeps drift over a long run from landing on one version only.
     for (const variant of run % 2 ? variants : [...variants].reverse()) {
-      if (!existsSync(join(outDir, variant, `${task.id}-${run}.json`))) jobs.push({ task, variant, run });
+      const file = join(outDir, variant, `${task.id}-${run}.json`);
+      const done = existsSync(file) && JSON.parse(readFileSync(file, "utf8"));
+      // An attempt that ended in an error runs again. A finished one counts toward the cap.
+      if (done && !done.error) spent += done.costUsd;
+      else jobs.push({ task, variant, run });
     }
   }
 }
@@ -195,7 +201,6 @@ for (let run = 1; run <= Number(opts.runs); run++) {
 buildVariants();
 const stopServers = await serveVariants();
 const rows = [];
-let spent = 0;
 let next = 0;
 const maxCost = Number(opts["max-cost"]);
 try {
