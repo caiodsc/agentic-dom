@@ -163,6 +163,7 @@ const TeamList = ({ users }) =>
 | 9 | [collapsed-content-inert](docs/rules/collapsed-content-inert.md) | An element collapses to zero height but keeps its content in the page | warn |
 | 10 | [empty-button-has-name](docs/rules/empty-button-has-name.md) | A button that shows no text and has no name, like a switch with only its knob | error |
 | 11 | [checkbox-has-name](docs/rules/checkbox-has-name.md) | A checkbox that has no name | error |
+| 12 | [hover-only-controls](docs/rules/hover-only-controls.md) | Controls left out of the page until the mouse is over them | warn |
 
 Some traps come from how a page behaves while it runs, so no lint can see them. [Traps the lint cannot see](docs/runtime-traps.md) lists them.
 
