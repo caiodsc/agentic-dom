@@ -47,6 +47,10 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "spread on the render element of a button", code: `<IconButton render={<Button {...props} />}><EditIcon /></IconButton>` },
     { name: "name on a link a button renders", code: `<Button render={<a href="/edit" aria-label="Edit" />}><EditIcon /></Button>` },
     { name: "render given a function", code: `<TooltipTrigger render={(props) => <Button {...props} />}><EditIcon /></TooltipTrigger>` },
+    { name: "spread with a name after it, under a tooltip", code: `<Tooltip><TooltipTrigger render={<Button {...props} aria-label="Delete" />}><TrashIcon /></TooltipTrigger><TooltipContent>Delete</TooltipContent></Tooltip>` },
+    { name: "spread under a tooltip with no text", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent /></Tooltip>` },
+    { name: "spread under a tooltip that renders nothing", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent>{null}{false}{""}{/* later */}{false && "Delete"}</TooltipContent></Tooltip>` },
+    { name: "spread under a tooltip given as a prop", code: `<Tooltip title="Delete"><IconButton {...props}><TrashIcon /></IconButton></Tooltip>` },
     { name: "custom iconPattern replaces the default", code: `<button><CloseIcon /></button>`, options: [{ iconPattern: "^Lucide" }] },
   ],
   invalid: [
@@ -87,6 +91,10 @@ ruleTester.run("icon-button-has-name", rule, {
     { name: "import written after the button", code: `const A = () => <button><Trash2 /></button>;\nimport { Trash2 } from "lucide-react";`, errors: [{ messageId: "noName" }] },
     { name: "namespace import from an icon package", code: `import * as Icons from "lucide-react";\n<button><Icons.Trash /></button>`, errors: [{ messageId: "noName" }] },
     { name: "icon inside a component that renders a button", code: `<TooltipTrigger render={<Button onClick={edit} />}><EditIcon /></TooltipTrigger>`, errors: [{ messageId: "noName" }] },
+    { name: "spread on a rendered button whose tooltip shows text", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent>{t("delete")}</TooltipContent></Tooltip>`, errors: [{ messageId: "noName" }] },
+    { name: "spread on a button whose tooltip text sits in a fragment", code: `<Tooltip><TooltipTrigger render={<Button {...props} />}><TrashIcon /></TooltipTrigger><TooltipContent><>Delete</></TooltipContent></Tooltip>`, errors: [{ messageId: "noName" }] },
+    { name: "spread on a button inside a trigger with asChild", code: `<Tooltip><TooltipTrigger asChild><Button {...props}><TrashIcon /></Button></TooltipTrigger><TooltipContent>Delete</TooltipContent></Tooltip>`, errors: [{ messageId: "noName" }] },
+    { name: "spread on a member trigger whose popup shows text", code: `<Tooltip.Root><Tooltip.Trigger render={<button {...props} />}><TrashIcon /></Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner><Tooltip.Popup>Delete</Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>`, errors: [{ messageId: "noName" }] },
     { name: "custom iconPattern", code: `<button><LucideX /></button>`, options: [{ iconPattern: "^Lucide" }], errors: [{ messageId: "noName" }] },
   ],
 });
