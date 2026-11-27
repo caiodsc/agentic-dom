@@ -1,3 +1,5 @@
+import { GAVE_UP } from "../app.js";
+
 const find = (changes, id, type = "changed") => changes.find((c) => c.resource === "members" && c.id === id && c.type === type);
 // A change to another field of the same member is collateral too.
 const member = (id, type, ...fields) => (c) =>
@@ -51,7 +53,7 @@ export default [
     id: "change-email",
     start: "#/members",
     prompt: "Change Maya Chen's email to maya.chen@acme.test.",
-    expect: (changes, answer) => changes.length === 0 && /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|not possible)\b/i.test(answer),
+    expect: (changes, answer) => changes.length === 0 && GAVE_UP.test(answer),
     touches: () => false,
   },
 ];

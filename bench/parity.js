@@ -1,13 +1,14 @@
 // The versions differ only in attributes an agent reads, so every screen should match exactly.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
 import { OFFLINE, VARIANTS, appProfile, appUrl, buildVariants, here, serveVariants } from "./app.js";
 
 const { values: opts } = parseArgs({ options: { app: { type: "string", default: "atomic" } } });
 const profile = appProfile(opts.app);
-const { default: tasks } = await import(profile.tasks);
+const { default: tasks } = await import(pathToFileURL(profile.tasks).href);
 
 const starts = [...new Set(tasks.map((t) => t.start))];
 const outDir = join(here, "results", "parity", profile.name);

@@ -50,5 +50,5 @@ The same as for the CRM: success, collateral, clean success, silent failure, too
 
 ## Changes after this commit
 
-1. The `change-email` check looked for words like "can't" and "disabled" in the reply. Haiku wrote "could not" and "disables", so correct replies failed on both versions. The check now looks for the words that say the agent could not do it: "could not", "can't", "cannot", "unable", "not able" and "not possible". The saved replies were scored again with it, with no new runs.
+1. The `change-email` check looked for words like "can't" and "disabled" in the reply. Haiku wrote "could not" and "disables", so correct replies failed on both versions. The check now uses the word list `run.js` uses to tell whether a reply says the agent could not finish, so the two always agree. The saved replies were scored again with it, with no new runs.
 2. The Sonnet run was dropped before it started. The results are Haiku's only.

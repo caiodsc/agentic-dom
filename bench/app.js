@@ -7,12 +7,14 @@ import { fileURLToPath } from "node:url";
 
 export const here = fileURLToPath(new URL(".", import.meta.url));
 export const VARIANTS = ["before", "after"];
+// A reply that says the agent did not finish. Any other reply counts as a claim that it did.
+export const GAVE_UP = /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|wasn't able|was not able|failed|did ?n[o']t|no (such|matching))\b/i;
 
 const APPS = {
   atomic: {
     dir: join(here, "app"),
     patches: join(here, "patches"),
-    tasks: "./tasks.js",
+    tasks: join(here, "tasks.js"),
     viteConfig: "vite.demo.config.ts",
     description: "A CRM",
     resources: ["sales", "tags", "companies", "contacts", "contact_notes", "deals", "deal_notes", "tasks", "configuration"],
@@ -22,7 +24,7 @@ const APPS = {
   "test-app": {
     dir: join(here, "test-app"),
     patches: join(here, "test-app", "patches"),
-    tasks: "./test-app/tasks.js",
+    tasks: join(here, "test-app", "tasks.js"),
     viteConfig: "vite.config.ts",
     description: "A team admin app",
     resources: ["members"],

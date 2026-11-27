@@ -2,9 +2,10 @@ import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
-import { OFFLINE, appProfile, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
+import { GAVE_UP, OFFLINE, appProfile, appUrl, buildVariants, here, serveVariants, wait, waitFor } from "./app.js";
 
 const { values: opts } = parseArgs({
   options: {
@@ -21,12 +22,10 @@ const { values: opts } = parseArgs({
 });
 
 const profile = appProfile(opts.app);
-const { default: allTasks } = await import(profile.tasks);
+const { default: allTasks } = await import(pathToFileURL(profile.tasks).href);
 const FIRST_CDP_PORT = 9333;
 const RUN_TIMEOUT_MS = 6 * 60 * 1000;
 const RESOURCES = profile.resources;
-// A reply that says the agent did not finish. Any other reply counts as a claim that it did.
-const GAVE_UP = /\b(could ?n[o']t|can ?n[o']t|cannot|unable|not able|wasn't able|was not able|failed|did ?n[o']t|no (such|matching))\b/i;
 
 const SYSTEM_PROMPT = "You operate a web app through the browser tools. Do the user's task in the app.";
 const prompt = (task) =>
