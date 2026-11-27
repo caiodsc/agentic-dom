@@ -1,7 +1,9 @@
+const checkboxHasName = require("./lib/rules/checkbox-has-name.js");
 const collapsedContentInert = require("./lib/rules/collapsed-content-inert.js");
 const emptyButtonHasName = require("./lib/rules/empty-button-has-name.js");
 const disabledHasReason = require("./lib/rules/disabled-has-reason.js");
 const errorPropLinked = require("./lib/rules/error-prop-linked.js");
+const hoverOnlyControls = require("./lib/rules/hover-only-controls.js");
 const iconButtonHasName = require("./lib/rules/icon-button-has-name.js");
 const labelInName = require("./lib/rules/label-in-name.js");
 const labelPropLinked = require("./lib/rules/label-prop-linked.js");
@@ -13,10 +15,12 @@ const { name, version } = require("./package.json");
 const plugin = {
   meta: { name, version },
   rules: {
+    "checkbox-has-name": checkboxHasName,
     "collapsed-content-inert": collapsedContentInert,
     "disabled-has-reason": disabledHasReason,
     "empty-button-has-name": emptyButtonHasName,
     "error-prop-linked": errorPropLinked,
+    "hover-only-controls": hoverOnlyControls,
     "icon-button-has-name": iconButtonHasName,
     "label-in-name": labelInName,
     "label-prop-linked": labelPropLinked,
@@ -28,10 +32,12 @@ const plugin = {
 };
 
 const rules = {
+  "agentic-dom/checkbox-has-name": "error",
   "agentic-dom/collapsed-content-inert": "warn",
   "agentic-dom/disabled-has-reason": "warn",
   "agentic-dom/empty-button-has-name": "error",
   "agentic-dom/error-prop-linked": "warn",
+  "agentic-dom/hover-only-controls": "warn",
   "agentic-dom/icon-button-has-name": "error",
   "agentic-dom/label-in-name": "warn",
   "agentic-dom/label-prop-linked": "error",

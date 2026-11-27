@@ -1,0 +1,4 @@
+node_modules/
+results/raw/
+dist/
+results/parity/

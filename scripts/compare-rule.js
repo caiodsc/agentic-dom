@@ -24,12 +24,7 @@ if (!existsSync(ruleFile(baseDir)) && !existsSync(ruleFile(root))) {
   process.exit(1);
 }
 
-let parser;
-try {
-  parser = require(require.resolve("@typescript-eslint/parser", { paths: [app] }));
-} catch {
-  console.error("The app has no @typescript-eslint/parser, so .tsx files will not parse.");
-}
+const parser = require("@typescript-eslint/parser");
 
 function files(dir, out = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -47,7 +42,7 @@ function reports(dir) {
   const linter = new Linter({ configType: "flat", cwd: app });
   const config = [{
     files: ["**/*.{js,jsx,tsx}"],
-    languageOptions: { ...(parser && { parser }), parserOptions: { ecmaFeatures: { jsx: true } } },
+    languageOptions: { parser, parserOptions: { ecmaFeatures: { jsx: true } } },
     plugins: { a: { rules: { r: require(file) } } },
     rules: { "a/r": "warn" },
   }];
