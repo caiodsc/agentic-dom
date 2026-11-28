@@ -51,5 +51,7 @@ ruleTester.run("empty-button-has-name", rule, {
     { name: "name on a hidden inner element", code: `<button><span aria-hidden="true" aria-label="Delete" /></button>`, errors: [{ messageId: "noName" }] },
     { name: "hidden text inside", code: `<button><span className="hidden">Delete</span></button>`, errors: [{ messageId: "noName" }] },
     { name: "empty name attribute", code: `<button aria-label=""><span className="knob" /></button>`, errors: [{ messageId: "noName" }] },
+    { name: "swatches returned from a map callback", code: `<div>{colors.map((color) => <button key={color} onClick={() => pick(color)} style={{ backgroundColor: color }} />)}</div>`, errors: [{ messageId: "noNameAmongUnnamed" }] },
+    { name: "two empty buttons in one element", code: `<div><button role="switch" aria-checked={a}><span className="knob" /></button><button role="switch" aria-checked={b}><span className="knob" /></button></div>`, errors: [{ messageId: "noNameAmongUnnamed" }, { messageId: "noNameAmongUnnamed" }] },
   ],
 });
