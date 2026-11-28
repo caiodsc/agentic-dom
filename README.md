@@ -150,17 +150,16 @@ const TeamList = ({ users }) =>
 
 ## Does it help agents?
 
-On a [test app](bench/test-app/METHOD.md) whose rows end with two icon buttons, an AI agent did each task 10 times, without and with the names the lint asks for:
+We asked an AI agent to do simple jobs in a small team app, like renaming or deactivating a member. Each member's row ends with two buttons that show only an icon: one emails an invitation, one removes the member. Without names, the agent can't tell them apart, so it guesses. With the names agentic-dom asks for, it knows.
 
-| Task | Haiku | Sonnet |
+| | Without names | With names |
 |---|---|---|
-| Rename Sofia | 8 → 10 | 0 → 10 |
-| Deactivate Ethan | 4 → 10 | 0 → 10 |
-| Change Maya's email (not possible) | 7 → 10 | 1 → 10 |
+| Haiku did the job right | 63% | 100% |
+| Sonnet did the job right | 3% | 100% |
+| Haiku emailed an invitation nobody asked for | 37% | 0% |
+| Sonnet emailed an invitation nobody asked for | 97% | 0% |
 
-Without the names, it sent invitations nobody asked for: Haiku 11 of 30 times, Sonnet 29 of 30.
-
-<sub>Clean successes out of 10. Haiku shows the worse of two runs. Tasks that ask to resend or remove scored 10 either way.</sub>
+<sub>30 tries per model, over 3 jobs. Jobs that ask to send the invitation or remove a member went right 100% of the time either way. Haiku shows the worse of two runs. [How we measured](bench/test-app/METHOD.md).</sub>
 
 <br>
 
