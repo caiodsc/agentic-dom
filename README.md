@@ -150,15 +150,17 @@ const TeamList = ({ users }) =>
 
 ## Does it help agents?
 
-A [test app](bench/test-app/METHOD.md) built around one pattern: each row ends with two icon buttons, one resends the invitation and one removes the member. An AI agent did each task 10 times, with and without the names the lint asks for. Clean success:
+On a [test app](bench/test-app/METHOD.md) whose rows end with two icon buttons, an AI agent did each task 10 times, without and with the names the lint asks for:
 
-| Task | Haiku, no names | Haiku, with names | Sonnet, no names | Sonnet, with names |
-|---|---|---|---|---|
-| Rename Sofia | 8/10 | 10/10 | 0/10 | 10/10 |
-| Deactivate Ethan | 4/10 | 10/10 | 0/10 | 10/10 |
-| Change Maya's email (not possible) | 7/10 | 10/10 | 1/10 | 10/10 |
+| Task | Haiku | Sonnet |
+|---|---|---|
+| Rename Sofia | 8 → 10 | 0 → 10 |
+| Deactivate Ethan | 4 → 10 | 0 → 10 |
+| Change Maya's email (not possible) | 7 → 10 | 1 → 10 |
 
-Without the names, the agent sent invitations nobody asked for: Haiku 11 of 30 times, Sonnet 29 of 30. With them, never. Tasks that ask to resend or remove scored 10/10 either way. The Haiku column is the worse of two runs. The other got 20 of 30.
+Without the names, it sent invitations nobody asked for: Haiku 11 of 30 times, Sonnet 29 of 30.
+
+<sub>Clean successes out of 10. Haiku shows the worse of two runs. Tasks that ask to resend or remove scored 10 either way.</sub>
 
 <br>
 
