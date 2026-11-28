@@ -30,8 +30,8 @@ fi
 
 status=0
 $lint > out.txt || status=$?
-cat out.txt
 if [ "$status" -ne 1 ] || ! grep -q 'agentic-dom/' out.txt; then
+  cat out.txt
   echo "Expected the README setup to report the demo with agentic-dom rules (exit $status)." >&2
   exit 1
 fi
