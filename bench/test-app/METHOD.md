@@ -2,7 +2,7 @@
 
 ## Question
 
-A team admin screen lists members in a table. Each row ends with three icon buttons, in this order: one sends the invitation again at once, one opens the edit dialog, one asks before removing the member. Clicking the row itself does nothing. Two versions of the screen look the same to a person, pixel for pixel. In one of them the three icon buttons have no name, and neither does the Active checkbox in the edit dialog. Does an agent that works from the page's accessibility snapshot press the wrong button, change data it was not asked to change, or claim a change it did not make?
+A team admin screen lists members in a table. Each row ends with three icon buttons, in this order: one sends the invitation again at once, one opens the edit dialog, one opens a menu with Copy email and Remove. Remove asks before removing the member. Clicking the row itself does nothing. Two versions of the screen look the same to a person, pixel for pixel. In one of them the three icon buttons have no name, and neither does the Active checkbox in the edit dialog. Does an agent that works from the page's accessibility snapshot press the wrong button, change data it was not asked to change, or claim a change it did not make?
 
 ## App
 
@@ -30,7 +30,7 @@ Each check was confirmed with a scripted browser and no agent, on both versions.
 
 Every attempt starts a new browser on the members screen with fresh data.
 
-Haiku, Sonnet and Opus each run all 6 tasks, 10 attempts per task and version.
+Haiku runs all 6 tasks, 10 attempts per task and version.
 
 ## Hypotheses
 
@@ -48,4 +48,4 @@ Haiku, Sonnet and Opus each run all 6 tasks, 10 attempts per task and version.
 
 - The screen was built to hold one pattern the lint reports. It shows how much that pattern costs an agent, not how often apps have it.
 - One small app and one agent setup.
-- One run per model.
+- One run, one model.

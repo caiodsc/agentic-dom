@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { PencilIcon, SendIcon, Trash2Icon, UserPlusIcon } from "lucide-react"
+import { CopyIcon, EllipsisIcon, PencilIcon, SendIcon, Trash2Icon, UserPlusIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
@@ -22,6 +22,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -46,6 +53,11 @@ export function MembersPage() {
   const resend = (member: Member) => {
     updateMember(member.id, { invited_at: new Date().toISOString() })
     toast.success(`Invitation sent to ${member.email}`)
+  }
+
+  const copyEmail = (member: Member) => {
+    navigator.clipboard?.writeText(member.email).catch(() => {})
+    toast.success("Email copied")
   }
 
   return (
@@ -93,9 +105,22 @@ export function MembersPage() {
                     <Button variant="ghost" size="icon-sm" aria-label={`Edit ${member.name}`} onClick={() => setEditing(member)}>
                       <PencilIcon />
                     </Button>
-                    <Button variant="ghost" size="icon-sm" aria-label={`Remove ${member.name}`} onClick={() => setRemoving(member)}>
-                      <Trash2Icon className="text-destructive" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`More actions for ${member.name}`} />}>
+                        <EllipsisIcon />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => copyEmail(member)}>
+                          <CopyIcon />
+                          Copy email
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive" onClick={() => setRemoving(member)}>
+                          <Trash2Icon />
+                          Remove
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </TableCell>
               </TableRow>
