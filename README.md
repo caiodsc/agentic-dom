@@ -156,15 +156,12 @@ Clean success means the task was done and nothing else changed.
 
 | Task | Haiku, no names | Haiku, with names | Sonnet, no names | Sonnet, with names |
 |---|---|---|---|---|
-| Resend Liam's invitation | 10/10 | 10/10 | not run | not run |
-| Remove Ava | 10/10 | 10/10 | not run | not run |
-| Make sure Noah gets the invitation again | 10/10 | 10/10 | not run | not run |
 | Rename Sofia | 8/10 | 10/10 | 0/10 | 10/10 |
 | Deactivate Ethan | 4/10 | 10/10 | 0/10 | 10/10 |
 | Change Maya's email (not possible) | 7/10 | 10/10 | 1/10 | 10/10 |
 
-- Without the names, the agent pressed the row's first icon button and sent an invitation nobody asked for: Haiku in 11 of 60 attempts, Sonnet in 29 of 30. With the names, it never did.
-- Sonnet ran only the 3 tasks where Haiku failed. Haiku ran those 3 tasks twice, and the table shows the run with fewer clean successes without the names. The other run got 20 of 30.
+- Without the names, the agent pressed the row's first icon button and sent an invitation nobody asked for: Haiku in 11 of 30 attempts, Sonnet in 29 of 30. With the names, it never did.
+- Haiku also did 3 tasks that ask to send the invitation or remove a member, and got 10 of 10 with and without the names. Sonnet ran only the 3 tasks above. Haiku ran those 3 tasks twice, and the table shows the run with fewer clean successes without the names. The other run got 20 of 30.
 - The app was built to hold this pattern, so it shows how much the pattern costs an agent, not how often apps have it.
 
 <br>
