@@ -165,8 +165,6 @@ const TeamList = ({ users }) =>
 | 11 | [collapsed-content-inert](docs/rules/collapsed-content-inert.md) | An element collapses to zero height but keeps its content in the page | warn |
 | 12 | [hover-only-controls](docs/rules/hover-only-controls.md) | Controls left out of the page until the mouse is over them | warn |
 
-Some traps come from how a page behaves while it runs, so no lint can see them. [Traps the lint cannot see](docs/runtime-traps.md) lists them.
-
 <br>
 
 ## Setup
@@ -225,6 +223,12 @@ Add eslint-plugin-agentic-dom to this project's ESLint setup, following the Quic
 
 Then run ESLint and fix every agentic-dom message. If there are too many, suppress them as the README says and tell me how many.
 ```
+
+<br>
+
+## Traps
+
+Some traps come from how a page behaves while it runs, so no lint can see them. [Traps the lint cannot see](docs/runtime-traps.md) lists them.
 
 <br>
 
