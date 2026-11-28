@@ -46,7 +46,7 @@ npm install -D eslint-plugin-agentic-dom
 ```
 
 ```js
-// eslint.config.js
+// eslint.config.mjs
 import agenticDom from "eslint-plugin-agentic-dom";
 
 export default [
@@ -217,6 +217,7 @@ export default [
 
 ```json
 {
+  "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
   "extends": ["plugin:agentic-dom/legacy-recommended"]
 }
 ```
