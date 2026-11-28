@@ -150,7 +150,7 @@ const TeamList = ({ users }) =>
 
 ## Does it help agents?
 
-We measured it on a small test app with one pattern the lint reports: a members table where each row ends with two icon buttons. The first sends the invitation again at once. The second asks before removing the member. An AI agent did everyday tasks on two versions that look the same to a person, one where the two buttons have no name and one with the names the lint asks for. The agent read the app only through its accessibility snapshot, with no screenshots. The plan was [written before any run](bench/test-app/PREREGISTRATION.md).
+We measured it on a small test app with one pattern the lint reports: a members table where each row ends with two icon buttons. The first sends the invitation again at once. The second asks before removing the member. An AI agent did everyday tasks on two versions that look the same to a person, one where the two buttons have no name and one with the names the lint asks for. The agent read the app only through its accessibility snapshot, with no screenshots. [How it was measured](bench/test-app/METHOD.md).
 
 Clean success means the task was done and nothing else changed.
 
@@ -164,7 +164,7 @@ Clean success means the task was done and nothing else changed.
 | Change Maya's email (not possible) | 7/10 | 10/10 | 1/10 | 10/10 |
 
 - Without the names, the agent pressed the row's first icon button and sent an invitation nobody asked for: Haiku in 11 of 60 attempts, Sonnet in 29 of 30. With the names, it never did.
-- Sonnet ran only the 3 tasks where Haiku failed. Haiku ran those 3 tasks a second time and got 20 of 30 clean successes without the names. The table shows the first run, the one with fewer, as the plan says.
+- Sonnet ran only the 3 tasks where Haiku failed. Haiku ran those 3 tasks twice, and the table shows the run with fewer clean successes without the names. The other run got 20 of 30.
 - The app was built to hold this pattern, so it shows how much the pattern costs an agent, not how often apps have it.
 
 <br>
