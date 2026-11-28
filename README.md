@@ -156,7 +156,7 @@ const TeamList = ({ users }) =>
 | 2 | [icon-button-has-name](docs/rules/icon-button-has-name.md) | A button that shows only an icon and has no name | error |
 | 3 | [empty-button-has-name](docs/rules/empty-button-has-name.md) | A button that shows no text and has no name, like a switch with only its knob | error |
 | 4 | [checkbox-has-name](docs/rules/checkbox-has-name.md) | A checkbox that has no name | error |
-| 5 | [disabled-has-reason](docs/rules/disabled-has-reason.md) | A button can be disabled without saying why | warn |
+| 5 | [disabled-has-reason](docs/rules/disabled-has-reason.md) | A button or text field can be disabled without saying why | warn |
 | 6 | [repeated-action-context](docs/rules/repeated-action-context.md) | The same button or link name on every row of a list | warn |
 | 7 | [error-prop-linked](docs/rules/error-prop-linked.md) | A component shows its `error` prop but never links it to its control | warn |
 | 8 | [toggle-has-state](docs/rules/toggle-has-state.md) | A button shows and hides content but never says whether it is shown | warn |
