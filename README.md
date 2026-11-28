@@ -159,7 +159,7 @@ We asked an AI agent to do simple jobs in a small team app, like renaming or dea
 | Haiku emailed an invitation nobody asked for | 37% | 0% |
 | Sonnet emailed an invitation nobody asked for | 97% | 0% |
 
-<sub>30 tries per model, over 3 jobs. Jobs that ask to send the invitation or remove a member went right 100% of the time either way. Haiku shows the worse of two runs. [How we measured](bench/test-app/METHOD.md).</sub>
+<sub>30 tries per model, over 3 jobs. On jobs that ask to send the invitation or remove a member, Haiku was right 100% of the time either way. Haiku shows the worse of two runs. [How we measured](bench/test-app/METHOD.md).</sub>
 
 <br>
 
