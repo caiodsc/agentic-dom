@@ -150,9 +150,7 @@ const TeamList = ({ users }) =>
 
 ## Does it help agents?
 
-We measured it on a small test app with one pattern the lint reports: a members table where each row ends with two icon buttons. The first sends the invitation again at once. The second asks before removing the member. An AI agent did everyday tasks on two versions that look the same to a person, one where the two buttons have no name and one with the names the lint asks for. The agent read the app only through its accessibility snapshot, with no screenshots. [How it was measured](bench/test-app/METHOD.md).
-
-Clean success means the task was done and nothing else changed.
+A [test app](bench/test-app/METHOD.md) built around one pattern: each row ends with two icon buttons, one resends the invitation and one removes the member. An AI agent did each task 10 times, with and without the names the lint asks for. Clean success:
 
 | Task | Haiku, no names | Haiku, with names | Sonnet, no names | Sonnet, with names |
 |---|---|---|---|---|
@@ -160,9 +158,7 @@ Clean success means the task was done and nothing else changed.
 | Deactivate Ethan | 4/10 | 10/10 | 0/10 | 10/10 |
 | Change Maya's email (not possible) | 7/10 | 10/10 | 1/10 | 10/10 |
 
-- Without the names, the agent pressed the row's first icon button and sent an invitation nobody asked for: Haiku in 11 of 30 attempts, Sonnet in 29 of 30. With the names, it never did.
-- Haiku also did 3 tasks that ask to send the invitation or remove a member, and got 10 of 10 with and without the names. Sonnet ran only the 3 tasks above. Haiku ran those 3 tasks twice, and the table shows the run with fewer clean successes without the names. The other run got 20 of 30.
-- The app was built to hold this pattern, so it shows how much the pattern costs an agent, not how often apps have it.
+Without the names, the agent sent invitations nobody asked for: Haiku 11 of 30 times, Sonnet 29 of 30. With them, never. Tasks that ask to resend or remove scored 10/10 either way. The Haiku column is the worse of two runs. The other got 20 of 30.
 
 <br>
 
