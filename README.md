@@ -150,16 +150,15 @@ const TeamList = ({ users }) =>
 
 ## Does it help agents?
 
-We asked an AI agent to do simple jobs in a small team app, like renaming or deactivating a member. Each member's row ends with two buttons that show only an icon: one emails an invitation, one removes the member. Without names, the agent can't tell them apart, so it guesses. With the names agentic-dom asks for, it knows.
+We asked an AI agent (Claude Haiku) to do simple jobs in a small team app, like renaming or deactivating a member. Each member's row ends with three buttons that show only an icon: one emails an invitation, one edits the member, one opens a menu. Without names, the agent can't tell them apart, so it guesses. With the names agentic-dom asks for, it knows.
 
 | | Without names | With names |
 |---|---|---|
-| Haiku did the job right | 63% | 100% |
-| Sonnet did the job right | 3% | 100% |
-| Haiku emailed an invitation nobody asked for | 37% | 0% |
-| Sonnet emailed an invitation nobody asked for | 97% | 0% |
+| Did the job right | 45% | 100% |
+| Emailed an invitation nobody asked for | 47% | 0% |
+| Steps per job, on average | 9.9 | 7.8 |
 
-<sub>30 tries per model, over 3 jobs. On jobs that ask to send the invitation or remove a member, Haiku was right 100% of the time either way. Haiku shows the worse of two runs. [How we measured](bench/test-app/METHOD.md).</sub>
+<sub>60 tries per version, over 6 jobs. Removing a member went right every time either way, because the menu shows the word Remove. [How we measured](bench/test-app/METHOD.md).</sub>
 
 <br>
 
