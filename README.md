@@ -150,15 +150,18 @@ const TeamList = ({ users }) =>
 
 ## Does it help agents?
 
-We asked an AI agent (Claude Haiku) to do simple jobs in a small team app, like renaming or deactivating a member. Each member's row ends with three buttons that show only an icon: one emails an invitation, one edits the member, one opens a menu. Without names, the agent can't tell them apart, so it guesses. With the names agentic-dom asks for, it knows.
+We asked two AI agents (Claude Haiku and Claude Sonnet) to do simple jobs in a small team app, like renaming or deactivating a member. Each member's row ends with three buttons that show only an icon: one emails an invitation, one edits the member, one opens a menu. Without names, an agent can't tell them apart, so it guesses. With the names agentic-dom asks for, it knows.
 
 | | Without names | With names |
 |---|---|---|
-| Did the job right | 45% | 100% |
-| Emailed an invitation nobody asked for | 47% | 0% |
-| Steps per job, on average | 9.9 | 7.8 |
+| Did the job right, Haiku | 45% | 100% |
+| Did the job right, Sonnet | 67% | 100% |
+| Emailed an invitation nobody asked for, Haiku | 47% | 0% |
+| Emailed an invitation nobody asked for, Sonnet | 33% | 0% |
+| Steps per job, Haiku | 9.9 | 7.8 |
+| Steps per job, Sonnet | 7.2 | 5.6 |
 
-<sub>60 tries per version, over 6 jobs. Removing a member went right every time either way, because the menu shows the word Remove. [How we measured](bench/test-app/METHOD.md).</sub>
+<sub>60 tries per version and agent, over 6 jobs. Removing a member went right every time either way, because the menu shows the word Remove. [How we measured](bench/test-app/METHOD.md).</sub>
 
 <br>
 

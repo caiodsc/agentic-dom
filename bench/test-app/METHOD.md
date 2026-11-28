@@ -30,7 +30,7 @@ Each check was confirmed with a scripted browser and no agent, on both versions.
 
 Every attempt starts a new browser on the members screen with fresh data.
 
-Haiku runs all 6 tasks, 10 attempts per task and version.
+Haiku and Sonnet each run all 6 tasks, 10 attempts per task and version.
 
 ## Hypotheses
 
@@ -48,4 +48,4 @@ Haiku runs all 6 tasks, 10 attempts per task and version.
 
 - The screen was built to hold one pattern the lint reports. It shows how much that pattern costs an agent, not how often apps have it.
 - One small app and one agent setup.
-- One run, one model.
+- One run per model. Opus is not run yet: to do.
