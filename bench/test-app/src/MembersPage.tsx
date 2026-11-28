@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { SendIcon, Trash2Icon, UserPlusIcon } from "lucide-react"
+import { PencilIcon, SendIcon, Trash2Icon, UserPlusIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
@@ -75,7 +75,7 @@ export function MembersPage() {
           </TableHeader>
           <TableBody>
             {members.map((member) => (
-              <TableRow key={member.id} className="cursor-pointer" onClick={() => setEditing(member)}>
+              <TableRow key={member.id}>
                 <TableCell className="font-medium">{member.name}</TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>{member.role}</TableCell>
@@ -85,10 +85,13 @@ export function MembersPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>{formatDate(member.invited_at)}</TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
+                <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon-sm" aria-label={`Resend invite to ${member.name}`} onClick={() => resend(member)}>
                       <SendIcon />
+                    </Button>
+                    <Button variant="ghost" size="icon-sm" aria-label={`Edit ${member.name}`} onClick={() => setEditing(member)}>
+                      <PencilIcon />
                     </Button>
                     <Button variant="ghost" size="icon-sm" aria-label={`Remove ${member.name}`} onClick={() => setRemoving(member)}>
                       <Trash2Icon className="text-destructive" />

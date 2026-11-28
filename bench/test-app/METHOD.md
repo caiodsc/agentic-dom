@@ -2,21 +2,21 @@
 
 ## Question
 
-A team admin screen lists members in a table. Clicking a row opens the edit dialog. Each row ends with two icon buttons: one sends the invitation again at once, the other asks before removing the member. Two versions of the screen look the same to a person, pixel for pixel. In one of them the two icon buttons have no name. Does an agent that works from the page's accessibility snapshot press the wrong button, change data it was not asked to change, or claim a change it did not make?
+A team admin screen lists members in a table. Each row ends with three icon buttons, in this order: one sends the invitation again at once, one opens the edit dialog, one asks before removing the member. Clicking the row itself does nothing. Two versions of the screen look the same to a person, pixel for pixel. In one of them the three icon buttons have no name, and neither does the Active checkbox in the edit dialog. Does an agent that works from the page's accessibility snapshot press the wrong button, change data it was not asked to change, or claim a change it did not make?
 
 ## App
 
 `test-app/` is a small React app built with ready-made shadcn/ui components on Base UI. Its data lives in the page and resets on reload. No model has seen it before.
 
 - **after**: the app as it is in `test-app/src`. The lint gives 0 reports on it.
-- **before**: `after`, minus every attribute whose removal the lint reports. `node ablate.js` writes `test-app/patches/before.patch`. It removes 2 attributes, the names of the two row buttons. The lint gives 2 `icon-button-has-name` reports on it.
+- **before**: `after`, minus every attribute whose removal the lint reports. `node ablate.js` writes `test-app/patches/before.patch`. It removes 4 attributes: the names of the three row buttons and the label link of the Active checkbox. The lint gives 3 `icon-button-has-name` reports and 1 `checkbox-has-name` report on it.
 - `node parity.js` screenshots the start screen of both versions. They match pixel for pixel.
 
 ## Tasks
 
 The 6 tasks in `test-app/tasks.js` are everyday team admin work: send an invitation again (asked two ways), remove a member, rename a member, deactivate a member, and change an email. The email cannot change in this app: its field is disabled and says so. That task passes when nothing changes and the reply says the agent could not do it, using the word list `run.js` uses to tell whether a reply says so.
 
-Each check was confirmed with a scripted browser and no agent, on both versions. The right steps pass every task. Pressing the send button instead of opening the row fails the rename task and counts the new invitation as collateral. Saving the edit dialog without a change fails the email task.
+Each check was confirmed with a scripted browser and no agent, on both versions. The right steps pass every task. Pressing the send button instead of the edit button fails the rename task and counts the new invitation as collateral. Clicking a row opens nothing. Saving the edit dialog without a change fails the email task.
 
 ## Measures
 
@@ -30,10 +30,7 @@ Each check was confirmed with a scripted browser and no agent, on both versions.
 
 Every attempt starts a new browser on the members screen with fresh data.
 
-- **Haiku**: all 6 tasks, 10 attempts per task and version.
-- **Sonnet**: the 3 tasks where Haiku had a failure (`rename-member`, `deactivate-member`, `change-email`), 10 attempts per task and version. It measures whether a stronger model still pays for the missing names where Haiku did, not Sonnet's rate over all 6 tasks.
-- **Opus**: the same 3 tasks as Sonnet, 10 attempts per task and version.
-- **Haiku, second run**: the same 3 tasks, 10 attempts per task and version. The report uses the Haiku run with fewer clean successes on `before`, and lists both.
+Haiku, Sonnet and Opus each run all 6 tasks, 10 attempts per task and version.
 
 ## Hypotheses
 
@@ -51,3 +48,4 @@ Every attempt starts a new browser on the members screen with fresh data.
 
 - The screen was built to hold one pattern the lint reports. It shows how much that pattern costs an agent, not how often apps have it.
 - One small app and one agent setup.
+- One run per model.
