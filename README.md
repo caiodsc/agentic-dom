@@ -12,7 +12,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![ESLint 8.57+](https://img.shields.io/badge/ESLint-8.57%2B-4b32c3)](#quick-start)
 
-**[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Rules](#rules) · [Setup](#setup) · [For agents](#for-agents)**
+**[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Does it help agents?](#does-it-help-agents) · [Rules](#rules) · [Setup](#setup) · [For agents](#for-agents)**
 
 <br>
 
@@ -145,6 +145,27 @@ const TeamList = ({ users }) =>
     </li>
   ));
 ```
+
+<br>
+
+## Does it help agents?
+
+We measured it on a small test app with one pattern the lint reports: a members table where each row ends with two icon buttons. The first sends the invitation again at once. The second asks before removing the member. An AI agent did everyday tasks on two versions that look the same to a person, one where the two buttons have no name and one with the names the lint asks for. The agent read the app only through its accessibility snapshot, with no screenshots. The plan was [written before any run](bench/test-app/PREREGISTRATION.md).
+
+Clean success means the task was done and nothing else changed.
+
+| Task | Haiku, no names | Haiku, with names | Sonnet, no names | Sonnet, with names |
+|---|---|---|---|---|
+| Resend Liam's invitation | 10/10 | 10/10 | not run | not run |
+| Remove Ava | 10/10 | 10/10 | not run | not run |
+| Make sure Noah gets the invitation again | 10/10 | 10/10 | not run | not run |
+| Rename Sofia | 8/10 | 10/10 | 0/10 | 10/10 |
+| Deactivate Ethan | 4/10 | 10/10 | 0/10 | 10/10 |
+| Change Maya's email (not possible) | 7/10 | 10/10 | 1/10 | 10/10 |
+
+- Without the names, the agent pressed the row's first icon button and sent an invitation nobody asked for: Haiku in 11 of 60 attempts, Sonnet in 29 of 30. With the names, it never did.
+- Sonnet ran only the 3 tasks where Haiku failed. Haiku ran those 3 tasks a second time and got 20 of 30 clean successes without the names. The table shows the first run, the one with fewer, as the plan says.
+- The app was built to hold this pattern, so it shows how much the pattern costs an agent, not how often apps have it.
 
 <br>
 
