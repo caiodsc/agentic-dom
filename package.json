@@ -12,6 +12,6 @@
   "homepage": "https://github.com/caiodsc/agentic-dom#readme",
   "scripts": { "test": "node --test tests/*.test.js", "readme:assets": "node scripts/readme-assets.js" },
   "peerDependencies": { "eslint": ">=8.57" },
-  "devDependencies": { "@typescript-eslint/parser": "^8.74.0", "eslint": "^9.39.5" },
+  "devDependencies": { "@typescript-eslint/parser": "^8.74.0", "eslint": "^10.15.0" },
   "engines": { "node": ">=18.18" }
 }
