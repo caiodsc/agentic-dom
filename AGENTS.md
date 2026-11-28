@@ -17,6 +17,7 @@ Focus exclusively on problems that make AI browser agents struggle to identify, 
 ## Guidelines
 
 - Prioritize precision over coverage.
+- Precision decides which code gets reported. Choosing between messages for the same report needs only a simple check that is usually right, since a wrong message still leads to the same fix.
 - Never confuse dynamic values with unique values.
 - Respect HTML and ARIA semantics.
 - Read every JSX value the way React renders it. A value React drops or renders as nothing counts as absent.
