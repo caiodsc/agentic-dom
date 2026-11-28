@@ -1,17 +1,31 @@
 diff --git a/src/MembersPage.tsx b/src/MembersPage.tsx
-index bb2449b..e4e4216 100644
+index cef0286..2fd2850 100644
 --- a/src/MembersPage.tsx
 +++ b/src/MembersPage.tsx
-@@ -87,10 +87,10 @@ export function MembersPage() {
+@@ -99,14 +99,14 @@ export function MembersPage() {
                  <TableCell>{formatDate(member.invited_at)}</TableCell>
-                 <TableCell onClick={(e) => e.stopPropagation()}>
+                 <TableCell>
                    <div className="flex gap-1">
 -                    <Button variant="ghost" size="icon-sm" aria-label={`Resend invite to ${member.name}`} onClick={() => resend(member)}>
 +                    <Button variant="ghost" size="icon-sm" onClick={() => resend(member)}>
                        <SendIcon />
                      </Button>
--                    <Button variant="ghost" size="icon-sm" aria-label={`Remove ${member.name}`} onClick={() => setRemoving(member)}>
-+                    <Button variant="ghost" size="icon-sm" onClick={() => setRemoving(member)}>
-                       <Trash2Icon className="text-destructive" />
+-                    <Button variant="ghost" size="icon-sm" aria-label={`Edit ${member.name}`} onClick={() => setEditing(member)}>
++                    <Button variant="ghost" size="icon-sm" onClick={() => setEditing(member)}>
+                       <PencilIcon />
                      </Button>
-                   </div>
+                     <DropdownMenu>
+-                      <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`More actions for ${member.name}`} />}>
++                      <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
+                         <EllipsisIcon />
+                       </DropdownMenuTrigger>
+                       <DropdownMenuContent>
+@@ -192,7 +192,7 @@ function EditMemberDialog({ member, onClose }: { member: Member; onClose: () =>
+           <div className="flex items-start gap-3">
+             <Checkbox id="member-active" checked={active} onCheckedChange={(checked) => setActive(checked === true)} />
+             <div className="flex flex-col gap-1">
+-              <Label htmlFor="member-active">Active</Label>
++              <Label>Active</Label>
+               <p className="text-xs text-muted-foreground">Inactive members can't sign in.</p>
+             </div>
+           </div>

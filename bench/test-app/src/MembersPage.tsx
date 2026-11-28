@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { SendIcon, Trash2Icon, UserPlusIcon } from "lucide-react"
+import { CopyIcon, EllipsisIcon, PencilIcon, SendIcon, Trash2Icon, UserPlusIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
@@ -22,6 +22,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -46,6 +53,11 @@ export function MembersPage() {
   const resend = (member: Member) => {
     updateMember(member.id, { invited_at: new Date().toISOString() })
     toast.success(`Invitation sent to ${member.email}`)
+  }
+
+  const copyEmail = (member: Member) => {
+    navigator.clipboard?.writeText(member.email).catch(() => {})
+    toast.success("Email copied")
   }
 
   return (
@@ -75,7 +87,7 @@ export function MembersPage() {
           </TableHeader>
           <TableBody>
             {members.map((member) => (
-              <TableRow key={member.id} className="cursor-pointer" onClick={() => setEditing(member)}>
+              <TableRow key={member.id}>
                 <TableCell className="font-medium">{member.name}</TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>{member.role}</TableCell>
@@ -85,14 +97,30 @@ export function MembersPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>{formatDate(member.invited_at)}</TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
+                <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon-sm" aria-label={`Resend invite to ${member.name}`} onClick={() => resend(member)}>
                       <SendIcon />
                     </Button>
-                    <Button variant="ghost" size="icon-sm" aria-label={`Remove ${member.name}`} onClick={() => setRemoving(member)}>
-                      <Trash2Icon className="text-destructive" />
+                    <Button variant="ghost" size="icon-sm" aria-label={`Edit ${member.name}`} onClick={() => setEditing(member)}>
+                      <PencilIcon />
                     </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`More actions for ${member.name}`} />}>
+                        <EllipsisIcon />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => copyEmail(member)}>
+                          <CopyIcon />
+                          Copy email
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive" onClick={() => setRemoving(member)}>
+                          <Trash2Icon />
+                          Remove
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </TableCell>
               </TableRow>

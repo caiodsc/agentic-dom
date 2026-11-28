@@ -12,7 +12,7 @@ Your frontend is an interface for AI agents too. agentic-dom is an ESLint plugin
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![ESLint 8.57+](https://img.shields.io/badge/ESLint-8.57%2B-4b32c3)](#quick-start)
 
-**[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Rules](#rules) · [Setup](#setup) · [For agents](#for-agents)**
+**[Quick start](#quick-start) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [Does it help agents?](#does-it-help-agents) · [Rules](#rules) · [Setup](#setup) · [For agents](#for-agents)**
 
 <br>
 
@@ -145,6 +145,23 @@ const TeamList = ({ users }) =>
     </li>
   ));
 ```
+
+<br>
+
+## Does it help agents?
+
+We asked two AI agents (Claude Haiku and Claude Sonnet) to do simple jobs in a small team app, like renaming or deactivating a member. Each member's row ends with three buttons that show only an icon: one emails an invitation, one edits the member, one opens a menu. Without names, an agent can't tell them apart, so it guesses. With the names agentic-dom asks for, it knows.
+
+| | Without names | With names |
+|---|---|---|
+| Did the job right, Haiku | 45% | 100% |
+| Did the job right, Sonnet | 67% | 100% |
+| Emailed an invitation nobody asked for, Haiku | 47% | 0% |
+| Emailed an invitation nobody asked for, Sonnet | 33% | 0% |
+| Steps per job, Haiku | 9.9 | 7.8 |
+| Steps per job, Sonnet | 7.2 | 5.6 |
+
+<sub>60 tries per version and agent, over 6 jobs. Removing a member went right every time either way, because the menu shows the word Remove. [How we measured](bench/test-app/METHOD.md).</sub>
 
 <br>
 
