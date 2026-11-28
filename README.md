@@ -182,6 +182,8 @@ We asked two AI agents (Claude Haiku and Claude Sonnet) to do simple jobs in a s
 | 11 | [collapsed-content-inert](docs/rules/collapsed-content-inert.md) | An element collapses to zero height but keeps its content in the page | warn |
 | 12 | [hover-only-controls](docs/rules/hover-only-controls.md) | Controls left out of the page until the mouse is over them | warn |
 
+The list keeps growing as we find more patterns that make agents fail. Seen one that is not here? [Suggest a rule](https://github.com/caiodsc/agentic-dom/issues/new?template=rule-idea.yml).
+
 <br>
 
 ## Setup
