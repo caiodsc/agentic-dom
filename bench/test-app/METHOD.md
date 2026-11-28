@@ -32,6 +32,7 @@ Every attempt starts a new browser on the members screen with fresh data.
 
 - **Haiku**: all 6 tasks, 10 attempts per task and version.
 - **Sonnet**: the 3 tasks where Haiku had a failure (`rename-member`, `deactivate-member`, `change-email`), 10 attempts per task and version. It measures whether a stronger model still pays for the missing names where Haiku did, not Sonnet's rate over all 6 tasks.
+- **Opus**: the same 3 tasks as Sonnet, 10 attempts per task and version.
 - **Haiku, second run**: the same 3 tasks, 10 attempts per task and version. The report uses the Haiku run with fewer clean successes on `before`, and lists both.
 
 ## Hypotheses
